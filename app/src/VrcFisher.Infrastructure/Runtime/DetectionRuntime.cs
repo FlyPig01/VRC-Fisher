@@ -8,8 +8,8 @@ namespace VrcFisher.Infrastructure.Runtime;
 
 public sealed class DetectionRuntime(
     DirectoryLayout layout,
-    AppOptions options,
-    WindowsGraphicsCaptureSource capture,
+    Func<AppOptions> optionsProvider,
+    IFrameSource capture,
     IModelCatalog modelCatalog,
     IInputController inputController,
     ILogger<DetectionRuntime> logger) : IDetectionRuntime, IAsyncDisposable
@@ -33,6 +33,7 @@ public sealed class DetectionRuntime(
         if (!modelCatalog.IsReady)
             throw new InvalidOperationException("模型未安装或未通过校验");
         CancellationToken runToken;
+        var options = optionsProvider();
         lock (_sync)
         {
             if (_runTask is not null) return;

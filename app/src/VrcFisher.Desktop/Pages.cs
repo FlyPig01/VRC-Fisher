@@ -81,17 +81,58 @@ public sealed class ModelsPage : Page
 
 public sealed class SettingsPage : Page
 {
+    private TextBlock _captureStatus = null!;
+    private ComboBox _device = null!;
+
     public SettingsPage()
     {
+        var select = new Button { Content = "选择显示器或窗口" };
+        select.Click += async (_, _) =>
+        {
+            if (Tag is not MainWindow window) return;
+            await window.SelectCaptureTargetAsync();
+            Refresh(window);
+        };
+        _captureStatus = new TextBlock { TextWrapping = TextWrapping.Wrap };
+        _device = new ComboBox { ItemsSource = new[] { "Auto", "CPU", "GPU" }, Width = 180 };
+        _device.SelectionChanged += async (_, _) =>
+        {
+            if (Tag is not MainWindow window || _device.SelectedItem is not string value) return;
+            var device = value switch
+            {
+                "CPU" => VrcFisher.Core.ExecutionDevice.Cpu,
+                "GPU" => VrcFisher.Core.ExecutionDevice.Gpu,
+                _ => VrcFisher.Core.ExecutionDevice.Auto
+            };
+            await window.SaveOptionsAsync(window.Options with { Device = device });
+        };
         Content = new StackPanel
         {
             Spacing = 12,
             Children =
             {
                 new TextBlock { Text = "设置", FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold },
-                new TextBlock { Text = "显示器、设备和阈值配置将在捕获适配器完成后启用。当前软件根目录：" },
+                select,
+                _captureStatus,
+                new TextBlock { Text = "运行设备" },
+                _device,
+                new TextBlock { Text = "软件根目录：" },
                 new TextBlock { Text = AppContext.BaseDirectory, TextWrapping = TextWrapping.Wrap }
             }
+        };
+        Loaded += (_, _) => { if (Tag is MainWindow window) Refresh(window); };
+    }
+
+    private void Refresh(MainWindow window)
+    {
+        _captureStatus.Text = window.Capture.IsConfigured
+            ? $"捕获目标：{window.Capture.TargetName}"
+            : "尚未选择捕获目标";
+        _device.SelectedItem = window.Options.Device switch
+        {
+            VrcFisher.Core.ExecutionDevice.Cpu => "CPU",
+            VrcFisher.Core.ExecutionDevice.Gpu => "GPU",
+            _ => "Auto"
         };
     }
 }

@@ -3,10 +3,8 @@ using VrcFisher.Core;
 namespace VrcFisher.Infrastructure.Capture;
 
 /// <summary>
-/// Capture boundary consumed by the runtime. The Windows Graphics Capture
-/// frame-pool adapter is hosted by Desktop because it requires Windows App SDK
-/// and a WinRT/Direct3D device. This assembly intentionally remains testable
-/// without the GUI SDK; no synthetic frames are produced here.
+/// Testable frame source boundary. The Desktop WGC adapter performs the
+/// WinRT/Direct3D readback and publishes BGRA frames through this class.
 /// </summary>
 public sealed class WindowsGraphicsCaptureSource : IFrameSource
 {
@@ -45,6 +43,8 @@ public sealed class WindowsGraphicsCaptureSource : IFrameSource
     public void PublishCapturedFrame(ReadOnlyMemory<byte> bgraPixels, int width, int height)
     {
         if (!_running) return;
+        if (width <= 0 || height <= 0 || bgraPixels.Length < width * height * 4)
+            throw new ArgumentException("捕获帧的尺寸或像素数据无效");
         var frame = new CapturedFrameEventArgs(
             Interlocked.Increment(ref _sequence),
             DateTimeOffset.UtcNow,
