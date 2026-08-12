@@ -1,0 +1,27 @@
+<Window
+    x:Class="VrcFisher.Desktop.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid Padding="24" RowSpacing="16" ColumnSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock Text="VRC-Fisher" FontSize="26" FontWeight="SemiBold" />
+            <TextBlock x:Name="StatusBadge" Text="未就绪" VerticalAlignment="Center" />
+        </StackPanel>
+        <NavigationView x:Name="Navigation" Grid.Row="1" IsBackButtonVisible="Collapsed" SelectionChanged="OnNavigationChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="运行" Tag="run" />
+                <NavigationViewItem Content="模型" Tag="models" />
+                <NavigationViewItem Content="设置" Tag="settings" />
+                <NavigationViewItem Content="诊断" Tag="diagnostics" />
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
+    </Grid>
+</Window>

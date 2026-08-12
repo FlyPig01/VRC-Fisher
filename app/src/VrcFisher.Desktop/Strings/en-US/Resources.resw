@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve"><value>VRC-Fisher</value></data>
+  <data name="Run" xml:space="preserve"><value>Run</value></data>
+  <data name="Models" xml:space="preserve"><value>Models</value></data>
+  <data name="Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Diagnostics" xml:space="preserve"><value>Diagnostics</value></data>
+  <data name="Observe" xml:space="preserve"><value>Observe only</value></data>
+  <data name="Automatic" xml:space="preserve"><value>Automatic</value></data>
+  <data name="Stop" xml:space="preserve"><value>Stop and release mouse</value></data>
+  <data name="ModelsNotReady" xml:space="preserve"><value>Models not ready</value></data>
+</root>

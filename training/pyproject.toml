@@ -1,0 +1,17 @@
+[project]
+name = "vrc-fisher-training"
+version = "0.1.0"
+description = "Training and ONNX export tools for VRC-Fisher."
+requires-python = ">=3.11,<3.12"
+
+[project.scripts]
+vrc-train = "vrc_training.train:main"
+vrc-export = "vrc_training.export:main"
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

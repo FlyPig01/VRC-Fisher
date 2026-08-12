@@ -1,0 +1,27 @@
+[project]
+name = "vrc-fisher"
+version = "0.1.0"
+description = "External real-time visual observer for a VRChat fishing mini-game."
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "mss>=9,<10",
+  "numpy>=2.0,<2.1",
+  "pillow>=11,<13",
+  "psutil>=6,<7",
+]
+
+[project.optional-dependencies]
+cpu = ["onnxruntime>=1.24,<2"]
+directml = ["onnxruntime-directml>=1.24,<2"]
+dev = ["pytest>=8,<9", "pyinstaller>=6,<7"]
+
+[project.scripts]
+vrc-fisher = "vrc_fisher.app:main"
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

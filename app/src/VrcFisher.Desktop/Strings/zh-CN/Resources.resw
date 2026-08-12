@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve"><value>VRC-Fisher</value></data>
+  <data name="Run" xml:space="preserve"><value>运行</value></data>
+  <data name="Models" xml:space="preserve"><value>模型</value></data>
+  <data name="Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="Diagnostics" xml:space="preserve"><value>诊断</value></data>
+  <data name="Observe" xml:space="preserve"><value>仅观察</value></data>
+  <data name="Automatic" xml:space="preserve"><value>自动运行</value></data>
+  <data name="Stop" xml:space="preserve"><value>停止并释放鼠标</value></data>
+  <data name="ModelsNotReady" xml:space="preserve"><value>模型未就绪</value></data>
+</root>

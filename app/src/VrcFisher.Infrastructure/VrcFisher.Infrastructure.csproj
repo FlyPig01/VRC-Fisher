@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <RootNamespace>VrcFisher.Infrastructure</RootNamespace>
+    <AssemblyName>VrcFisher.Infrastructure</AssemblyName>
+    <Platforms>AnyCPU;x64</Platforms>
+    <PlatformTarget Condition="'$(Platform)' == 'x64'">x64</PlatformTarget>
+    <PlatformTarget Condition="'$(Platform)' != 'x64'">x64</PlatformTarget>
+    <DefineConstants Condition="'$(VrcExecutionProvider)' == 'DirectML'">$(DefineConstants);VRC_DIRECTML</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VrcFisher.Core\VrcFisher.Core.csproj" />
+    <ProjectReference Include="..\VrcFisher.Application\VrcFisher.Application.csproj" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.24.4" Condition="'$(VrcExecutionProvider)' != 'DirectML'" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" Condition="'$(VrcExecutionProvider)' == 'DirectML'" />
+  </ItemGroup>
+</Project>

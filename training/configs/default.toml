@@ -1,0 +1,20 @@
+[runtime]
+device = "cpu"
+workers = 4
+seed = 42
+
+[locator]
+data = "datasets/locator/data.yaml"
+base_model = "yolo11n.pt"
+image_size = 640
+epochs = 100
+batch = 8
+patience = 20
+
+[minigame]
+data = "datasets/minigame/data.yaml"
+base_model = "yolo11n.pt"
+image_size = 640
+epochs = 100
+batch = 8
+patience = 20

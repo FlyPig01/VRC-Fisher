@@ -1,0 +1,1 @@
+"""Capture benchmark tool placeholder."""

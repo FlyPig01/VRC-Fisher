@@ -1,0 +1,1 @@
+"""Video inspection tool placeholder."""

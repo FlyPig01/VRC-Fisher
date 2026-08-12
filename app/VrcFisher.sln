@@ -1,0 +1,45 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VrcFisher.Core", "src\VrcFisher.Core\VrcFisher.Core.csproj", "{A1010101-0101-0101-0101-010101010101}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VrcFisher.Application", "src\VrcFisher.Application\VrcFisher.Application.csproj", "{A2020202-0202-0202-0202-020202020202}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VrcFisher.Infrastructure", "src\VrcFisher.Infrastructure\VrcFisher.Infrastructure.csproj", "{A3030303-0303-0303-0303-030303030303}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VrcFisher.Desktop", "src\VrcFisher.Desktop\VrcFisher.Desktop.csproj", "{A4040404-0404-0404-0404-040404040404}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VrcFisher.Core.Tests", "tests\VrcFisher.Core.Tests\VrcFisher.Core.Tests.csproj", "{A5050505-0505-0505-0505-050505050505}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1010101-0101-0101-0101-010101010101}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1010101-0101-0101-0101-010101010101}.Debug|x64.Build.0 = Debug|Any CPU
+		{A1010101-0101-0101-0101-010101010101}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1010101-0101-0101-0101-010101010101}.Release|x64.Build.0 = Release|Any CPU
+		{A2020202-0202-0202-0202-020202020202}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A2020202-0202-0202-0202-020202020202}.Debug|x64.Build.0 = Debug|Any CPU
+		{A2020202-0202-0202-0202-020202020202}.Release|x64.ActiveCfg = Release|Any CPU
+		{A2020202-0202-0202-0202-020202020202}.Release|x64.Build.0 = Release|Any CPU
+		{A3030303-0303-0303-0303-030303030303}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A3030303-0303-0303-0303-030303030303}.Debug|x64.Build.0 = Debug|Any CPU
+		{A3030303-0303-0303-0303-030303030303}.Release|x64.ActiveCfg = Release|Any CPU
+		{A3030303-0303-0303-0303-030303030303}.Release|x64.Build.0 = Release|Any CPU
+		{A4040404-0404-0404-0404-040404040404}.Debug|x64.ActiveCfg = Debug|x64
+		{A4040404-0404-0404-0404-040404040404}.Debug|x64.Build.0 = Debug|x64
+		{A4040404-0404-0404-0404-040404040404}.Release|x64.ActiveCfg = Release|x64
+		{A4040404-0404-0404-0404-040404040404}.Release|x64.Build.0 = Release|x64
+		{A5050505-0505-0505-0505-050505050505}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A5050505-0505-0505-0505-050505050505}.Debug|x64.Build.0 = Debug|Any CPU
+		{A5050505-0505-0505-0505-050505050505}.Release|x64.ActiveCfg = Release|Any CPU
+		{A5050505-0505-0505-0505-050505050505}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
