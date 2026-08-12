@@ -7,7 +7,9 @@ param(
     [string]$Locator,
 
     [Parameter(Mandatory = $true)]
-    [string]$Minigame
+    [string]$Minigame,
+
+    [switch]$AutomaticAllowed
 )
 
 Set-StrictMode -Version Latest
@@ -45,6 +47,7 @@ foreach ($Model in $Models) {
     schema_version = 1
     runtime_api = 1
     version = $Version
+    automatic_allowed = [bool]$AutomaticAllowed
     models = $ManifestModels
 } | ConvertTo-Json -Depth 4 | Set-Content `
     -LiteralPath (Join-Path $ReleaseRoot "model-manifest.json") `

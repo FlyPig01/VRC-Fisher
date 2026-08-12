@@ -25,6 +25,7 @@ public sealed partial class MainWindow : Window
         Func<AppOptions, Task> saveOptions)
     {
         InitializeComponent();
+        ApplyLocalizedChrome();
         _runtime = runtime;
         _models = models;
         _layout = layout;
@@ -33,8 +34,7 @@ public sealed partial class MainWindow : Window
         _options = options;
         Title = "VRC-Fisher";
         Navigation.SelectedItem = Navigation.MenuItems[0];
-        ContentFrame.Navigate(typeof(RunPage));
-        if (ContentFrame.Content is FrameworkElement firstPage) firstPage.Tag = this;
+        if (ContentFrame.Content is null) ShowPage("run");
         _timer.Tick += (_, _) => RefreshStatus();
         _timer.Start();
     }
@@ -65,19 +65,35 @@ public sealed partial class MainWindow : Window
     private void OnNavigationChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         if (args.SelectedItem is not NavigationViewItem item) return;
-        ContentFrame.Navigate(item.Tag?.ToString() switch
+        ShowPage(item.Tag?.ToString());
+    }
+
+    private void ShowPage(string? pageName)
+    {
+        var page = pageName switch
         {
-            "models" => typeof(ModelsPage),
-            "settings" => typeof(SettingsPage),
-            "diagnostics" => typeof(DiagnosticsPage),
-            _ => typeof(RunPage)
-        });
-        if (ContentFrame.Content is FrameworkElement page) page.Tag = this;
+            "models" => new ModelsPage(),
+            "settings" => new SettingsPage(),
+            "diagnostics" => new DiagnosticsPage(),
+            _ => (Page)new RunPage()
+        };
+        page.Tag = this;
+        ContentFrame.Content = page;
     }
 
     private void RefreshStatus()
     {
         var snapshot = _runtime.Snapshot;
-        StatusBadge.Text = snapshot.ModelsReady ? snapshot.Phase.ToString() : "模型未就绪";
+        StatusBadge.Text = _models.IsReady ? UiStrings.Phase(snapshot.Phase) : UiStrings.Get("ModelsNotReady");
+    }
+
+    private void ApplyLocalizedChrome()
+    {
+        AppTitleText.Text = UiStrings.Get("AppTitle");
+        RunNavigationItem.Content = UiStrings.Get("Run");
+        ModelsNavigationItem.Content = UiStrings.Get("Models");
+        SettingsNavigationItem.Content = UiStrings.Get("Settings");
+        DiagnosticsNavigationItem.Content = UiStrings.Get("Diagnostics");
+        StatusBadge.Text = UiStrings.Get("ModelsNotReady");
     }
 }

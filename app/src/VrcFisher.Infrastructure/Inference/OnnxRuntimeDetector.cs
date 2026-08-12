@@ -15,6 +15,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     private readonly string _minigameInput;
     private readonly float _confidenceThreshold;
     private readonly float _iouThreshold;
+    private readonly int _inputSize;
     private readonly IReadOnlyList<string> _locatorClasses = ["prompt", "fishing_ui_group", "success", "failure"];
     private readonly IReadOnlyList<string> _minigameClasses = ["rail", "control_bar", "target", "progress_bar"];
 
@@ -22,34 +23,41 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         string modelsDirectory,
         ExecutionDevice device,
         float confidenceThreshold = 0.35f,
-        float iouThreshold = 0.45f)
+        float iouThreshold = 0.45f,
+        int inputSize = 640)
     {
         var locatorPath = Path.Combine(modelsDirectory, LocatorModel);
         var minigamePath = Path.Combine(modelsDirectory, MinigameModel);
         if (!File.Exists(locatorPath) || !File.Exists(minigamePath))
             throw new FileNotFoundException("两个 ONNX 模型必须同时存在");
 
-        var requestedProviders = ProviderNames(device);
-        _locator = new InferenceSession(locatorPath, CreateOptions(requestedProviders));
-        try
-        {
-            _minigame = new InferenceSession(minigamePath, CreateOptions(requestedProviders));
-        }
-        catch
-        {
-            _locator.Dispose();
-            throw;
-        }
+        var sessions = CreateSessions(locatorPath, minigamePath, device);
+        _locator = sessions.Locator;
+        _minigame = sessions.Minigame;
         _locatorInput = _locator.InputMetadata.Keys.Single();
         _minigameInput = _minigame.InputMetadata.Keys.Single();
         _confidenceThreshold = confidenceThreshold;
         _iouThreshold = iouThreshold;
-        Provider = ResolveProvider(device, requestedProviders);
+        if (inputSize is < 32 or > 2048)
+            throw new ArgumentOutOfRangeException(nameof(inputSize));
+        _inputSize = inputSize;
+        Provider = sessions.Provider;
     }
 
     public string Provider { get; }
     public bool IsReady => true;
     public bool CanProduceDecisions => true;
+    public static bool SupportsDirectML
+    {
+        get
+        {
+#if VRC_DIRECTML
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
 
     public DetectionObservation Detect(CapturedFrameEventArgs frame)
     {
@@ -57,7 +65,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         if (frame.Width <= 0 || frame.Height <= 0 || frame.BgraPixels.IsEmpty)
             throw new InvalidDataException("捕获帧为空");
 
-        using var locator = Run(_locator, _locatorInput, frame, out var locatorTransform);
+        using var locator = Run(_locator, _locatorInput, frame, _inputSize, out var locatorTransform);
         var locatorDetections = Decode(locator, _locatorClasses, _confidenceThreshold, _iouThreshold, locatorTransform);
         var prompt = BestBox(locatorDetections, "prompt");
         var fishingUi = BestBox(locatorDetections, "fishing_ui_group");
@@ -67,7 +75,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             return new DetectionObservation(frame.FrameNumber, frame.CapturedAt, Prompt: prompt, Success: success, Failure: failure);
 
         var crop = Crop(frame, fishingUi.Value, 0.08f);
-        using var minigame = Run(_minigame, _minigameInput, crop.Frame, out var minigameTransform);
+        using var minigame = Run(_minigame, _minigameInput, crop.Frame, _inputSize, out var minigameTransform);
         var localDetections = Decode(minigame, _minigameClasses, _confidenceThreshold, _iouThreshold, minigameTransform);
         var rail = BestBox(localDetections, "rail");
         var control = BestBox(localDetections, "control_bar");
@@ -102,7 +110,57 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         _locator.Dispose();
     }
 
-    private static SessionOptions CreateOptions(IReadOnlyList<string> providers)
+    private static (InferenceSession Locator, InferenceSession Minigame, string Provider) CreateSessions(
+        string locatorPath,
+        string minigamePath,
+        ExecutionDevice device)
+    {
+        if (device == ExecutionDevice.Gpu)
+        {
+#if VRC_DIRECTML
+            return CreatePair(locatorPath, minigamePath, useDirectMl: true, "DmlExecutionProvider");
+#else
+            throw new PlatformNotSupportedException("当前构建未包含 DirectML Provider");
+#endif
+        }
+
+        if (device == ExecutionDevice.Cpu)
+            return CreatePair(locatorPath, minigamePath, useDirectMl: false, "CPUExecutionProvider");
+
+#if VRC_DIRECTML
+        try
+        {
+            return CreatePair(locatorPath, minigamePath, useDirectMl: true, "DmlExecutionProvider");
+        }
+        catch (Exception error) when (error is OnnxRuntimeException or DllNotFoundException or BadImageFormatException)
+        {
+            return CreatePair(locatorPath, minigamePath, useDirectMl: false, "CPUExecutionProvider");
+        }
+#else
+        return CreatePair(locatorPath, minigamePath, useDirectMl: false, "CPUExecutionProvider");
+#endif
+    }
+
+    private static (InferenceSession Locator, InferenceSession Minigame, string Provider) CreatePair(
+        string locatorPath,
+        string minigamePath,
+        bool useDirectMl,
+        string provider)
+    {
+        var locator = new InferenceSession(locatorPath, CreateOptions(useDirectMl));
+        try
+        {
+            var minigame = new InferenceSession(minigamePath, CreateOptions(useDirectMl));
+            return (locator, minigame, provider);
+        }
+        catch
+        {
+            locator.Dispose();
+            throw;
+        }
+    }
+
+    private static SessionOptions CreateOptions(bool useDirectMl)
     {
         var options = new SessionOptions
         {
@@ -110,52 +168,39 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             IntraOpNumThreads = Math.Max(1, Environment.ProcessorCount / 2),
             InterOpNumThreads = 1
         };
-        if (providers.Contains("DmlExecutionProvider", StringComparer.Ordinal))
+        if (useDirectMl)
         {
 #if VRC_DIRECTML
-            // DirectML is appended by the package-specific extension when the
-            // DirectML build is selected. CPU remains the explicit fallback for Auto.
+            options.ExecutionMode = ExecutionMode.ORT_SEQUENTIAL;
+            options.EnableMemoryPattern = false;
             options.AppendExecutionProvider_DML(0);
 #else
-            if (providers.Count == 1)
-                throw new PlatformNotSupportedException("当前构建未包含 DirectML Provider");
+            throw new PlatformNotSupportedException("当前构建未包含 DirectML Provider");
 #endif
         }
-        options.AppendExecutionProvider_CPU();
+        else
+        {
+            options.AppendExecutionProvider_CPU();
+        }
         return options;
-    }
-
-    private static string ResolveProvider(ExecutionDevice device, IReadOnlyList<string> requestedProviders)
-    {
-#if VRC_DIRECTML
-        return requestedProviders[0];
-#else
-        if (device == ExecutionDevice.Gpu)
-            throw new PlatformNotSupportedException("当前构建未包含 DirectML Provider");
-        return "CPUExecutionProvider";
-#endif
-    }
-
-    private static IReadOnlyList<string> ProviderNames(ExecutionDevice device)
-    {
-        if (device == ExecutionDevice.Cpu) return ["CPUExecutionProvider"];
-        if (device == ExecutionDevice.Gpu) return ["DmlExecutionProvider"];
-        return ["DmlExecutionProvider", "CPUExecutionProvider"];
     }
 
     private static IDisposableReadOnlyCollection<DisposableNamedOnnxValue> Run(
         InferenceSession session,
         string inputName,
         CapturedFrameEventArgs frame,
+        int inputSize,
         out LetterboxTransform transform)
     {
-        var tensor = ToTensor(frame, out transform);
+        var tensor = ToTensor(frame, inputSize, out transform);
         return session.Run([NamedOnnxValue.CreateFromTensor(inputName, tensor)]);
     }
 
-    private static DenseTensor<float> ToTensor(CapturedFrameEventArgs frame, out LetterboxTransform transform)
+    private static DenseTensor<float> ToTensor(
+        CapturedFrameEventArgs frame,
+        int size,
+        out LetterboxTransform transform)
     {
-        const int size = 640;
         var tensor = new DenseTensor<float>([1, 3, size, size]);
         var source = frame.BgraPixels.Span;
         var scale = MathF.Min((float)size / frame.Width, (float)size / frame.Height);

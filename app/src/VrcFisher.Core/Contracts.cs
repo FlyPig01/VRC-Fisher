@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace VrcFisher.Core;
 
 public enum FishingPhase
@@ -26,6 +28,23 @@ public enum ExecutionDevice
     Auto,
     Cpu,
     Gpu
+}
+
+public enum RuntimeMessageCode
+{
+    ModelsUnavailable,
+    ModelsRequired,
+    AutomaticNotAllowed,
+    AutomaticStarted,
+    ObservationStarted,
+    DetectionStopped,
+    Stopped,
+    CaptureStopped,
+    FrameStale,
+    TargetNotForeground,
+    OutputContractUnverified,
+    InferenceFailed,
+    StateMachineDecision
 }
 
 public readonly record struct BoundingBox(float Left, float Top, float Right, float Bottom)
@@ -100,6 +119,7 @@ public interface IStateMachine
 
 public interface IInputController
 {
+    bool IsTargetForeground { get; }
     void Click();
     void PressLeft();
     void ReleaseLeft();
@@ -129,13 +149,17 @@ public interface IDetector
     DetectionObservation Detect(CapturedFrameEventArgs frame);
 }
 
-public sealed record ModelFileInfo(string FileName, long Size, string Sha256);
+public sealed record ModelFileInfo(
+    [property: JsonPropertyName("filename")] string FileName,
+    long Size,
+    string Sha256);
 
 public sealed record ModelManifest(
-    int SchemaVersion,
-    int RuntimeApi,
+    [property: JsonPropertyName("schema_version")] int SchemaVersion,
+    [property: JsonPropertyName("runtime_api")] int RuntimeApi,
     string Version,
-    IReadOnlyList<ModelFileInfo> Models);
+    IReadOnlyList<ModelFileInfo> Models,
+    [property: JsonPropertyName("automatic_allowed")] bool AutomaticAllowed = false);
 
 public sealed record ModelStatus(
     string Name,
@@ -145,6 +169,13 @@ public sealed record ModelStatus(
     string? Version,
     string Message);
 
+public sealed record ModelDownloadProgress(
+    string CurrentFile,
+    long BytesDownloaded,
+    long BytesTotal,
+    int CompletedFiles,
+    int TotalFiles);
+
 public sealed record RuntimeSnapshot(
     FishingPhase Phase,
     bool IsObserving,
@@ -153,19 +184,22 @@ public sealed record RuntimeSnapshot(
     string Provider,
     long FramesCaptured,
     long FramesDropped,
-    string Message,
+    RuntimeStatus Status,
     DateTimeOffset UpdatedAt);
+
+public sealed record RuntimeStatus(RuntimeMessageCode Code, string? Detail = null);
 
 public sealed record DetectionRuntimeMetrics(
     long FramesCaptured,
     long FramesDropped,
     FishingPhase Phase,
-    string Message,
+    RuntimeStatus Status,
     DateTimeOffset UpdatedAt);
 
 public interface IRuntimeController
 {
     RuntimeSnapshot Snapshot { get; }
+    event EventHandler<RuntimeSnapshot>? SnapshotChanged;
     Task StartObservationAsync(bool automatic, CancellationToken cancellationToken);
     Task StopAsync(CancellationToken cancellationToken);
 }

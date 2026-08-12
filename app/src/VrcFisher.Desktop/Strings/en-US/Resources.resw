@@ -9,4 +9,77 @@
   <data name="Automatic" xml:space="preserve"><value>Automatic</value></data>
   <data name="Stop" xml:space="preserve"><value>Stop and release mouse</value></data>
   <data name="ModelsNotReady" xml:space="preserve"><value>Models not ready</value></data>
+  <data name="StatusLoading" xml:space="preserve"><value>Loading status...</value></data>
+  <data name="ProviderUnavailable" xml:space="preserve"><value>Provider: Unavailable</value></data>
+  <data name="Unavailable" xml:space="preserve"><value>Unavailable</value></data>
+  <data name="SelectCapture" xml:space="preserve"><value>Select display or window</value></data>
+  <data name="Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="DownloadModels" xml:space="preserve"><value>Download or update models</value></data>
+  <data name="CancelDownload" xml:space="preserve"><value>Cancel download</value></data>
+  <data name="DeleteModels" xml:space="preserve"><value>Delete models</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve"><value>Delete installed models?</value></data>
+  <data name="ConfirmDeleteModels" xml:space="preserve"><value>This deletes locator.onnx, minigame.onnx, and the installation record. The application and settings are kept.</value></data>
+  <data name="ModelMissing" xml:space="preserve"><value>{0}: not installed</value></data>
+  <data name="ModelValid" xml:space="preserve"><value>{0}: version {1}, {2:N1} MB, verified</value></data>
+  <data name="ModelInvalid" xml:space="preserve"><value>{0}: {1:N1} MB, manifest verification failed</value></data>
+  <data name="ModelsDescription" xml:space="preserve"><value>Both models must pass integrity verification before observation can start.</value></data>
+  <data name="Device" xml:space="preserve"><value>Execution device</value></data>
+  <data name="SoftwareRoot" xml:space="preserve"><value>Software root:</value></data>
+  <data name="DiagnosticsDescription" xml:space="preserve"><value>Diagnostics preview is off by default. No recognition result is shown without a verified model and capture target.</value></data>
+  <data name="RuntimeStatus" xml:space="preserve"><value>Phase: {0}
+Status: {1}</value></data>
+  <data name="RuntimeProvider" xml:space="preserve"><value>Provider: {0}
+Models: {1}</value></data>
+  <data name="Ready" xml:space="preserve"><value>Ready</value></data>
+  <data name="CheckingModels" xml:space="preserve"><value>Checking compatible model releases...</value></data>
+  <data name="DownloadProgress" xml:space="preserve"><value>{0}: {1:N0}/{2:N0} bytes</value></data>
+  <data name="DownloadComplete" xml:space="preserve"><value>Models downloaded and verified.</value></data>
+  <data name="DownloadCancelled" xml:space="preserve"><value>Download cancelled; installed models were not changed.</value></data>
+  <data name="DownloadFailed" xml:space="preserve"><value>Model download failed: {0}</value></data>
+  <data name="CaptureTarget" xml:space="preserve"><value>Capture target: {0}</value></data>
+  <data name="CaptureNotSelected" xml:space="preserve"><value>No capture target selected</value></data>
+  <data name="DiagnosticsStatus" xml:space="preserve"><value>Provider: {0}
+Captured frames: {1}
+Dropped frames: {2}
+Status: {3}</value></data>
+  <data name="PhaseIdle" xml:space="preserve"><value>Idle</value></data>
+  <data name="PhaseCasting" xml:space="preserve"><value>Casting</value></data>
+  <data name="PhaseWaitingForBite" xml:space="preserve"><value>Waiting for bite</value></data>
+  <data name="PhaseHooking" xml:space="preserve"><value>Hooking</value></data>
+  <data name="PhaseMinigame" xml:space="preserve"><value>Minigame</value></data>
+  <data name="PhaseReeling" xml:space="preserve"><value>Reeling</value></data>
+  <data name="PhaseLoot" xml:space="preserve"><value>Collecting</value></data>
+  <data name="PhaseRecovery" xml:space="preserve"><value>Recovery</value></data>
+  <data name="PhaseStopped" xml:space="preserve"><value>Stopped</value></data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve"><value>Models are not installed; recognition and automatic input are disabled</value></data>
+  <data name="RuntimeModelsRequired" xml:space="preserve"><value>Both verified ONNX models are required before observation can start</value></data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve"><value>The installed models are not approved for automatic input; use observe-only mode</value></data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve"><value>Automatic mode started</value></data>
+  <data name="RuntimeObservationStarted" xml:space="preserve"><value>Observe-only mode started</value></data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve"><value>Detection stopped: {0}</value></data>
+  <data name="RuntimeStopped" xml:space="preserve"><value>Stopped and released mouse input</value></data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve"><value>Capture stopped; input was released</value></data>
+  <data name="RuntimeFrameStale" xml:space="preserve"><value>Capture frame is stale; input was released</value></data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve"><value>VRChat is not in the foreground; automatic input was paused and released</value></data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve"><value>Models are loaded, but the output contract is unverified; only the Provider can be checked</value></data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve"><value>Inference failed: {0}</value></data>
+  <data name="UnknownError" xml:space="preserve"><value>unknown error</value></data>
+  <data name="UnknownStatus" xml:space="preserve"><value>Unknown status</value></data>
+  <data name="DecisionCast" xml:space="preserve"><value>Cast</value></data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve"><value>Bite confirmed</value></data>
+  <data name="DecisionBiteTimeout" xml:space="preserve"><value>Bite timed out</value></data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve"><value>Minigame confirmed</value></data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve"><value>Minigame did not start</value></data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve"><value>Success confirmed</value></data>
+  <data name="DecisionMinigameEnded" xml:space="preserve"><value>Minigame ended</value></data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve"><value>Minigame timed out</value></data>
+  <data name="DecisionFollowTarget" xml:space="preserve"><value>Following target</value></data>
+  <data name="DecisionReelAndCollect" xml:space="preserve"><value>Reel in and collect</value></data>
+  <data name="DecisionNextCycle" xml:space="preserve"><value>Starting next cycle</value></data>
+  <data name="DecisionLootTimeout" xml:space="preserve"><value>Collection timed out</value></data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve"><value>Recovery complete</value></data>
+  <data name="DecisionFailureDetected" xml:space="preserve"><value>Failure detected</value></data>
+  <data name="DecisionStopRequested" xml:space="preserve"><value>Stop requested</value></data>
+  <data name="DecisionWaiting" xml:space="preserve"><value>Waiting</value></data>
 </root>

@@ -5,10 +5,10 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Repository,
 
-    [ValidateSet("all", "cpu", "directml")]
+    [ValidateSet("all")]
     [string]$Variant = "all",
 
-    [string]$Python = "python",
+    [string]$DotNet = "dotnet",
     [string]$InnoCompiler = ""
 )
 
@@ -16,6 +16,6 @@ param(
     -Version $Version `
     -Repository $Repository `
     -Variant $Variant `
-    -Python $Python `
+    -DotNet $DotNet `
     -InnoCompiler $InnoCompiler
 exit $LASTEXITCODE

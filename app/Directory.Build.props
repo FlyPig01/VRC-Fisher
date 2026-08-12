@@ -1,5 +1,9 @@
 <Project>
   <PropertyGroup>
+    <VrcExecutionProvider Condition="'$(VrcExecutionProvider)' == ''">CPU</VrcExecutionProvider>
+    <BaseIntermediateOutputPath>obj\$(VrcExecutionProvider)\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin\$(VrcExecutionProvider)\</BaseOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(MSBuildProjectDirectory)\obj\**;$(MSBuildProjectDirectory)\bin\**</DefaultItemExcludes>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

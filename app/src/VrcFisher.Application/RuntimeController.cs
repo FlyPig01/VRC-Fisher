@@ -18,7 +18,7 @@ public sealed class RuntimeController : IRuntimeController
         "Unavailable",
         0,
         0,
-        "模型未安装，识别与自动输入已禁用",
+        new RuntimeStatus(RuntimeMessageCode.ModelsUnavailable),
         DateTimeOffset.UtcNow);
 
     public RuntimeSnapshot Snapshot
@@ -53,7 +53,20 @@ public sealed class RuntimeController : IRuntimeController
                 IsAutomatic = false,
                 Phase = FishingPhase.Stopped,
                 Provider = detectionRuntime.Provider,
-                Message = "两个有效 ONNX 模型都安装后才能开始观察"
+                Status = new RuntimeStatus(RuntimeMessageCode.ModelsRequired)
+            });
+            return;
+        }
+        if (automatic && !modelCatalog.AutomaticAllowed)
+        {
+            Update(_snapshot with
+            {
+                ModelsReady = true,
+                IsObserving = false,
+                IsAutomatic = false,
+                Phase = FishingPhase.Stopped,
+                Provider = detectionRuntime.Provider,
+                Status = new RuntimeStatus(RuntimeMessageCode.AutomaticNotAllowed)
             });
             return;
         }
@@ -65,7 +78,9 @@ public sealed class RuntimeController : IRuntimeController
             ModelsReady = true,
             Phase = FishingPhase.Idle,
             Provider = detectionRuntime.Provider,
-            Message = automatic ? "自动运行已启动" : "仅观察已启动"
+            Status = new RuntimeStatus(automatic
+                ? RuntimeMessageCode.AutomaticStarted
+                : RuntimeMessageCode.ObservationStarted)
         });
         try
         {
@@ -85,7 +100,7 @@ public sealed class RuntimeController : IRuntimeController
                 IsObserving = false,
                 IsAutomatic = false,
                 Phase = FishingPhase.Recovery,
-                Message = $"识别已停止：{error.Message}"
+                Status = new RuntimeStatus(RuntimeMessageCode.DetectionStopped, error.Message)
             });
         }
     }
@@ -104,21 +119,9 @@ public sealed class RuntimeController : IRuntimeController
                 IsObserving = false,
                 IsAutomatic = false,
                 Phase = FishingPhase.Stopped,
-                Message = "已停止并释放鼠标"
+                Status = new RuntimeStatus(RuntimeMessageCode.Stopped)
             });
         }
-    }
-
-    public void UpdateMetrics(long captured, long dropped, FishingPhase phase, string message)
-    {
-        Update(_snapshot with
-        {
-            FramesCaptured = captured,
-            FramesDropped = dropped,
-            Phase = phase,
-            Message = message,
-            Provider = detectionRuntime.Provider
-        });
     }
 
     private void Update(RuntimeSnapshot snapshot)
@@ -135,7 +138,7 @@ public sealed class RuntimeController : IRuntimeController
             FramesCaptured = metrics.FramesCaptured,
             FramesDropped = metrics.FramesDropped,
             Phase = metrics.Phase,
-            Message = metrics.Message,
+            Status = metrics.Status,
             Provider = detectionRuntime.Provider
         });
     }

@@ -1,6 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using VrcFisher.Application;
+using VrcFisher.Core;
+using VrcFisher.Infrastructure.Inference;
 
 namespace VrcFisher.Desktop;
 
@@ -8,27 +10,45 @@ public sealed class RunPage : Page
 {
     private TextBlock _status = null!;
     private TextBlock _provider = null!;
+    private Button _observe = null!;
+    private Button _automatic = null!;
+    private Button _stop = null!;
 
     public RunPage()
     {
         var root = new StackPanel { Spacing = 16 };
-        root.Children.Add(new TextBlock { Text = "运行", FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
-        _status = new TextBlock { Text = "正在加载状态...", TextWrapping = TextWrapping.Wrap };
-        _provider = new TextBlock { Text = "Provider: Unavailable" };
+        root.Children.Add(new TextBlock { Text = UiStrings.Get("Run"), FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+        _status = new TextBlock { Text = UiStrings.Get("StatusLoading"), TextWrapping = TextWrapping.Wrap };
+        _provider = new TextBlock { Text = UiStrings.Get("ProviderUnavailable") };
         root.Children.Add(_status);
         root.Children.Add(_provider);
-        var observe = new Button { Content = "仅观察", HorizontalAlignment = HorizontalAlignment.Left };
-        var automatic = new Button { Content = "自动运行", HorizontalAlignment = HorizontalAlignment.Left };
-        var stop = new Button { Content = "停止并释放鼠标", HorizontalAlignment = HorizontalAlignment.Left };
-        observe.Click += async (_, _) => await StartAsync(false);
-        automatic.Click += async (_, _) => await StartAsync(true);
-        stop.Click += async (_, _) => await StopAsync();
-        root.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, Children = { observe, automatic, stop } });
+        _observe = new Button { Content = UiStrings.Get("Observe"), HorizontalAlignment = HorizontalAlignment.Left };
+        _automatic = new Button { Content = UiStrings.Get("Automatic"), HorizontalAlignment = HorizontalAlignment.Left };
+        _stop = new Button { Content = UiStrings.Get("Stop"), HorizontalAlignment = HorizontalAlignment.Left };
+        _observe.Click += async (_, _) => await StartAsync(false);
+        _automatic.Click += async (_, _) => await StartAsync(true);
+        _stop.Click += async (_, _) => await StopAsync();
+        root.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, Children = { _observe, _automatic, _stop } });
         Content = root;
-        Loaded += (_, _) => Refresh();
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     private MainWindow Window => (MainWindow)Tag!;
+
+    private void OnLoaded(object sender, RoutedEventArgs args)
+    {
+        Window.Runtime.SnapshotChanged += OnSnapshotChanged;
+        Refresh();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs args)
+    {
+        if (Tag is MainWindow window) window.Runtime.SnapshotChanged -= OnSnapshotChanged;
+    }
+
+    private void OnSnapshotChanged(object? sender, RuntimeSnapshot snapshot) =>
+        DispatcherQueue.TryEnqueue(Refresh);
 
     private async Task StartAsync(bool automatic)
     {
@@ -45,27 +65,41 @@ public sealed class RunPage : Page
     private void Refresh()
     {
         var snapshot = Window.Runtime.Snapshot;
-        _status.Text = $"阶段：{snapshot.Phase}\n状态：{snapshot.Message}";
-        _provider.Text = $"Provider：{snapshot.Provider}\n模型：{(snapshot.ModelsReady ? "已就绪" : "未安装或未通过校验")}";
+        _status.Text = UiStrings.Format("RuntimeStatus", UiStrings.Phase(snapshot.Phase), UiStrings.RuntimeStatus(snapshot.Status));
+        _provider.Text = UiStrings.Format("RuntimeProvider", UiStrings.Provider(snapshot.Provider),
+            snapshot.ModelsReady ? UiStrings.Get("Ready") : UiStrings.Get("ModelsNotReady"));
+        var canStart = Window.Models.IsReady && Window.Capture.IsConfigured && !snapshot.IsObserving;
+        _observe.IsEnabled = canStart;
+        _automatic.IsEnabled = canStart && Window.Models.AutomaticAllowed;
+        _stop.IsEnabled = snapshot.IsObserving;
     }
 }
 
 public sealed class ModelsPage : Page
 {
     private readonly StackPanel _list = new() { Spacing = 8 };
+    private readonly TextBlock _message = new() { TextWrapping = TextWrapping.Wrap };
+    private readonly ProgressBar _progress = new() { Minimum = 0, Maximum = 1, Visibility = Visibility.Collapsed };
+    private CancellationTokenSource? _downloadCancellation;
     private MainWindow _window = null!;
 
     public ModelsPage()
     {
         var root = new StackPanel { Spacing = 16 };
-        root.Children.Add(new TextBlock { Text = "模型", FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
-        root.Children.Add(new TextBlock { Text = "模型必须通过完整性校验；当前没有正式模型时，运行按钮保持禁用。", TextWrapping = TextWrapping.Wrap });
+        root.Children.Add(new TextBlock { Text = UiStrings.Get("Models"), FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+        root.Children.Add(new TextBlock { Text = UiStrings.Get("ModelsDescription"), TextWrapping = TextWrapping.Wrap });
         root.Children.Add(_list);
-        var refresh = new Button { Content = "刷新状态" };
-        var delete = new Button { Content = "删除模型" };
+        root.Children.Add(_progress);
+        root.Children.Add(_message);
+        var refresh = new Button { Content = UiStrings.Get("Refresh") };
+        var download = new Button { Content = UiStrings.Get("DownloadModels") };
+        var cancel = new Button { Content = UiStrings.Get("CancelDownload") };
+        var delete = new Button { Content = UiStrings.Get("DeleteModels") };
         refresh.Click += async (_, _) => await RefreshAsync();
-        delete.Click += async (_, _) => { if (_window.Models is VrcFisher.Infrastructure.Models.ModelCatalog catalog) await catalog.DeleteModelsAsync(CancellationToken.None); await RefreshAsync(); };
-        root.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, Children = { refresh, delete } });
+        download.Click += async (_, _) => await DownloadAsync();
+        cancel.Click += (_, _) => _downloadCancellation?.Cancel();
+        delete.Click += async (_, _) => await DeleteAsync();
+        root.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, Children = { refresh, download, cancel, delete } });
         Content = root;
         Loaded += async (_, _) => { _window = (MainWindow)Tag!; await RefreshAsync(); };
     }
@@ -75,7 +109,62 @@ public sealed class ModelsPage : Page
         await _window.Models.RefreshAsync(CancellationToken.None);
         _list.Children.Clear();
         foreach (var item in _window.Models.GetStatus())
-            _list.Children.Add(new TextBlock { Text = $"{item.Name}: {(item.Installed ? item.Message : "未安装")}" });
+        {
+            var text = !item.Installed
+                ? UiStrings.Format("ModelMissing", item.Name)
+                : item.Valid
+                    ? UiStrings.Format("ModelValid", item.Name, item.Version ?? "-", item.Size / 1048576d)
+                    : UiStrings.Format("ModelInvalid", item.Name, item.Size / 1048576d);
+            _list.Children.Add(new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap });
+        }
+    }
+
+    private async Task DownloadAsync()
+    {
+        _downloadCancellation?.Dispose();
+        _downloadCancellation = new CancellationTokenSource();
+        _progress.Visibility = Visibility.Visible;
+        _message.Text = UiStrings.Get("CheckingModels");
+        try
+        {
+            var progress = new Progress<ModelDownloadProgress>(value =>
+            {
+                _progress.Value = value.BytesTotal <= 0 ? 0 : (double)value.BytesDownloaded / value.BytesTotal;
+                _message.Text = UiStrings.Format("DownloadProgress", value.CurrentFile, value.BytesDownloaded, value.BytesTotal);
+            });
+            await _window.Models.DownloadLatestAsync(progress, _downloadCancellation.Token);
+            _message.Text = UiStrings.Get("DownloadComplete");
+            await RefreshAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            _message.Text = UiStrings.Get("DownloadCancelled");
+        }
+        catch (Exception error)
+        {
+            _message.Text = UiStrings.Format("DownloadFailed", error.Message);
+        }
+        finally
+        {
+            _progress.Visibility = Visibility.Collapsed;
+            _downloadCancellation?.Dispose();
+            _downloadCancellation = null;
+        }
+    }
+
+    private async Task DeleteAsync()
+    {
+        var dialog = new ContentDialog
+        {
+            XamlRoot = XamlRoot,
+            Title = UiStrings.Get("ConfirmDeleteTitle"),
+            Content = UiStrings.Get("ConfirmDeleteModels"),
+            PrimaryButtonText = UiStrings.Get("DeleteModels"),
+            CloseButtonText = UiStrings.Get("Cancel")
+        };
+        if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
+        await _window.Models.DeleteModelsAsync(CancellationToken.None);
+        await RefreshAsync();
     }
 }
 
@@ -86,7 +175,7 @@ public sealed class SettingsPage : Page
 
     public SettingsPage()
     {
-        var select = new Button { Content = "选择显示器或窗口" };
+        var select = new Button { Content = UiStrings.Get("SelectCapture") };
         select.Click += async (_, _) =>
         {
             if (Tag is not MainWindow window) return;
@@ -94,7 +183,10 @@ public sealed class SettingsPage : Page
             Refresh(window);
         };
         _captureStatus = new TextBlock { TextWrapping = TextWrapping.Wrap };
-        _device = new ComboBox { ItemsSource = new[] { "Auto", "CPU", "GPU" }, Width = 180 };
+        var devices = OnnxRuntimeDetector.SupportsDirectML
+            ? new[] { "Auto", "CPU", "GPU" }
+            : new[] { "Auto", "CPU" };
+        _device = new ComboBox { ItemsSource = devices, Width = 180 };
         _device.SelectionChanged += async (_, _) =>
         {
             if (Tag is not MainWindow window || _device.SelectedItem is not string value) return;
@@ -111,13 +203,13 @@ public sealed class SettingsPage : Page
             Spacing = 12,
             Children =
             {
-                new TextBlock { Text = "设置", FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold },
+                new TextBlock { Text = UiStrings.Get("Settings"), FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold },
                 select,
                 _captureStatus,
-                new TextBlock { Text = "运行设备" },
+                new TextBlock { Text = UiStrings.Get("Device") },
                 _device,
-                new TextBlock { Text = "软件根目录：" },
-                new TextBlock { Text = AppContext.BaseDirectory, TextWrapping = TextWrapping.Wrap }
+                new TextBlock { Text = UiStrings.Get("SoftwareRoot") },
+                new TextBlock { Text = "", TextWrapping = TextWrapping.Wrap }
             }
         };
         Loaded += (_, _) => { if (Tag is MainWindow window) Refresh(window); };
@@ -126,14 +218,16 @@ public sealed class SettingsPage : Page
     private void Refresh(MainWindow window)
     {
         _captureStatus.Text = window.Capture.IsConfigured
-            ? $"捕获目标：{window.Capture.TargetName}"
-            : "尚未选择捕获目标";
+            ? UiStrings.Format("CaptureTarget", window.Capture.TargetName)
+            : UiStrings.Get("CaptureNotSelected");
         _device.SelectedItem = window.Options.Device switch
         {
             VrcFisher.Core.ExecutionDevice.Cpu => "CPU",
             VrcFisher.Core.ExecutionDevice.Gpu => "GPU",
             _ => "Auto"
         };
+        if (Content is StackPanel panel && panel.Children.LastOrDefault() is TextBlock rootText)
+            rootText.Text = window.Layout.Root;
     }
 }
 
@@ -147,7 +241,8 @@ public sealed class DiagnosticsPage : Page
             if (Tag is MainWindow window)
             {
                 var snapshot = window.Runtime.Snapshot;
-                text.Text = $"Provider：{snapshot.Provider}\n捕获帧：{snapshot.FramesCaptured}\n丢弃帧：{snapshot.FramesDropped}\n状态：{snapshot.Message}";
+                text.Text = UiStrings.Format("DiagnosticsStatus", UiStrings.Provider(snapshot.Provider), snapshot.FramesCaptured,
+                    snapshot.FramesDropped, UiStrings.RuntimeStatus(snapshot.Status));
             }
         };
         Content = new StackPanel
@@ -155,9 +250,9 @@ public sealed class DiagnosticsPage : Page
             Spacing = 12,
             Children =
             {
-                new TextBlock { Text = "诊断", FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold },
+                new TextBlock { Text = UiStrings.Get("Diagnostics"), FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold },
                 text,
-                new TextBlock { Text = "诊断预览默认关闭。没有正式模型和显示器捕获时，不显示伪造的识别结果。", TextWrapping = TextWrapping.Wrap }
+                new TextBlock { Text = UiStrings.Get("DiagnosticsDescription"), TextWrapping = TextWrapping.Wrap }
             }
         };
     }

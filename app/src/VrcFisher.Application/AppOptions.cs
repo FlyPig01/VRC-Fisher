@@ -13,6 +13,26 @@ public sealed record AppOptions(
     string? CaptureDisplay = null)
 {
     public static AppOptions Default => new();
+
+    public AppOptions Normalize()
+    {
+        var confidence = double.IsFinite(ConfidenceThreshold)
+            ? Math.Clamp(ConfidenceThreshold, 0.01, 0.99)
+            : Default.ConfidenceThreshold;
+        var iou = double.IsFinite(IoUThreshold)
+            ? Math.Clamp(IoUThreshold, 0.01, 0.99)
+            : Default.IoUThreshold;
+        var inputSize = InputSize is >= 32 and <= 2048
+            ? InputSize
+            : Default.InputSize;
+        return this with
+        {
+            Language = Language is "zh-CN" or "en-US" ? Language : Default.Language,
+            ConfidenceThreshold = confidence,
+            IoUThreshold = iou,
+            InputSize = inputSize
+        };
+    }
 }
 
 public sealed class OptionsStore(string rootDirectory)
@@ -25,7 +45,7 @@ public sealed class OptionsStore(string rootDirectory)
         try
         {
             var value = JsonSerializer.Deserialize<AppOptions>(File.ReadAllText(_path), JsonOptions.Default);
-            return value ?? AppOptions.Default;
+            return (value ?? AppOptions.Default).Normalize();
         }
         catch (JsonException)
         {
@@ -69,13 +89,28 @@ public sealed class DirectoryLayout(string rootDirectory)
         Directory.CreateDirectory(Logs);
         Directory.CreateDirectory(Artifacts);
     }
+
+    public static DirectoryLayout FromApplicationBase()
+    {
+        var binaryRoot = Path.GetFullPath(AppContext.BaseDirectory);
+        var parent = Directory.GetParent(binaryRoot.TrimEnd(Path.DirectorySeparatorChar));
+        var installedRoot = parent?.FullName;
+        return installedRoot is not null
+            && File.Exists(Path.Combine(installedRoot, "release.json"))
+            ? new DirectoryLayout(installedRoot)
+            : new DirectoryLayout(binaryRoot);
+    }
 }
 
 public interface IModelCatalog
 {
     IReadOnlyList<ModelStatus> GetStatus();
     bool IsReady { get; }
+    bool AutomaticAllowed { get; }
     Task RefreshAsync(CancellationToken cancellationToken);
+    Task<ModelManifest> DownloadLatestAsync(
+        IProgress<ModelDownloadProgress>? progress,
+        CancellationToken cancellationToken);
     Task DeleteModelsAsync(CancellationToken cancellationToken);
 }
 

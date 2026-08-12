@@ -4,13 +4,13 @@
 
 ## 准备环境
 
-需要 Python 3.11 和 uv。当前 `pyproject.toml` 尚未锁定训练框架依赖，先在本目录的独立 `.venv` 中安装；开始正式训练前必须补齐并锁定版本。
+需要 Python 3.11 和 uv。`pyproject.toml` 声明 CPU 基线依赖的兼容上限；uv lock 文件应随依赖变化更新。CUDA 版 PyTorch 不在仓库依赖中自动选择，需按 NVIDIA 驱动和 PyTorch 官方矩阵单独替换安装。
 
 ```powershell
 Set-Location E:\MyTools\VRC-Fisher\training
 uv venv --python 3.11 .venv
 uv pip install --python .venv\Scripts\python.exe -e .
-uv pip install --python .venv\Scripts\python.exe torch torchvision ultralytics onnx onnxslim pytest
+uv pip install --python .venv\Scripts\python.exe pytest
 .venv\Scripts\python.exe -m pytest -q
 ```
 

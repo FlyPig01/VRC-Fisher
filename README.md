@@ -2,7 +2,7 @@
 
 VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序从用户选择的完整显示器捕获画面，以两个视觉模型定位钓鱼提示和小游戏 UI，再通过状态机控制鼠标。
 
-> 当前仍是开发中的 MVP。C#/.NET 10/WinUI 3 分层工程、状态机、模型目录、Provider 入口、帧缓冲和 YOLO 后处理已建立并可测试；正式标注数据、可用 ONNX、真实 Windows Graphics Capture 适配和 Setup 仍未完成。
+> 当前仍是开发中的 MVP。C#/.NET 10/WinUI 3 软件、Windows Graphics Capture、双 ONNX 推理、状态机、模型管理、CPU/DirectML 运行组件和单一 Inno Setup 已实现并通过本机构建、安装与启动验证；正式标注数据、可用 ONNX、识别性能和真实 VRChat 自动钓鱼验收仍未完成。
 
 ## 从这里开始
 
@@ -23,20 +23,20 @@ VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序�
 4. 先运行“仅观察”，确认状态识别正确。
 5. 再明确启动“自动运行”；任何异常立即按 `F8` 停止。
 
-当前尚无正式 Release，上述步骤暂不能执行。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
+当前尚无已上传到 GitHub 的正式 Release；本地构建产物只用于开发验收。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
 
 ## 仓库目录
 
 | 目录 | 内容 |
 |---|---|
-| `app/` | 正式 C# 软件工程；旧 Python 原型仅作移植参考 |
+| `app/` | 正式 C# 软件工程与自动化测试 |
 | `data_processing/` | 录屏抽帧、全屏标注审计和双数据集生成 |
 | `training/` | PyTorch/Ultralytics 训练与 ONNX 导出 |
-| `packaging/` | 目标为 C# self-contained publish 与单一 Inno Setup；脚本仍待重写 |
+| `packaging/` | C# self-contained publish 与单一 Inno Setup 构建脚本 |
 | `releases/` | 本地发布产物，不提交 Git |
 | `docs/` | 全部开发者设计文档 |
 
-正式产品从第一版开始使用 C#、.NET 10、WinUI 3 和 ONNX Runtime。Python 只用于离线数据处理与训练，不进入用户安装包。简体中文与 English 资源随 WinUI 软件本体内置，不从 GitHub 单独下载语言包；GitHub Releases 只提供经过校验的 ONNX 模型。CUDA 当前不在范围内。
+正式产品从第一版开始使用 C#、.NET 10、WinUI 3 和 ONNX Runtime。Python 只用于离线数据处理与训练，不进入用户安装包。简体中文与 English 资源来自仓库中的 `.resw`，构建为 `VrcFisher.pri` 后随本体安装，不从 GitHub 单独下载语言包；GitHub Releases 只提供经过校验的 ONNX 模型。CUDA 当前不在范围内。
 
 ## 当前阻塞
 

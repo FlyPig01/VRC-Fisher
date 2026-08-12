@@ -3,6 +3,13 @@ name = "vrc-fisher-training"
 version = "0.1.0"
 description = "Training and ONNX export tools for VRC-Fisher."
 requires-python = ">=3.11,<3.12"
+dependencies = [
+  "torch>=2.6,<3",
+  "torchvision>=0.21,<1",
+  "ultralytics>=8.3,<9",
+  "onnx>=1.17,<2",
+  "onnxslim>=0.1,<1",
+]
 
 [project.scripts]
 vrc-train = "vrc_training.train:main"

@@ -14,6 +14,8 @@ public sealed class DetectionRuntime(
     IInputController inputController,
     ILogger<DetectionRuntime> logger) : IDetectionRuntime, IAsyncDisposable
 {
+    private static readonly TimeSpan FrameWaitTimeout = TimeSpan.FromMilliseconds(750);
+    private static readonly TimeSpan MaximumFrameAge = TimeSpan.FromMilliseconds(750);
     private readonly object _sync = new();
     private readonly LatestFrameBuffer _frames = new();
     private readonly FishingStateMachine _stateMachine = new(StateMachineOptions.Default);
@@ -37,8 +39,14 @@ public sealed class DetectionRuntime(
         lock (_sync)
         {
             if (_runTask is not null) return;
-            _detector = new OnnxRuntimeDetector(layout.Models, options.Device);
-            if (automatic && !_detector.CanProduceDecisions)
+            _stateMachine.Reset(DateTimeOffset.UtcNow);
+            _detector = new OnnxRuntimeDetector(
+                layout.Models,
+                options.Device,
+                (float)options.ConfidenceThreshold,
+                (float)options.IoUThreshold,
+                options.InputSize);
+            if (automatic && (!modelCatalog.AutomaticAllowed || !_detector.CanProduceDecisions))
             {
                 _detector.Dispose();
                 _detector = null;
@@ -89,8 +97,8 @@ public sealed class DetectionRuntime(
         await capture.StopAsync(cancellationToken);
         if (task is not null)
         {
-            try { await task.WaitAsync(cancellationToken); }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            try { await task; }
+            catch (OperationCanceledException) { }
         }
         detector?.Dispose();
         runCancellation?.Dispose();
@@ -112,27 +120,50 @@ public sealed class DetectionRuntime(
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            var frame = await _frames.WaitAsync(cancellationToken);
-            if (frame is null) continue;
+            var frame = await _frames.WaitAsync(FrameWaitTimeout, cancellationToken);
+            if (frame is null)
+            {
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    inputController.ReleaseAll();
+                    _stateMachine.Reset(DateTimeOffset.UtcNow);
+                    Publish(FishingPhase.Recovery, RuntimeMessageCode.CaptureStopped);
+                }
+                continue;
+            }
             var detector = _detector;
             if (detector is null) continue;
             try
             {
+                if (DateTimeOffset.UtcNow - frame.CapturedAt > MaximumFrameAge)
+                {
+                    inputController.ReleaseAll();
+                    _stateMachine.Reset(DateTimeOffset.UtcNow);
+                    Publish(FishingPhase.Recovery, RuntimeMessageCode.FrameStale);
+                    continue;
+                }
+                if (_automatic && !inputController.IsTargetForeground)
+                {
+                    inputController.ReleaseAll();
+                    _stateMachine.Reset(DateTimeOffset.UtcNow);
+                    Publish(FishingPhase.Recovery, RuntimeMessageCode.TargetNotForeground);
+                    continue;
+                }
                 var observation = detector.Detect(frame);
                 if (!detector.CanProduceDecisions)
                 {
-                    Publish(FishingPhase.Stopped, "模型已加载，但输出契约未验证；仅可检查 Provider");
+                    Publish(FishingPhase.Stopped, RuntimeMessageCode.OutputContractUnverified);
                     continue;
                 }
                 var decision = _stateMachine.Step(observation, DateTimeOffset.UtcNow);
                 if (_automatic) Apply(decision.Action);
-                Publish(decision.Phase, decision.Reason);
+                Publish(decision.Phase, RuntimeMessageCode.StateMachineDecision, decision.Reason);
             }
             catch (Exception error)
             {
                 logger.LogError(error, "frame inference failed; input released");
                 inputController.ReleaseAll();
-                Publish(FishingPhase.Recovery, $"识别失败：{error.Message}");
+                Publish(FishingPhase.Recovery, RuntimeMessageCode.InferenceFailed, error.Message);
             }
         }
     }
@@ -147,13 +178,13 @@ public sealed class DetectionRuntime(
         }
     }
 
-    private void Publish(FishingPhase phase, string message)
+    private void Publish(FishingPhase phase, RuntimeMessageCode code, string? detail = null)
     {
         MetricsChanged?.Invoke(this, new DetectionRuntimeMetrics(
             Interlocked.Read(ref _captured),
             _frames.DroppedCount,
             phase,
-            message,
+            new RuntimeStatus(code, detail),
             DateTimeOffset.UtcNow));
     }
 }

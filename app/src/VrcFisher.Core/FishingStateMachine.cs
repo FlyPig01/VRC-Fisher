@@ -10,6 +10,14 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
 
     public FishingPhase Phase => _phase;
 
+    public void Reset(DateTimeOffset now)
+    {
+        _evidence.Clear();
+        _phase = FishingPhase.Idle;
+        _enteredAt = now;
+        _leftHeld = false;
+    }
+
     public StateDecision Step(DetectionObservation observation, DateTimeOffset now)
     {
         _evidence.Update(observation);
@@ -50,6 +58,12 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
                 if (elapsed >= options.PromptToUiTimeout) return Recover(now, "minigame did not start");
                 break;
             case FishingPhase.Minigame:
+                if (_evidence.Success >= options.SuccessConfirmFrames)
+                {
+                    var release = ReleaseIfHeld();
+                    Transition(FishingPhase.Reeling, now);
+                    return Decision(release, "success confirmed");
+                }
                 if (_evidence.UiLost >= options.UiLostFrames)
                 {
                     var release = ReleaseIfHeld();
@@ -117,7 +131,7 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
     {
         var action = ReleaseIfHeld();
         Transition(FishingPhase.Recovery, now);
-        return Decision(action == InputAction.None ? InputAction.Click : action, reason);
+        return Decision(action, reason);
     }
 
     private InputAction ReleaseIfHeld()

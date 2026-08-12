@@ -9,4 +9,77 @@
   <data name="Automatic" xml:space="preserve"><value>自动运行</value></data>
   <data name="Stop" xml:space="preserve"><value>停止并释放鼠标</value></data>
   <data name="ModelsNotReady" xml:space="preserve"><value>模型未就绪</value></data>
+  <data name="StatusLoading" xml:space="preserve"><value>正在加载状态...</value></data>
+  <data name="ProviderUnavailable" xml:space="preserve"><value>Provider：不可用</value></data>
+  <data name="Unavailable" xml:space="preserve"><value>不可用</value></data>
+  <data name="SelectCapture" xml:space="preserve"><value>选择显示器或窗口</value></data>
+  <data name="Refresh" xml:space="preserve"><value>刷新状态</value></data>
+  <data name="DownloadModels" xml:space="preserve"><value>下载或更新模型</value></data>
+  <data name="CancelDownload" xml:space="preserve"><value>取消下载</value></data>
+  <data name="DeleteModels" xml:space="preserve"><value>删除模型</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve"><value>删除已安装模型？</value></data>
+  <data name="ConfirmDeleteModels" xml:space="preserve"><value>将删除 locator.onnx、minigame.onnx 和安装记录。软件本体与设置不会被删除。</value></data>
+  <data name="ModelMissing" xml:space="preserve"><value>{0}：未安装</value></data>
+  <data name="ModelValid" xml:space="preserve"><value>{0}：版本 {1}，{2:N1} MB，校验通过</value></data>
+  <data name="ModelInvalid" xml:space="preserve"><value>{0}：{1:N1} MB，未通过清单校验</value></data>
+  <data name="ModelsDescription" xml:space="preserve"><value>两个模型都必须通过完整性校验，才能开始观察。</value></data>
+  <data name="Device" xml:space="preserve"><value>运行设备</value></data>
+  <data name="SoftwareRoot" xml:space="preserve"><value>软件根目录：</value></data>
+  <data name="DiagnosticsDescription" xml:space="preserve"><value>诊断预览默认关闭。没有正式模型和显示器捕获时，不显示识别结果。</value></data>
+  <data name="RuntimeStatus" xml:space="preserve"><value>阶段：{0}
+状态：{1}</value></data>
+  <data name="RuntimeProvider" xml:space="preserve"><value>Provider：{0}
+模型：{1}</value></data>
+  <data name="Ready" xml:space="preserve"><value>已就绪</value></data>
+  <data name="CheckingModels" xml:space="preserve"><value>正在查询兼容的模型 Release...</value></data>
+  <data name="DownloadProgress" xml:space="preserve"><value>{0}：{1:N0}/{2:N0} 字节</value></data>
+  <data name="DownloadComplete" xml:space="preserve"><value>模型下载完成并通过校验。</value></data>
+  <data name="DownloadCancelled" xml:space="preserve"><value>模型下载已取消；已安装模型未改变。</value></data>
+  <data name="DownloadFailed" xml:space="preserve"><value>模型下载失败：{0}</value></data>
+  <data name="CaptureTarget" xml:space="preserve"><value>捕获目标：{0}</value></data>
+  <data name="CaptureNotSelected" xml:space="preserve"><value>尚未选择捕获目标</value></data>
+  <data name="DiagnosticsStatus" xml:space="preserve"><value>Provider：{0}
+捕获帧：{1}
+丢弃帧：{2}
+状态：{3}</value></data>
+  <data name="PhaseIdle" xml:space="preserve"><value>空闲</value></data>
+  <data name="PhaseCasting" xml:space="preserve"><value>抛竿</value></data>
+  <data name="PhaseWaitingForBite" xml:space="preserve"><value>等待咬钩</value></data>
+  <data name="PhaseHooking" xml:space="preserve"><value>提竿</value></data>
+  <data name="PhaseMinigame" xml:space="preserve"><value>钓鱼小游戏</value></data>
+  <data name="PhaseReeling" xml:space="preserve"><value>收线</value></data>
+  <data name="PhaseLoot" xml:space="preserve"><value>拾取</value></data>
+  <data name="PhaseRecovery" xml:space="preserve"><value>恢复</value></data>
+  <data name="PhaseStopped" xml:space="preserve"><value>已停止</value></data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve"><value>模型未安装，识别与自动输入已禁用</value></data>
+  <data name="RuntimeModelsRequired" xml:space="preserve"><value>两个有效 ONNX 模型都安装后才能开始观察</value></data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve"><value>当前模型尚未通过自动输入验收，只能使用仅观察模式</value></data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve"><value>自动运行已启动</value></data>
+  <data name="RuntimeObservationStarted" xml:space="preserve"><value>仅观察已启动</value></data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve"><value>识别已停止：{0}</value></data>
+  <data name="RuntimeStopped" xml:space="preserve"><value>已停止并释放鼠标</value></data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve"><value>捕获画面已停止，输入已释放</value></data>
+  <data name="RuntimeFrameStale" xml:space="preserve"><value>捕获帧过旧，输入已释放</value></data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve"><value>VRChat 不在前台，自动输入已暂停并释放鼠标</value></data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve"><value>模型已加载，但输出契约未验证；仅可检查 Provider</value></data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve"><value>识别失败：{0}</value></data>
+  <data name="UnknownError" xml:space="preserve"><value>未知错误</value></data>
+  <data name="UnknownStatus" xml:space="preserve"><value>未知状态</value></data>
+  <data name="DecisionCast" xml:space="preserve"><value>抛竿</value></data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve"><value>确认咬钩</value></data>
+  <data name="DecisionBiteTimeout" xml:space="preserve"><value>等待咬钩超时</value></data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve"><value>确认小游戏界面</value></data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve"><value>小游戏未开始</value></data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve"><value>确认成功</value></data>
+  <data name="DecisionMinigameEnded" xml:space="preserve"><value>小游戏已结束</value></data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve"><value>小游戏超时</value></data>
+  <data name="DecisionFollowTarget" xml:space="preserve"><value>跟随目标</value></data>
+  <data name="DecisionReelAndCollect" xml:space="preserve"><value>收线并拾取</value></data>
+  <data name="DecisionNextCycle" xml:space="preserve"><value>开始下一轮</value></data>
+  <data name="DecisionLootTimeout" xml:space="preserve"><value>拾取超时</value></data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve"><value>恢复完成</value></data>
+  <data name="DecisionFailureDetected" xml:space="preserve"><value>检测到失败</value></data>
+  <data name="DecisionStopRequested" xml:space="preserve"><value>已请求停止</value></data>
+  <data name="DecisionWaiting" xml:space="preserve"><value>等待中</value></data>
 </root>

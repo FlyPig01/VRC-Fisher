@@ -81,7 +81,7 @@ DirectML 与 CPU-only 不是“同一个包的快慢版本”：CPU-only 只携�
 | Python | 3.11 可用 |
 | uv | 0.11.0 |
 | GPU | NVIDIA GeForce RTX 4060 Laptop GPU，8 GB 显存 |
-| Inno Setup `ISCC.exe` | 未在 PATH 中发现 |
+| Inno Setup `ISCC.exe` | 已安装 6.7.3；用户级路径 `C:\Users\32615\AppData\Local\Programs\Inno Setup 6\ISCC.exe` |
 | CUDA 训练环境 | 未配置，当前不要求 |
 
 这张表只描述当前开发机，不是用户前置条件。C# 正式软件使用 self-contained 发布，用户不需要预装 .NET SDK、Python 或 CUDA。

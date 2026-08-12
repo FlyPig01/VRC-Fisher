@@ -11,15 +11,15 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock Text="VRC-Fisher" FontSize="26" FontWeight="SemiBold" />
-            <TextBlock x:Name="StatusBadge" Text="未就绪" VerticalAlignment="Center" />
+            <TextBlock x:Name="AppTitleText" Text="VRC-Fisher" FontSize="26" FontWeight="SemiBold" />
+            <TextBlock x:Name="StatusBadge" Text="Models not ready" VerticalAlignment="Center" />
         </StackPanel>
-        <NavigationView x:Name="Navigation" Grid.Row="1" IsBackButtonVisible="Collapsed" SelectionChanged="OnNavigationChanged">
+        <NavigationView x:Name="Navigation" Grid.Row="1" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="OnNavigationChanged">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="运行" Tag="run" />
-                <NavigationViewItem Content="模型" Tag="models" />
-                <NavigationViewItem Content="设置" Tag="settings" />
-                <NavigationViewItem Content="诊断" Tag="diagnostics" />
+                <NavigationViewItem x:Name="RunNavigationItem" Content="Run" Tag="run" />
+                <NavigationViewItem x:Name="ModelsNavigationItem" Content="Models" Tag="models" />
+                <NavigationViewItem x:Name="SettingsNavigationItem" Content="Settings" Tag="settings" />
+                <NavigationViewItem x:Name="DiagnosticsNavigationItem" Content="Diagnostics" Tag="diagnostics" />
             </NavigationView.MenuItems>
             <Frame x:Name="ContentFrame" />
         </NavigationView>

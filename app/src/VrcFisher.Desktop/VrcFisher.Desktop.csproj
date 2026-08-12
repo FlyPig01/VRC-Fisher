@@ -7,7 +7,6 @@
     <AssemblyName>VrcFisher</AssemblyName>
     <Platforms>x64</Platforms>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
-    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseRidGraph>true</UseRidGraph>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
@@ -26,4 +25,23 @@
   <ItemGroup>
     <PRIResource Include="Strings\**\*.resw" />
   </ItemGroup>
+  <Target Name="RemoveWinUiDirectMlPublishConflict"
+          AfterTargets="ComputeFilesToPublish"
+          BeforeTargets="_HandleFileConflictsForPublish"
+          Condition="'$(VrcExecutionProvider)' == 'DirectML'">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+          Condition="'%(ResolvedFileToPublish.RelativePath)' == 'DirectML.dll' and $([System.String]::Copy('%(ResolvedFileToPublish.FullPath)').Contains('\MsixContent\'))" />
+    </ItemGroup>
+  </Target>
+  <Target Name="IncludeApplicationPriInPublish"
+          AfterTargets="ComputeFilesToPublish"
+          BeforeTargets="_HandleFileConflictsForPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(TargetDir)VrcFisher.pri"
+          Condition="Exists('$(TargetDir)VrcFisher.pri')"
+          RelativePath="VrcFisher.pri"
+          CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
 </Project>
