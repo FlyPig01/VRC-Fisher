@@ -1,9 +1,9 @@
 # Branding assets
 
-`VRC-Fisher.svg` is the revised application icon concept. It uses an enlarged
-fish head with visible eye, gills, mouth, fishing line and hook, plus tracking
-brackets and water waves so the subject remains recognizable when reduced. It
-is an original vector source asset for visual review only. It is not referenced
-by the WinUI application or Inno Setup yet, and no `.ico` has been generated.
-After the visual design is approved, export the required Windows icon sizes
-from this source and update the packaging manifest in a separate change.
+`VRC-Fisher.svg` is an original flat application-icon concept. It reduces the
+mark to a rounded blue fish biting a golden hook. A sensor-like eye and three
+small pixels suggest automated vision without adding a literal frame, wave, or
+control symbol. It is a review-only vector source: the WinUI application and
+Inno Setup do not reference it, and no `.ico` has been generated. After
+approval, export Windows icon sizes from this source and wire them into
+packaging in a separate change.

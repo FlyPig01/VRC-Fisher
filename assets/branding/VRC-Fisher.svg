@@ -1,32 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
   <title id="title">VRC-Fisher icon concept</title>
-  <desc id="desc">A detailed fish head tracked by a fishing hook and targeting brackets over water.</desc>
-  <rect width="256" height="256" rx="52" fill="#082F49"/>
+  <desc id="desc">A clean blue fish biting a golden hook, with a sensor-like eye.</desc>
+  <rect width="256" height="256" rx="52" fill="#F8FAFC"/>
 
-  <!-- Targeting brackets frame the enlarged subject. -->
-  <path d="M29 77V49h28M199 49h28v28M29 157v28h28M227 157v28h-28" fill="none" stroke="#67E8F9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- The hook is drawn first so the fish naturally bites over the line. -->
+  <path d="M210 29v66c0 13-4 22-14 30 7 17 10 34 3 49-8 17-27 25-43 16-13-7-16-21-8-32 5-7 13-10 22-8" fill="none" stroke="#F4B63E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m170 150-10-7 2 14" fill="none" stroke="#F4B63E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <!-- Enlarged side-profile fish head, with room for readable facial details. -->
-  <path d="M48 132c3-45 34-76 79-82 37-5 69 10 87 38l24 14-24 13c-15 31-46 49-82 53-39 4-69-9-84-36Z" fill="#FDBA74" stroke="#FFF7ED" stroke-width="5" stroke-linejoin="round"/>
-  <path d="M211 102c8 0 14 4 18 10-5 7-11 10-19 10l-13-10Z" fill="#FB923C" stroke="#FFF7ED" stroke-width="4" stroke-linejoin="round"/>
-  <circle cx="166" cy="91" r="9" fill="#FFF7ED"/>
-  <circle cx="168" cy="91" r="4.5" fill="#082F49"/>
-  <path d="M142 99c-12 9-17 22-15 37M151 104c-8 9-11 19-10 29" fill="none" stroke="#C2410C" stroke-width="5" stroke-linecap="round"/>
-  <path d="M190 115c7 4 13 5 20 3" fill="none" stroke="#9A3412" stroke-width="4" stroke-linecap="round"/>
-  <path d="M87 83c14-13 29-19 45-22M86 142c14 12 29 17 45 18" fill="none" stroke="#FDBA74" stroke-width="9" stroke-linecap="round" opacity=".7"/>
-  <path d="M102 92l9 7M98 112l10 5M98 132l10-4" stroke="#EA580C" stroke-width="4" stroke-linecap="round" opacity=".9"/>
+  <!-- One custom silhouette combines rounded body, pointed snout, and forked tail. -->
+  <path d="M63 122c-13-7-24-20-31-36-2 14 2 27 13 36-11 10-15 23-12 39 8-15 19-26 31-33 20 30 54 46 90 39 26-5 47-20 60-42-12-23-34-39-60-44-37-7-72 9-91 41Z" fill="#2F80ED"/>
 
-  <!-- The line enters the mouth; the hook hangs below it instead of crossing the fish. -->
-  <path d="M211 27v75c0 8-3 13-9 16" fill="none" stroke="#FDE68A" stroke-width="7" stroke-linecap="round"/>
-  <path d="M202 116c1 24 6 42-5 57-8 12-23 17-34 9-9-7-8-18-1-27" fill="none" stroke="#FDE68A" stroke-width="8" stroke-linecap="round"/>
-  <path d="m162 155-10-5 3 12" fill="none" stroke="#FDE68A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- A soft belly cut gives the body motion without adding another outline. -->
+  <path d="M66 129c22 25 55 36 87 29 19-4 36-14 48-29-13 10-29 16-47 18-35 4-65-3-88-18Z" fill="#56B5F5" opacity=".9"/>
 
-  <!-- Water anchors the fishing meaning without obscuring the subject. -->
-  <path d="M31 211c19-13 38-13 57 0s38 13 57 0 38-13 57 0 38 13 57 0" fill="none" stroke="#38BDF8" stroke-width="9" stroke-linecap="round"/>
-  <path d="M48 234c14-8 28-8 42 0s28 8 42 0 28-8 42 0 28 8 42 0" fill="none" stroke="#22D3EE" stroke-width="6" stroke-linecap="round" opacity=".85"/>
+  <!-- Sensor-like eye and minimal face details. -->
+  <circle cx="172" cy="103" r="13" fill="#F8FAFC"/>
+  <circle cx="172" cy="103" r="7" fill="#0F3D6E"/>
+  <circle cx="175" cy="100" r="2.5" fill="#FFFFFF"/>
+  <path d="M190 121c7 4 13 4 20 0" fill="none" stroke="#1559A6" stroke-width="5" stroke-linecap="round"/>
 
-  <!-- Small tracking nodes suggest automatic following, not a hand-drawn lure. -->
-  <circle cx="72" cy="34" r="5" fill="#67E8F9"/>
-  <circle cx="89" cy="34" r="5" fill="#67E8F9" opacity=".75"/>
-  <circle cx="106" cy="34" r="5" fill="#67E8F9" opacity=".5"/>
+  <!-- Three restrained pixels imply automated digital tracking. -->
+  <rect x="72" y="57" width="9" height="9" rx="2" fill="#2F80ED"/>
+  <rect x="88" y="48" width="7" height="7" rx="2" fill="#56B5F5"/>
+  <rect x="102" y="54" width="5" height="5" rx="1.5" fill="#9ED8FA"/>
 </svg>
