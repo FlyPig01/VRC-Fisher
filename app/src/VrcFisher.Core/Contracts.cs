@@ -159,6 +159,7 @@ public sealed record ModelManifest(
     [property: JsonPropertyName("runtime_api")] int RuntimeApi,
     string Version,
     IReadOnlyList<ModelFileInfo> Models,
+    IReadOnlyList<ModelFileInfo> Documentation,
     [property: JsonPropertyName("automatic_allowed")] bool AutomaticAllowed = false);
 
 public sealed record ModelStatus(

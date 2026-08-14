@@ -12,6 +12,7 @@ from typing import Any, TypeVar
 class TaskConfig:
     data: str
     base_model: str = "yolo11n.pt"
+    run_name: str | None = None
     image_size: int = 640
     epochs: int = 100
     batch: int = 8
@@ -58,6 +59,10 @@ def load_train_config(path: Path) -> TrainConfig:
     for name, task in (("locator", config.locator), ("minigame", config.minigame)):
         if min(task.image_size, task.epochs, task.batch, task.patience) <= 0:
             raise ValueError(f"{name} numeric settings must be positive")
+        if task.run_name is not None and (
+            not task.run_name or Path(task.run_name).name != task.run_name
+        ):
+            raise ValueError(f"{name} run_name must be a directory name")
     if config.workers < 0:
         raise ValueError("workers cannot be negative")
     return config

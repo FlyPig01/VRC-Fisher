@@ -1,0 +1,26 @@
+{
+  "dataset": {"name": "感叹号验证集", "images": 75, "positive_images": 74, "negative_images": 1, "independent_events": 1},
+  "evaluation": {"imgsz": 960, "iou": 0.7, "device": "CUDA:0", "runtime_default_conf": 0.35},
+  "full_pr": {
+    "best_init": {"precision": 0.956242, "recall": 0.959459, "map50": 0.971862, "map50_95": 0.728520},
+    "round3": {"precision": 0.930733, "recall": 0.972973, "map50": 0.981797, "map50_95": 0.726284}
+  },
+  "event_level_conf_0_35": {
+    "best_init": {"hit_frames": 71, "miss_frames": 3, "max_consecutive_miss_frames": 1, "sample_interval_seconds": 0.5, "event_hit": true},
+    "round3": {"hit_frames": 66, "miss_frames": 8, "max_consecutive_miss_frames": 2, "sample_interval_seconds": 0.5, "event_hit": true}
+  },
+  "operating_points": {
+    "best_init": {
+      "0.15": {"tp": 71, "fp": 10, "fn": 3, "precision": 0.876543, "recall": 0.959459},
+      "0.20": {"tp": 71, "fp": 8, "fn": 3, "precision": 0.898734, "recall": 0.959459},
+      "0.35": {"tp": 71, "fp": 4, "fn": 3, "precision": 0.946667, "recall": 0.959459},
+      "0.50": {"tp": 71, "fp": 4, "fn": 3, "precision": 0.946667, "recall": 0.959459}
+    },
+    "round3": {
+      "0.15": {"tp": 70, "fp": 4, "fn": 4, "precision": 0.945946, "recall": 0.945946},
+      "0.20": {"tp": 68, "fp": 3, "fn": 6, "precision": 0.957746, "recall": 0.918919},
+      "0.35": {"tp": 66, "fp": 1, "fn": 8, "precision": 0.985075, "recall": 0.891892},
+      "0.50": {"tp": 62, "fp": 1, "fn": 12, "precision": 0.984127, "recall": 0.837838}
+    }
+  }
+}

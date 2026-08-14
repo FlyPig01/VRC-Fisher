@@ -1,14 +1,14 @@
 [runtime]
-device = "cpu"
+device = "0"
 workers = 4
 seed = 42
 
 [locator]
 data = "datasets/locator/data.yaml"
 base_model = "yolo11n.pt"
-image_size = 640
+image_size = 960
 epochs = 100
-batch = 8
+batch = 4
 patience = 20
 
 [minigame]

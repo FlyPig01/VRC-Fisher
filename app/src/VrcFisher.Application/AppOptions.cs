@@ -9,7 +9,6 @@ public sealed record AppOptions(
     bool AutomaticMode = false,
     double ConfidenceThreshold = 0.35,
     double IoUThreshold = 0.45,
-    int InputSize = 640,
     string? CaptureDisplay = null)
 {
     public static AppOptions Default => new();
@@ -22,15 +21,11 @@ public sealed record AppOptions(
         var iou = double.IsFinite(IoUThreshold)
             ? Math.Clamp(IoUThreshold, 0.01, 0.99)
             : Default.IoUThreshold;
-        var inputSize = InputSize is >= 32 and <= 2048
-            ? InputSize
-            : Default.InputSize;
         return this with
         {
             Language = Language is "zh-CN" or "en-US" ? Language : Default.Language,
             ConfidenceThreshold = confidence,
-            IoUThreshold = iou,
-            InputSize = inputSize
+            IoUThreshold = iou
         };
     }
 }

@@ -1,1 +1,5 @@
-# Dataset configuration placeholder. Add paths/classes after dataset review.
+train: images/train
+val: images/val
+names:
+  0: bite_indicator
+  1: minigame_panel

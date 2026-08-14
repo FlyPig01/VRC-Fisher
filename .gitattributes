@@ -1,0 +1,3 @@
+# Model binaries are intentionally versioned but must not be treated as text diffs.
+models/**/*.pt binary
+models/**/*.onnx binary

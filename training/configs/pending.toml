@@ -1,0 +1,22 @@
+[runtime]
+device = "0"
+workers = 4
+seed = 42
+
+[locator]
+data = "datasets/locator/data.yaml"
+base_model = "runs/locator-best-init/weights/best.pt"
+run_name = "locator-round3"
+image_size = 960
+epochs = 100
+batch = 4
+patience = 20
+
+[minigame]
+data = "datasets/minigame/data.yaml"
+base_model = "runs/minigame-best-init/weights/best.pt"
+run_name = "minigame-round3"
+image_size = 640
+epochs = 100
+batch = 8
+patience = 20

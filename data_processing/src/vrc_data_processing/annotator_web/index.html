@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VRC-Fisher 标注器</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">VRC-Fisher <span>本地标注</span></div>
+    <div class="recording" id="recording"></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div id="progressBar"></div></div>
+      <strong id="progressText">0 / 0</strong>
+    </div>
+    <div class="save-state" id="saveState">就绪</div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar">
+      <section>
+        <div class="section-title">标签</div>
+        <div id="classList" class="class-list"></div>
+      </section>
+      <section>
+        <div class="section-title">识别框</div>
+        <div id="emptyBoxList" class="muted">当前图片没有框</div>
+        <div id="boxList" class="box-list" aria-label="当前图片的识别框"></div>
+      </section>
+      <section class="selection-panel">
+        <div class="section-title">选中框</div>
+        <div id="emptySelection" class="muted">未选择</div>
+        <div id="selectionControls" hidden>
+          <select id="selectedClass" aria-label="更改类别"></select>
+          <button id="deleteBox" class="danger" type="button">删除框</button>
+        </div>
+      </section>
+      <section class="stats">
+        <div><span>已审核</span><strong id="reviewedCount">0</strong></div>
+        <div><span>正样本</span><strong id="positiveCount">0</strong></div>
+        <div><span>负样本</span><strong id="negativeCount">0</strong></div>
+        <div><span>待审核</span><strong id="remainingCount">0</strong></div>
+      </section>
+    </aside>
+
+    <section class="editor">
+      <div class="toolbar">
+        <button id="previous" class="icon-button" type="button" title="上一张" aria-label="上一张">&#8592;</button>
+        <button id="next" class="icon-button" type="button" title="下一张" aria-label="下一张">&#8594;</button>
+        <span id="frameCounter" class="counter">0 / 0</span>
+        <div class="frame-scrubber">
+          <input id="frameSlider" type="range" min="1" max="1" value="1" aria-label="拖动跳转图片">
+          <output id="frameSliderValue" for="frameSlider">1</output>
+        </div>
+        <span id="frameName" class="filename"></span>
+        <span id="reviewBadge" class="badge pending">待审核</span>
+        <div class="spacer"></div>
+        <button id="zoomOut" class="icon-button" type="button" title="缩小" aria-label="缩小">&#8722;</button>
+        <span id="zoomValue" class="zoom-value">100%</span>
+        <button id="zoomIn" class="icon-button" type="button" title="放大" aria-label="放大">&#43;</button>
+        <button id="fit" class="icon-button fit" type="button" title="适应窗口" aria-label="适应窗口">&#9635;</button>
+      </div>
+      <div id="viewport" class="viewport">
+        <div id="canvas" class="canvas">
+          <img id="frameImage" alt="当前标注帧" draggable="false">
+          <svg id="overlay" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+      <div id="validation" class="validation" hidden></div>
+      <div class="actions">
+        <button id="reset" class="secondary" type="button">恢复预标注</button>
+        <div class="spacer"></div>
+        <button id="negative" class="secondary" type="button">确认负样本</button>
+        <button id="confirm" class="primary" type="button">确认并下一张</button>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

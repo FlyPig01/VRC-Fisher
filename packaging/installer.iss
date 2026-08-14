@@ -79,10 +79,14 @@ chinesesimp.ModelDownloadFailed=软件已安装，但模型下载失败。请在
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\program"
+Type: filesandordirs; Name: "{app}\licenses"
 
 [Files]
 Source: "{#SourceDir}\release.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceDir}\USER_GUIDE.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceDir}\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceDir}\THIRD_PARTY_NOTICES.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceDir}\licenses\*"; DestDir: "{app}\licenses"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#SourceDir}\cpu\*"; DestDir: "{app}\program"; Components: cpu; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#SourceDir}\directml\*"; DestDir: "{app}\program"; Components: directml; Flags: ignoreversion recursesubdirs createallsubdirs
 

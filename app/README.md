@@ -8,10 +8,13 @@
 
 正式软件不需要 Python、MSS、TOML、PyInstaller 或 CUDA。Python 只存在于仓库的离线数据处理与训练目录，不进入发布包。
 
+本目录的 VRC-Fisher 原创代码采用根目录 MIT License。第三方运行库遵循各自许可证；官方 Ultralytics 衍生 ONNX 模型单独按上游标注的 AGPL-3.0 发布，不属于本目录的 MIT 授权。换用其他模型时必须遵守该模型自己的来源和许可证。
+
 ## 目标入口
 
 ```powershell
-Set-Location E:\MyTools\VRC-Fisher\app
+$Repo = "C:\path\to\VRC-Fisher"
+Set-Location (Join-Path $Repo "app")
 dotnet restore VrcFisher.sln
 dotnet build VrcFisher.sln -c Debug
 dotnet test VrcFisher.sln -c Debug
@@ -19,4 +22,4 @@ dotnet test VrcFisher.sln -c Debug
 
 开发回放使用的两个审核后 ONNX 应放在 `app/models/`；当前目录没有正式模型，模型缺失时应用可以启动但不能开始识别，模型文件不提交 Git。
 
-技术栈、架构、性能和发布规则统一见 [开发文档](../docs/README.md)。
+首次部署见 [开发环境部署](../docs/development-setup.md)；技术栈、架构、性能和发布规则统一见 [开发文档](../docs/README.md)。

@@ -10,6 +10,9 @@ namespace VrcFisher.Core.Tests;
 
 public sealed class ModelCatalogTests
 {
+    private static readonly byte[] ModelCard = Encoding.UTF8.GetBytes("model card");
+    private static readonly byte[] ModelLicense = Encoding.UTF8.GetBytes("AGPL license");
+
     [Fact]
     public void Empty_catalog_is_not_ready_before_refresh()
     {
@@ -32,6 +35,8 @@ public sealed class ModelCatalogTests
         var oldMinigame = Encoding.UTF8.GetBytes("old-minigame");
         await File.WriteAllBytesAsync(Path.Combine(layout.Models, "locator.onnx"), oldLocator);
         await File.WriteAllBytesAsync(Path.Combine(layout.Models, "minigame.onnx"), oldMinigame);
+        await File.WriteAllBytesAsync(Path.Combine(layout.Models, "MODEL_CARD.md"), ModelCard);
+        await File.WriteAllBytesAsync(Path.Combine(layout.Models, "MODEL_LICENSE.txt"), ModelLicense);
         await File.WriteAllTextAsync(
             Path.Combine(layout.Models, "installed-models.json"),
             Manifest("old", oldLocator, oldMinigame));
@@ -43,7 +48,9 @@ public sealed class ModelCatalogTests
         {
             ["https://test.invalid/model-manifest.json"] = Encoding.UTF8.GetBytes(invalidManifest),
             ["https://test.invalid/locator.onnx"] = newLocator,
-            ["https://test.invalid/minigame.onnx"] = newMinigame
+            ["https://test.invalid/minigame.onnx"] = newMinigame,
+            ["https://test.invalid/MODEL_CARD.md"] = ModelCard,
+            ["https://test.invalid/MODEL_LICENSE.txt"] = ModelLicense
         });
         var catalog = new ModelCatalog(layout, new HttpClient(handler));
 
@@ -53,6 +60,8 @@ public sealed class ModelCatalogTests
 
         Assert.Equal(oldLocator, await File.ReadAllBytesAsync(Path.Combine(layout.Models, "locator.onnx")));
         Assert.Equal(oldMinigame, await File.ReadAllBytesAsync(Path.Combine(layout.Models, "minigame.onnx")));
+        Assert.Equal(ModelCard, await File.ReadAllBytesAsync(Path.Combine(layout.Models, "MODEL_CARD.md")));
+        Assert.Equal(ModelLicense, await File.ReadAllBytesAsync(Path.Combine(layout.Models, "MODEL_LICENSE.txt")));
         Assert.DoesNotContain(Directory.EnumerateDirectories(layout.Downloads), path =>
             Path.GetFileName(path).StartsWith("models-", StringComparison.Ordinal));
     }
@@ -70,12 +79,16 @@ public sealed class ModelCatalogTests
             [{"tag_name":"models-v1.2.0","draft":false,"prerelease":false,"assets":[
               {"name":"model-manifest.json","browser_download_url":"https://cdn.test/model-manifest.json"},
               {"name":"locator.onnx","browser_download_url":"https://cdn.test/locator.onnx"},
-              {"name":"minigame.onnx","browser_download_url":"https://cdn.test/minigame.onnx"}
+              {"name":"minigame.onnx","browser_download_url":"https://cdn.test/minigame.onnx"},
+              {"name":"MODEL_CARD.md","browser_download_url":"https://cdn.test/MODEL_CARD.md"},
+              {"name":"MODEL_LICENSE.txt","browser_download_url":"https://cdn.test/MODEL_LICENSE.txt"}
             ]}]
             """),
             ["https://cdn.test/model-manifest.json"] = Encoding.UTF8.GetBytes(manifest),
             ["https://cdn.test/locator.onnx"] = locator,
-            ["https://cdn.test/minigame.onnx"] = minigame
+            ["https://cdn.test/minigame.onnx"] = minigame,
+            ["https://cdn.test/MODEL_CARD.md"] = ModelCard,
+            ["https://cdn.test/MODEL_LICENSE.txt"] = ModelLicense
         });
         var catalog = new ModelCatalog(
             new DirectoryLayout(temporary.Path),
@@ -88,6 +101,8 @@ public sealed class ModelCatalogTests
         Assert.Equal("1.2.0", installed.Version);
         Assert.True(File.Exists(Path.Combine(temporary.Path, "models", "locator.onnx")));
         Assert.True(File.Exists(Path.Combine(temporary.Path, "models", "minigame.onnx")));
+        Assert.True(File.Exists(Path.Combine(temporary.Path, "models", "MODEL_CARD.md")));
+        Assert.True(File.Exists(Path.Combine(temporary.Path, "models", "MODEL_LICENSE.txt")));
     }
 
     [Fact]
@@ -101,7 +116,9 @@ public sealed class ModelCatalogTests
         {
             ["https://test.invalid/model-manifest.json"] = Encoding.UTF8.GetBytes(manifest),
             ["https://test.invalid/locator.onnx"] = locator,
-            ["https://test.invalid/minigame.onnx"] = minigame
+            ["https://test.invalid/minigame.onnx"] = minigame,
+            ["https://test.invalid/MODEL_CARD.md"] = ModelCard,
+            ["https://test.invalid/MODEL_LICENSE.txt"] = ModelLicense
         }, "https://test.invalid/locator.onnx");
         var catalog = new ModelCatalog(
             new DirectoryLayout(temporary.Path),
@@ -116,6 +133,71 @@ public sealed class ModelCatalogTests
             Path.Combine(temporary.Path, "models", "locator.onnx")));
     }
 
+    [Fact]
+    public async Task Documentation_is_verified_and_deleted_with_the_models()
+    {
+        using var temporary = new TemporaryDirectory();
+        var layout = new DirectoryLayout(temporary.Path);
+        var locator = Encoding.UTF8.GetBytes("locator");
+        var minigame = Encoding.UTF8.GetBytes("minigame");
+        var manifest = Manifest("1.0.0", locator, minigame);
+        var handler = new StaticHttpHandler(new Dictionary<string, byte[]>
+        {
+            ["https://test.invalid/model-manifest.json"] = Encoding.UTF8.GetBytes(manifest),
+            ["https://test.invalid/locator.onnx"] = locator,
+            ["https://test.invalid/minigame.onnx"] = minigame,
+            ["https://test.invalid/MODEL_CARD.md"] = ModelCard,
+            ["https://test.invalid/MODEL_LICENSE.txt"] = ModelLicense
+        });
+        var catalog = new ModelCatalog(layout, new HttpClient(handler));
+
+        await catalog.DownloadLatestAsync(
+            new Uri("https://test.invalid/model-manifest.json"),
+            CancellationToken.None);
+
+        Assert.True(catalog.IsReady);
+        Assert.Equal(ModelCard, await File.ReadAllBytesAsync(Path.Combine(layout.Models, "MODEL_CARD.md")));
+        Assert.Equal(ModelLicense, await File.ReadAllBytesAsync(Path.Combine(layout.Models, "MODEL_LICENSE.txt")));
+
+        await File.WriteAllTextAsync(Path.Combine(layout.Models, "MODEL_CARD.md"), "tampered");
+        await catalog.RefreshAsync(CancellationToken.None);
+        Assert.False(catalog.IsReady);
+        Assert.All(catalog.GetStatus(), item => Assert.Contains("模型卡或许可证", item.Message));
+
+        await catalog.DeleteModelsAsync(CancellationToken.None);
+
+        foreach (var fileName in new[]
+                 {
+                     "locator.onnx",
+                     "minigame.onnx",
+                     "MODEL_CARD.md",
+                     "MODEL_LICENSE.txt",
+                     "installed-models.json"
+                 })
+            Assert.False(File.Exists(Path.Combine(layout.Models, fileName)));
+    }
+
+    [Fact]
+    public async Task Manifest_without_required_documentation_is_rejected()
+    {
+        using var temporary = new TemporaryDirectory();
+        var locator = Encoding.UTF8.GetBytes("locator");
+        var minigame = Encoding.UTF8.GetBytes("minigame");
+        var manifest = Manifest("1.0.0", locator, minigame)
+            .Replace("\"documentation\"", "\"optional_documentation\"", StringComparison.Ordinal);
+        var handler = new StaticHttpHandler(new Dictionary<string, byte[]>
+        {
+            ["https://test.invalid/model-manifest.json"] = Encoding.UTF8.GetBytes(manifest)
+        });
+        var catalog = new ModelCatalog(
+            new DirectoryLayout(temporary.Path),
+            new HttpClient(handler));
+
+        await Assert.ThrowsAsync<InvalidDataException>(() => catalog.DownloadLatestAsync(
+            new Uri("https://test.invalid/model-manifest.json"),
+            CancellationToken.None));
+    }
+
     private static string Manifest(
         string version,
         byte[] locator,
@@ -125,14 +207,20 @@ public sealed class ModelCatalogTests
         var locatorHash = Convert.ToHexString(SHA256.HashData(locator)).ToLowerInvariant();
         var minigameHash = overrideMinigameHash
             ?? Convert.ToHexString(SHA256.HashData(minigame)).ToLowerInvariant();
+        var modelCardHash = Convert.ToHexString(SHA256.HashData(ModelCard)).ToLowerInvariant();
+        var modelLicenseHash = Convert.ToHexString(SHA256.HashData(ModelLicense)).ToLowerInvariant();
         return $$"""
         {
-          "schema_version": 1,
+          "schema_version": 2,
           "runtime_api": 1,
           "version": "{{version}}",
           "models": [
             {"filename":"locator.onnx","size":{{locator.Length}},"sha256":"{{locatorHash}}"},
             {"filename":"minigame.onnx","size":{{minigame.Length}},"sha256":"{{minigameHash}}"}
+          ],
+          "documentation": [
+            {"filename":"MODEL_CARD.md","size":{{ModelCard.Length}},"sha256":"{{modelCardHash}}"},
+            {"filename":"MODEL_LICENSE.txt","size":{{ModelLicense.Length}},"sha256":"{{modelLicenseHash}}"}
           ]
         }
         """;

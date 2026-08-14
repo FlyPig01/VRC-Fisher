@@ -23,6 +23,8 @@ __pycache__/
 **/.mypy_cache/
 .ruff_cache/
 **/.ruff_cache/
+training/.uv-cache/
+training/.ultralytics/
 .coverage
 .coverage.*
 htmlcov/
@@ -73,8 +75,10 @@ training/datasets/minigame/*
 !training/datasets/minigame/labels/
 training/datasets/minigame/images/*
 training/datasets/minigame/labels/*
-training/recordings/*
-!training/recordings/.gitkeep
+training/test/videos/*
+!training/test/videos/.gitkeep
+training/test/results/*
+!training/test/results/.gitkeep
 training/runs/*
 !training/runs/.gitkeep
 training/weights/*
@@ -90,7 +94,12 @@ training/exports/*
 *.param
 *.bin
 
-# Development models stay local; formal models are GitHub Release assets.
+# Accepted official model source is committed with the source repository.
+# Training runs, ad-hoc exports, and unreviewed checkpoints remain ignored.
+!models/**/*.pt
+!models/**/*.onnx
+
+# Development runtime copies stay local; accepted source models live under models/.
 app/models/*
 !app/models/.gitkeep
 !app/models/README.md

@@ -8,6 +8,8 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
 {
     public const string LocatorModel = "locator.onnx";
     public const string MinigameModel = "minigame.onnx";
+    public const int ExpectedLocatorInputSize = 960;
+    public const int ExpectedMinigameInputSize = 640;
 
     private readonly InferenceSession _locator;
     private readonly InferenceSession _minigame;
@@ -15,7 +17,8 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     private readonly string _minigameInput;
     private readonly float _confidenceThreshold;
     private readonly float _iouThreshold;
-    private readonly int _inputSize;
+    private readonly int _locatorInputSize;
+    private readonly int _minigameInputSize;
     private readonly IReadOnlyList<string> _locatorClasses = ["prompt", "fishing_ui_group", "success", "failure"];
     private readonly IReadOnlyList<string> _minigameClasses = ["rail", "control_bar", "target", "progress_bar"];
 
@@ -23,8 +26,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         string modelsDirectory,
         ExecutionDevice device,
         float confidenceThreshold = 0.35f,
-        float iouThreshold = 0.45f,
-        int inputSize = 640)
+        float iouThreshold = 0.45f)
     {
         var locatorPath = Path.Combine(modelsDirectory, LocatorModel);
         var minigamePath = Path.Combine(modelsDirectory, MinigameModel);
@@ -36,11 +38,18 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         _minigame = sessions.Minigame;
         _locatorInput = _locator.InputMetadata.Keys.Single();
         _minigameInput = _minigame.InputMetadata.Keys.Single();
+        _locatorInputSize = ReadSquareInputSize(
+            _locator,
+            _locatorInput,
+            LocatorModel,
+            ExpectedLocatorInputSize);
+        _minigameInputSize = ReadSquareInputSize(
+            _minigame,
+            _minigameInput,
+            MinigameModel,
+            ExpectedMinigameInputSize);
         _confidenceThreshold = confidenceThreshold;
         _iouThreshold = iouThreshold;
-        if (inputSize is < 32 or > 2048)
-            throw new ArgumentOutOfRangeException(nameof(inputSize));
-        _inputSize = inputSize;
         Provider = sessions.Provider;
     }
 
@@ -65,7 +74,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         if (frame.Width <= 0 || frame.Height <= 0 || frame.BgraPixels.IsEmpty)
             throw new InvalidDataException("捕获帧为空");
 
-        using var locator = Run(_locator, _locatorInput, frame, _inputSize, out var locatorTransform);
+        using var locator = Run(_locator, _locatorInput, frame, _locatorInputSize, out var locatorTransform);
         var locatorDetections = Decode(locator, _locatorClasses, _confidenceThreshold, _iouThreshold, locatorTransform);
         var prompt = BestBox(locatorDetections, "prompt");
         var fishingUi = BestBox(locatorDetections, "fishing_ui_group");
@@ -75,7 +84,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             return new DetectionObservation(frame.FrameNumber, frame.CapturedAt, Prompt: prompt, Success: success, Failure: failure);
 
         var crop = Crop(frame, fishingUi.Value, 0.08f);
-        using var minigame = Run(_minigame, _minigameInput, crop.Frame, _inputSize, out var minigameTransform);
+        using var minigame = Run(_minigame, _minigameInput, crop.Frame, _minigameInputSize, out var minigameTransform);
         var localDetections = Decode(minigame, _minigameClasses, _confidenceThreshold, _iouThreshold, minigameTransform);
         var rail = BestBox(localDetections, "rail");
         var control = BestBox(localDetections, "control_bar");
@@ -194,6 +203,31 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     {
         var tensor = ToTensor(frame, inputSize, out transform);
         return session.Run([NamedOnnxValue.CreateFromTensor(inputName, tensor)]);
+    }
+
+    private static int ReadSquareInputSize(
+        InferenceSession session,
+        string inputName,
+        string modelName,
+        int expectedSize)
+    {
+        var dimensions = session.InputMetadata[inputName].Dimensions;
+        if (dimensions.Length != 4
+            || dimensions[0] is not (1 or -1)
+            || dimensions[1] != 3
+            || dimensions[2] <= 0
+            || dimensions[2] != dimensions[3]
+            || dimensions[2] is < 32 or > 2048)
+        {
+            throw new InvalidDataException(
+                $"{modelName} 必须使用 [1,3,H,W] 的静态方形输入，实际为 [{string.Join(',', dimensions)}]");
+        }
+        if (dimensions[2] != expectedSize)
+        {
+            throw new InvalidDataException(
+                $"{modelName} 输入必须为 {expectedSize} x {expectedSize}，实际为 {dimensions[2]} x {dimensions[3]}");
+        }
+        return dimensions[2];
     }
 
     private static DenseTensor<float> ToTensor(

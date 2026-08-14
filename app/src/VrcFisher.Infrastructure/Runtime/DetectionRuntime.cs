@@ -44,8 +44,7 @@ public sealed class DetectionRuntime(
                 layout.Models,
                 options.Device,
                 (float)options.ConfidenceThreshold,
-                (float)options.IoUThreshold,
-                options.InputSize);
+                (float)options.IoUThreshold);
             if (automatic && (!modelCatalog.AutomaticAllowed || !_detector.CanProduceDecisions))
             {
                 _detector.Dispose();

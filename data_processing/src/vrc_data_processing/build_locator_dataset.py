@@ -6,10 +6,22 @@ import argparse
 from pathlib import Path
 import shutil
 
+from .generated_output import staged_output
 from .labels import LOCATOR_CLASS_IDS, Label, annotation_path, frame_files, read_labels, write_labels
 
 
 def build_locator_dataset(frames: Path, annotations: Path, output: Path) -> tuple[int, int]:
+    from .audit_annotations import audit_annotations
+
+    audit = audit_annotations(frames, annotations)
+    if audit.errors:
+        raise ValueError(f"annotation audit failed with {len(audit.errors)} error(s)")
+    with staged_output(output) as staging:
+        images_written, labels_written = _build_locator_into(frames, annotations, staging)
+    return images_written, labels_written
+
+
+def _build_locator_into(frames: Path, annotations: Path, output: Path) -> tuple[int, int]:
     images_written = 0
     labels_written = 0
     for frame in sorted(frame_files(frames)):
@@ -28,12 +40,15 @@ def build_locator_dataset(frames: Path, annotations: Path, output: Path) -> tupl
         write_labels(destination_label, labels)
         images_written += 1
         labels_written += len(labels)
-    _write_yaml(output, ("prompt", "fishing_ui_group", "success", "failure"))
+    if images_written == 0:
+        raise ValueError("no annotated frames found")
+    _write_yaml(output, ("bite_indicator", "minigame_panel"))
     return images_written, labels_written
 
 
 def _write_yaml(output: Path, names: tuple[str, ...]) -> None:
-    lines = ["path: .", "train: images/train", "val: images/val", "test: images/test", "names:"]
+    # Omitting path makes Ultralytics resolve split paths from data.yaml's directory.
+    lines = ["train: images/train", "val: images/val", "names:"]
     lines.extend(f"  {index}: {name}" for index, name in enumerate(names))
     output.mkdir(parents=True, exist_ok=True)
     (output / "data.yaml").write_text("\n".join(lines) + "\n", encoding="ascii")
@@ -45,9 +60,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--annotations", type=Path, default=Path("input/annotations"))
     parser.add_argument("--output", type=Path, default=Path("output/locator"))
     args = parser.parse_args(argv)
-    images, labels = build_locator_dataset(args.frames, args.annotations, args.output)
-    if images == 0:
-        parser.error("no annotated frames found; run the annotation audit and add reviewed labels")
+    from .audit_annotations import audit_annotations
+
+    audit = audit_annotations(args.frames, args.annotations)
+    if audit.errors:
+        parser.error(f"annotation audit failed with {len(audit.errors)} error(s)")
+    try:
+        images, labels = build_locator_dataset(args.frames, args.annotations, args.output)
+    except ValueError as error:
+        parser.error(str(error))
     print(f"images={images} labels={labels} output={args.output}")
     return 0
 

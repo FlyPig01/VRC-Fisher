@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import math
 from pathlib import Path
 
 from PIL import Image
 
 from .build_locator_dataset import _write_yaml
+from .generated_output import staged_output
 from .labels import MINIGAME_CLASS_IDS, Label, annotation_path, frame_files, read_labels, write_labels
 
 
@@ -15,34 +17,95 @@ def build_minigame_dataset(
     frames: Path,
     annotations: Path,
     output: Path,
-    padding: float = 0.08,
+    padding: float = 0.0,
+    negative_ratio: float = 0.2,
+) -> tuple[int, int]:
+    from .audit_annotations import audit_annotations
+
+    audit = audit_annotations(frames, annotations)
+    if audit.errors:
+        raise ValueError(f"annotation audit failed with {len(audit.errors)} error(s)")
+    with staged_output(output) as staging:
+        crops_written, labels_written = _build_minigame_into(
+            frames, annotations, staging, padding, negative_ratio
+        )
+    return crops_written, labels_written
+
+
+def _build_minigame_into(
+    frames: Path,
+    annotations: Path,
+    output: Path,
+    padding: float,
+    negative_ratio: float,
 ) -> tuple[int, int]:
     if not 0.0 <= padding <= 0.5:
         raise ValueError("padding must be between 0 and 0.5")
+    if not 0.0 <= negative_ratio <= 1.0:
+        raise ValueError("negative_ratio must be between 0 and 1")
     crops_written = 0
     labels_written = 0
-    for frame in sorted(frame_files(frames)):
-        source_label = annotation_path(annotations, frame)
-        if not source_label.is_file():
-            continue
-        labels = read_labels(source_label)
-        groups = [label for label in labels if label.class_id == 1]
-        if len(groups) > 1:
-            raise ValueError(f"multiple fishing_ui_group labels are not supported: {frame}")
-        if not groups:
-            continue
-        with Image.open(frame) as image:
-            crop_box = _crop_box(groups[0], image.width, image.height, padding)
-            crop_labels = _local_labels(labels, crop_box, image.width, image.height)
-            destination_image = output / "images" / frame.parent.name / frame.name
-            destination_label = output / "labels" / frame.parent.name / f"{frame.stem}.txt"
-            destination_image.parent.mkdir(parents=True, exist_ok=True)
-            image.crop(crop_box).save(destination_image, format="JPEG", quality=95)
-            write_labels(destination_label, crop_labels)
-        crops_written += 1
-        labels_written += len(crop_labels)
-    _write_yaml(output, ("rail", "control_bar", "target", "progress_bar"))
+    recordings = sorted({frame.parent for frame in frame_files(frames)})
+    for recording in recordings:
+        records: list[tuple[Path, list[Label]]] = []
+        for frame in sorted(path for path in recording.iterdir() if path.suffix.casefold() in {".jpg", ".jpeg", ".png"}):
+            source_label = annotation_path(annotations, frame)
+            if source_label.is_file():
+                records.append((frame, read_labels(source_label)))
+        positives: list[tuple[int, Path, list[Label], Label]] = []
+        negatives: list[tuple[int, Path]] = []
+        for index, (frame, labels) in enumerate(records):
+            groups = [label for label in labels if label.class_id == 1]
+            if len(groups) > 1:
+                raise ValueError(f"multiple minigame_panel labels are not supported: {frame}")
+            if groups:
+                positives.append((index, frame, labels, groups[0]))
+            elif not labels:
+                negatives.append((index, frame))
+
+        for _, frame, labels, group in positives:
+            written = _write_crop(frame, labels, group, output, padding)
+            crops_written += 1
+            labels_written += written
+
+        negative_count = min(len(negatives), math.ceil(len(positives) * negative_ratio))
+        for record_index, frame in _select_evenly(negatives, negative_count):
+            nearest = min(positives, key=lambda item: abs(item[0] - record_index))
+            _write_crop(frame, [], nearest[3], output, padding)
+            crops_written += 1
+    if crops_written == 0:
+        raise ValueError("no positive minigame_panel frames found")
+    _write_yaml(output, ("catch_zone", "moving_target"))
     return crops_written, labels_written
+
+
+def _select_evenly(items: list[tuple[int, Path]], count: int) -> list[tuple[int, Path]]:
+    if count <= 0:
+        return []
+    if count >= len(items):
+        return items
+    if count == 1:
+        return [items[len(items) // 2]]
+    indices = [round(index * (len(items) - 1) / (count - 1)) for index in range(count)]
+    return [items[index] for index in indices]
+
+
+def _write_crop(
+    frame: Path,
+    labels: list[Label],
+    group: Label,
+    output: Path,
+    padding: float,
+) -> int:
+    with Image.open(frame) as image:
+        crop_box = _crop_box(group, image.width, image.height, padding)
+        crop_labels = _local_labels(labels, crop_box, image.width, image.height)
+        destination_image = output / "images" / frame.parent.name / frame.name
+        destination_label = output / "labels" / frame.parent.name / f"{frame.stem}.txt"
+        destination_image.parent.mkdir(parents=True, exist_ok=True)
+        image.crop(crop_box).save(destination_image, format="JPEG", quality=95)
+        write_labels(destination_label, crop_labels)
+    return len(crop_labels)
 
 
 def _crop_box(
@@ -85,7 +148,7 @@ def _local_labels(
         clipped_right = min(crop_right, right)
         clipped_bottom = min(crop_bottom, bottom)
         local_label = Label(
-            label.class_id - 4,
+            label.class_id - 2,
             ((clipped_left + clipped_right) / 2 - crop_left) / crop_width,
             ((clipped_top + clipped_bottom) / 2 - crop_top) / crop_height,
             (clipped_right - clipped_left) / crop_width,
@@ -101,16 +164,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--frames", type=Path, default=Path("work/frames"))
     parser.add_argument("--annotations", type=Path, default=Path("input/annotations"))
     parser.add_argument("--output", type=Path, default=Path("output/minigame"))
-    parser.add_argument("--padding", type=float, default=0.08)
+    parser.add_argument("--padding", type=float, default=0.0)
+    parser.add_argument("--negative-ratio", type=float, default=0.2)
     args = parser.parse_args(argv)
-    images, labels = build_minigame_dataset(
-        args.frames,
-        args.annotations,
-        args.output,
-        args.padding,
-    )
-    if images == 0:
-        parser.error("no annotated fishing_ui_group frames found; add reviewed labels first")
+    from .audit_annotations import audit_annotations
+
+    audit = audit_annotations(args.frames, args.annotations)
+    if audit.errors:
+        parser.error(f"annotation audit failed with {len(audit.errors)} error(s)")
+    try:
+        images, labels = build_minigame_dataset(
+            args.frames,
+            args.annotations,
+            args.output,
+            args.padding,
+            args.negative_ratio,
+        )
+    except ValueError as error:
+        parser.error(str(error))
     print(f"images={images} labels={labels} output={args.output}")
     return 0
 

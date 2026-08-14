@@ -9,11 +9,12 @@ using VrcFisher.Core;
 namespace VrcFisher.Infrastructure.Models;
 
 /// <summary>
-/// Owns the two-model installation as one versioned transaction.
+/// Owns the model files and their required documentation as one versioned transaction.
 /// </summary>
 public sealed class ModelCatalog : IModelCatalog
 {
-    private static readonly string[] Required = ["locator.onnx", "minigame.onnx"];
+    private static readonly string[] RequiredModels = ["locator.onnx", "minigame.onnx"];
+    private static readonly string[] RequiredDocumentation = ["MODEL_CARD.md", "MODEL_LICENSE.txt"];
     private const int MaximumDownloadAttempts = 3;
     private readonly DirectoryLayout _layout;
     private readonly HttpClient _httpClient;
@@ -36,7 +37,7 @@ public sealed class ModelCatalog : IModelCatalog
         _githubApiBase = (githubApiBase ?? new Uri("https://api.github.com/")).EnsureTrailingSlash();
     }
 
-    public bool IsReady => GetStatus().Count == Required.Length
+    public bool IsReady => GetStatus().Count == RequiredModels.Length
         && GetStatus().All(item => item.Installed && item.Valid);
     public bool AutomaticAllowed
     {
@@ -52,8 +53,13 @@ public sealed class ModelCatalog : IModelCatalog
     {
         _layout.Ensure();
         var manifest = await ReadInstalledManifestAsync(cancellationToken);
-        var statuses = new List<ModelStatus>(Required.Length);
-        foreach (var fileName in Required)
+        var documentationValid = manifest is not null
+            && await AreInstalledFilesValidAsync(
+                manifest.Documentation,
+                RequiredDocumentation,
+                cancellationToken);
+        var statuses = new List<ModelStatus>(RequiredModels.Length);
+        foreach (var fileName in RequiredModels)
         {
             var path = Path.Combine(_layout.Models, fileName);
             if (!File.Exists(path))
@@ -64,16 +70,21 @@ public sealed class ModelCatalog : IModelCatalog
 
             var info = new FileInfo(path);
             var expected = manifest?.Models.FirstOrDefault(item => item.FileName == fileName);
-            var valid = expected is not null
+            var modelValid = expected is not null
                 && info.Length == expected.Size
                 && await HasSha256Async(path, expected.Sha256, cancellationToken);
+            var valid = modelValid && documentationValid;
             statuses.Add(new(
                 fileName,
                 true,
                 valid,
                 info.Length,
                 manifest?.Version,
-                valid ? "已安装并通过校验" : "存在但未通过清单校验"));
+                valid
+                    ? "已安装并通过校验"
+                    : modelValid
+                        ? "模型文件有效，但模型卡或许可证缺失/损坏"
+                        : "存在但未通过清单校验"));
         }
 
         lock (_sync)
@@ -129,7 +140,9 @@ public sealed class ModelCatalog : IModelCatalog
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
-            foreach (var fileName in Required.Append("installed-models.json"))
+            foreach (var fileName in RequiredModels
+                         .Concat(RequiredDocumentation)
+                         .Append("installed-models.json"))
             {
                 var path = Path.Combine(_layout.Models, fileName);
                 if (File.Exists(path)) File.Delete(path);
@@ -189,34 +202,35 @@ public sealed class ModelCatalog : IModelCatalog
         var staging = Path.Combine(_layout.Downloads, $"models-{Guid.NewGuid():N}");
         var backup = Path.Combine(_layout.Downloads, $"models-backup-{Guid.NewGuid():N}");
         Directory.CreateDirectory(staging);
-        var totalBytes = manifest.Models.Sum(item => item.Size);
+        var files = manifest.Models.Concat(manifest.Documentation).ToArray();
+        var totalBytes = files.Sum(item => item.Size);
         long completedBytes = 0;
         var completedFiles = 0;
 
         try
         {
-            foreach (var model in manifest.Models)
+            foreach (var file in files)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var destination = Path.Combine(staging, model.FileName);
-                var uri = new Uri(manifestUri, model.FileName);
+                var destination = Path.Combine(staging, file.FileName);
+                var uri = new Uri(manifestUri, file.FileName);
                 await DownloadFileAsync(
                     uri,
                     destination,
-                    model,
+                    file,
                     completedBytes,
                     totalBytes,
                     completedFiles,
                     progress,
                     cancellationToken);
-                completedBytes += model.Size;
+                completedBytes += file.Size;
                 completedFiles++;
                 progress?.Report(new(
-                    model.FileName,
+                    file.FileName,
                     completedBytes,
                     totalBytes,
                     completedFiles,
-                    manifest.Models.Count));
+                    files.Length));
             }
 
             await File.WriteAllTextAsync(
@@ -285,22 +299,46 @@ public sealed class ModelCatalog : IModelCatalog
         return string.Equals(Convert.ToHexString(hash), expected, StringComparison.OrdinalIgnoreCase);
     }
 
+    private async Task<bool> AreInstalledFilesValidAsync(
+        IReadOnlyList<ModelFileInfo> files,
+        IReadOnlyList<string> requiredNames,
+        CancellationToken cancellationToken)
+    {
+        foreach (var fileName in requiredNames)
+        {
+            var expected = files.First(item => item.FileName == fileName);
+            var path = Path.Combine(_layout.Models, fileName);
+            if (!File.Exists(path)) return false;
+            var info = new FileInfo(path);
+            if (info.Length != expected.Size
+                || !await HasSha256Async(path, expected.Sha256, cancellationToken))
+                return false;
+        }
+        return true;
+    }
+
     private static void ValidateManifest(ModelManifest manifest)
     {
-        if (manifest.SchemaVersion != 1 || manifest.RuntimeApi != 1 || string.IsNullOrWhiteSpace(manifest.Version))
+        if (manifest.SchemaVersion != 2 || manifest.RuntimeApi != 1 || string.IsNullOrWhiteSpace(manifest.Version))
             throw new InvalidDataException("模型清单版本不兼容");
-        if (manifest.Models is null)
-            throw new InvalidDataException("模型清单缺少 models");
-        if (!Required.SequenceEqual(
+        if (manifest.Models is null || manifest.Documentation is null)
+            throw new InvalidDataException("模型清单缺少 models 或 documentation");
+        if (!RequiredModels.SequenceEqual(
                 manifest.Models.Select(item => item.FileName).OrderBy(item => item, StringComparer.Ordinal)))
             throw new InvalidDataException("模型清单必须同时包含 locator.onnx 与 minigame.onnx");
-        if (manifest.Models.Any(item =>
-                item.Size <= 0
-                || item.Sha256.Length != 64
-                || item.Sha256.Any(character => !Uri.IsHexDigit(character))
-                || !Required.Contains(item.FileName, StringComparer.Ordinal)))
+        if (!RequiredDocumentation.SequenceEqual(
+                manifest.Documentation.Select(item => item.FileName).OrderBy(item => item, StringComparer.Ordinal)))
+            throw new InvalidDataException("模型清单必须同时包含 MODEL_CARD.md 与 MODEL_LICENSE.txt");
+        if (manifest.Models.Any(item => !IsValidFileInfo(item, RequiredModels))
+            || manifest.Documentation.Any(item => !IsValidFileInfo(item, RequiredDocumentation)))
             throw new InvalidDataException("模型清单包含无效文件大小、名称或 SHA-256");
     }
+
+    private static bool IsValidFileInfo(ModelFileInfo item, IReadOnlyList<string> allowedNames) =>
+        item.Size > 0
+        && item.Sha256.Length == 64
+        && item.Sha256.All(Uri.IsHexDigit)
+        && allowedNames.Contains(item.FileName, StringComparer.Ordinal);
 
     private async Task DownloadFileAsync(
         Uri uri,
@@ -342,7 +380,7 @@ public sealed class ModelCatalog : IModelCatalog
                             completedBytes + fileBytes,
                             totalBytes,
                             completedFiles,
-                            Required.Length));
+                            RequiredModels.Length + RequiredDocumentation.Length));
                     }
                     await output.FlushAsync(cancellationToken);
                 }

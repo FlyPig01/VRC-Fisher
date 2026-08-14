@@ -23,8 +23,39 @@ function Write-Utf8NoBom {
     [System.IO.File]::WriteAllText($Path, $Content, $Encoding)
 }
 
+function Copy-RequiredFile {
+    param(
+        [string]$Source,
+        [string]$Destination
+    )
+    if (-not (Test-Path -LiteralPath $Source -PathType Leaf)) {
+        throw "Required legal file was not found: $Source"
+    }
+    $DestinationDirectory = Split-Path -Parent $Destination
+    if ($DestinationDirectory) {
+        New-Item -ItemType Directory -Force -Path $DestinationDirectory | Out-Null
+    }
+    Copy-Item -LiteralPath $Source -Destination $Destination -Force
+}
+
+function Get-PackageVersion {
+    param(
+        [string]$Project,
+        [string]$PackageId
+    )
+    [xml]$ProjectXml = Get-Content -LiteralPath $Project -Raw
+    $References = @($ProjectXml.SelectNodes("/Project/ItemGroup/PackageReference")) |
+        Where-Object { $_.Include -eq $PackageId }
+    $Versions = @($References | ForEach-Object { [string]$_.Version } | Select-Object -Unique)
+    if ($Versions.Count -ne 1 -or [string]::IsNullOrWhiteSpace($Versions[0])) {
+        throw "Expected exactly one explicit version for $PackageId in $Project."
+    }
+    return $Versions[0]
+}
+
 $ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $DesktopProject = Join-Path $ProjectRoot "app\src\VrcFisher.Desktop\VrcFisher.Desktop.csproj"
+$InfrastructureProject = Join-Path $ProjectRoot "app\src\VrcFisher.Infrastructure\VrcFisher.Infrastructure.csproj"
 $BuildRoot = Join-Path $ProjectRoot "build\installer"
 $ReleaseRoot = Join-Path $ProjectRoot "releases\app-v$Version"
 $StageRoot = Join-Path $BuildRoot "stage"
@@ -69,6 +100,15 @@ $Metadata = @{
 } | ConvertTo-Json
 Write-Utf8NoBom -Path (Join-Path $StageRoot "release.json") -Content $Metadata
 Copy-Item -LiteralPath (Join-Path $ProjectRoot "USER_GUIDE.md") -Destination $StageRoot -Force
+Copy-RequiredFile `
+    -Source (Join-Path $ProjectRoot "LICENSE") `
+    -Destination (Join-Path $StageRoot "LICENSE")
+Copy-RequiredFile `
+    -Source (Join-Path $ProjectRoot "THIRD_PARTY_NOTICES.md") `
+    -Destination (Join-Path $StageRoot "THIRD_PARTY_NOTICES.md")
+Copy-RequiredFile `
+    -Source (Join-Path $ProjectRoot "training\LICENSE") `
+    -Destination (Join-Path $StageRoot "licenses\AGPL-3.0.txt")
 
 foreach ($CurrentVariant in $Variants) {
     $PublishRoot = Join-Path $StageRoot $CurrentVariant
@@ -105,6 +145,61 @@ foreach ($CurrentVariant in $Variants) {
     $HasDirectMLPackage = $Dependencies.Contains('Microsoft.ML.OnnxRuntime.DirectML')
     if (($CurrentVariant -eq "directml") -ne $HasDirectMLPackage) {
         throw "Publish output contains the wrong ONNX Runtime package for $CurrentVariant."
+    }
+}
+
+$NuGetPackages = if ($env:NUGET_PACKAGES) {
+    $env:NUGET_PACKAGES
+} else {
+    Join-Path ([Environment]::GetFolderPath("UserProfile")) ".nuget\packages"
+}
+$LegalRoot = Join-Path $StageRoot "licenses\third-party"
+$WindowsAppSdkVersion = Get-PackageVersion $DesktopProject "Microsoft.WindowsAppSDK"
+$ToolkitVersion = Get-PackageVersion $DesktopProject "CommunityToolkit.Mvvm"
+$LoggingVersion = Get-PackageVersion $DesktopProject "Microsoft.Extensions.Logging"
+$OnnxRuntimeVersion = Get-PackageVersion $InfrastructureProject "Microsoft.ML.OnnxRuntime"
+$OnnxRuntimeDirectMlVersion = Get-PackageVersion $InfrastructureProject "Microsoft.ML.OnnxRuntime.DirectML"
+$LegalFiles = @(
+    @("microsoft.windowsappsdk\$WindowsAppSdkVersion\license.txt", "WindowsAppSDK-LICENSE.txt"),
+    @("microsoft.windowsappsdk\$WindowsAppSdkVersion\NOTICE.txt", "WindowsAppSDK-NOTICE.txt"),
+    @("communitytoolkit.mvvm\$ToolkitVersion\License.md", "CommunityToolkit.Mvvm-LICENSE.md"),
+    @("communitytoolkit.mvvm\$ToolkitVersion\ThirdPartyNotices.txt", "CommunityToolkit.Mvvm-NOTICES.txt"),
+    @("microsoft.ml.onnxruntime\$OnnxRuntimeVersion\LICENSE", "ONNXRuntime-LICENSE.txt"),
+    @("microsoft.ml.onnxruntime\$OnnxRuntimeVersion\ThirdPartyNotices.txt", "ONNXRuntime-NOTICES.txt"),
+    @("microsoft.ml.onnxruntime.directml\$OnnxRuntimeDirectMlVersion\LICENSE", "ONNXRuntime.DirectML-LICENSE.txt"),
+    @("microsoft.ml.onnxruntime.directml\$OnnxRuntimeDirectMlVersion\ThirdPartyNotices.txt", "ONNXRuntime.DirectML-NOTICES.txt"),
+    @("microsoft.extensions.logging\$LoggingVersion\THIRD-PARTY-NOTICES.TXT", "Microsoft.Extensions.Logging-NOTICES.txt")
+)
+foreach ($LegalFile in $LegalFiles) {
+    Copy-RequiredFile `
+        -Source (Join-Path $NuGetPackages $LegalFile[0]) `
+        -Destination (Join-Path $LegalRoot $LegalFile[1])
+}
+
+$DotNetRoot = Split-Path -Parent (Get-Command $DotNet -ErrorAction Stop).Source
+Copy-RequiredFile `
+    -Source (Join-Path $DotNetRoot "LICENSE.txt") `
+    -Destination (Join-Path $LegalRoot ".NET-LICENSE.txt")
+Copy-RequiredFile `
+    -Source (Join-Path $DotNetRoot "ThirdPartyNotices.txt") `
+    -Destination (Join-Path $LegalRoot ".NET-NOTICES.txt")
+Copy-RequiredFile `
+    -Source (Join-Path (Split-Path -Parent $InnoCompiler) "license.txt") `
+    -Destination (Join-Path $LegalRoot "Inno-Setup-LICENSE.txt")
+
+$RequiredStageLegalFiles = @(
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "licenses\AGPL-3.0.txt",
+    "licenses\third-party\WindowsAppSDK-LICENSE.txt",
+    "licenses\third-party\ONNXRuntime-NOTICES.txt",
+    "licenses\third-party\ONNXRuntime.DirectML-NOTICES.txt",
+    "licenses\third-party\.NET-NOTICES.txt",
+    "licenses\third-party\Inno-Setup-LICENSE.txt"
+)
+foreach ($RelativePath in $RequiredStageLegalFiles) {
+    if (-not (Test-Path -LiteralPath (Join-Path $StageRoot $RelativePath) -PathType Leaf)) {
+        throw "Installer stage is missing required legal file: $RelativePath"
     }
 }
 

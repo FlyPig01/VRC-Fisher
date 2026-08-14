@@ -1,0 +1,50 @@
+{
+  "evaluation": {
+    "date": "2026-08-14",
+    "ultralytics": "8.4.118",
+    "torch": "2.13.0+cu130",
+    "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "confidence": 0.001,
+    "iou": 0.7
+  },
+  "locator": {
+    "validation": {"images": 194, "negative_images": 121, "bite_indicator_instances": 6, "minigame_panel_instances": 67, "image_size": 960},
+    "previous": {
+      "weights": "runs/locator-best-init/weights/best.pt",
+      "sha256": "C95A8CE69B24D9E5B017E5EF43D7853644AA222FED0358F43941C70F4FAD0EC7",
+      "overall": {"precision": 0.985889, "recall": 0.916667, "map50": 0.975000, "map50_95": 0.765473},
+      "bite_indicator": {"precision": 0.972784, "recall": 0.833333, "map50": 0.955000, "map50_95": 0.775000},
+      "minigame_panel": {"precision": 0.998994, "recall": 1.000000, "map50": 0.995000, "map50_95": 0.755946}
+    },
+    "round3": {
+      "weights": "runs/locator-round3/weights/best.pt",
+      "sha256": "048863E47334A5CDB82B2E6190271D73857A11521ABDA420A19C114EF96DA007",
+      "best_epoch": 2,
+      "trained_epochs": 22,
+      "training_seconds": 894.582,
+      "overall": {"precision": 0.998445, "recall": 0.909242, "map50": 0.958636, "map50_95": 0.798062},
+      "bite_indicator": {"precision": 1.000000, "recall": 0.818484, "map50": 0.922273, "map50_95": 0.760682},
+      "minigame_panel": {"precision": 0.996891, "recall": 1.000000, "map50": 0.995000, "map50_95": 0.835442}
+    }
+  },
+  "minigame": {
+    "validation": {"images": 81, "negative_images": 14, "catch_zone_instances": 67, "moving_target_instances": 67, "image_size": 640},
+    "previous": {
+      "weights": "runs/minigame-best-init/weights/best.pt",
+      "sha256": "1FD2A02729D32064720226A5558473CE38EBF1CB53543FA378822F4436EBF2B0",
+      "overall": {"precision": 0.828514, "recall": 0.785862, "map50": 0.964248, "map50_95": 0.664291},
+      "catch_zone": {"precision": 0.657028, "recall": 0.985075, "map50": 0.969761, "map50_95": 0.734151},
+      "moving_target": {"precision": 1.000000, "recall": 0.586650, "map50": 0.958734, "map50_95": 0.594431}
+    },
+    "round3": {
+      "weights": "runs/minigame-round3/weights/best.pt",
+      "sha256": "2B4B03AAACFAA34B085EA1CED219A17C78B97903C0AF748C07D61D04078AF9AB",
+      "best_epoch": 5,
+      "trained_epochs": 25,
+      "training_seconds": 184.170,
+      "overall": {"precision": 0.982486, "recall": 0.985075, "map50": 0.980715, "map50_95": 0.718213},
+      "catch_zone": {"precision": 0.980394, "recall": 0.985075, "map50": 0.987326, "map50_95": 0.807083},
+      "moving_target": {"precision": 0.984579, "recall": 0.985075, "map50": 0.974104, "map50_95": 0.629344}
+    }
+  }
+}

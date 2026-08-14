@@ -12,15 +12,13 @@ public sealed class AppOptionsTests
         var options = new AppOptions(
             Language: "fr-FR",
             ConfidenceThreshold: double.NaN,
-            IoUThreshold: 2,
-            InputSize: 0);
+            IoUThreshold: 2);
 
         var normalized = options.Normalize();
 
         Assert.Equal("zh-CN", normalized.Language);
         Assert.Equal(AppOptions.Default.ConfidenceThreshold, normalized.ConfidenceThreshold);
         Assert.Equal(0.99, normalized.IoUThreshold);
-        Assert.Equal(AppOptions.Default.InputSize, normalized.InputSize);
     }
 
     [Fact]
@@ -30,7 +28,6 @@ public sealed class AppOptionsTests
             Language: "en-US",
             ConfidenceThreshold: 0.5,
             IoUThreshold: 0.6,
-            InputSize: 512,
             Device: ExecutionDevice.Cpu);
 
         var normalized = options.Normalize();

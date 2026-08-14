@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 
 import av
@@ -15,12 +14,12 @@ def extract_recording(
     output_root: Path,
     interval_seconds: float,
     jpeg_quality: int = 95,
-) -> list[dict[str, object]]:
+) -> int:
     if interval_seconds <= 0:
         raise ValueError("interval_seconds must be positive")
     destination = output_root / source.stem
     destination.mkdir(parents=True, exist_ok=True)
-    rows: list[dict[str, object]] = []
+    frames_written = 0
     next_timestamp = 0.0
     with av.open(str(source)) as container:
         stream = container.streams.video[0]
@@ -40,18 +39,10 @@ def extract_recording(
                 format="JPEG",
                 quality=jpeg_quality,
             )
-            rows.append(
-                {
-                    "recording": source.name,
-                    "recording_id": source.stem,
-                    "frame_index": frame_index,
-                    "timestamp_seconds": round(timestamp, 6),
-                    "image": str(path.relative_to(output_root)).replace("\\", "/"),
-                }
-            )
+            frames_written += 1
             while next_timestamp <= timestamp + 1e-9:
                 next_timestamp += interval_seconds
-    return rows
+    return frames_written
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -63,22 +54,24 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not 1 <= args.quality <= 100:
         parser.error("--quality must be between 1 and 100")
-    recordings = sorted(
-        path
-        for path in args.input.iterdir()
-        if path.is_file() and path.suffix.casefold() in {".mp4", ".mkv", ".mov", ".avi"}
-    )
+    supported_suffixes = {".mp4", ".mkv", ".mov", ".avi"}
+    if args.input.is_file():
+        recordings = [args.input] if args.input.suffix.casefold() in supported_suffixes else []
+    elif args.input.is_dir():
+        recordings = sorted(
+            path
+            for path in args.input.iterdir()
+            if path.is_file() and path.suffix.casefold() in supported_suffixes
+        )
+    else:
+        parser.error(f"input does not exist: {args.input}")
     if not recordings:
         parser.error(f"no recordings found in {args.input}")
-    rows: list[dict[str, object]] = []
-    for recording in recordings:
-        rows.extend(extract_recording(recording, args.output, args.interval, args.quality))
-    manifest = args.output / "manifest.jsonl"
-    manifest.write_text(
-        "".join(json.dumps(row, ensure_ascii=True) + "\n" for row in rows),
-        encoding="utf-8",
+    frames_written = sum(
+        extract_recording(recording, args.output, args.interval, args.quality)
+        for recording in recordings
     )
-    print(f"recordings={len(recordings)} frames={len(rows)} manifest={manifest}")
+    print(f"recordings={len(recordings)} frames={frames_written} output={args.output}")
     return 0
 
 

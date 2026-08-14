@@ -12,16 +12,31 @@ app-vX.Y.Z/
   VRC-Fisher-Setup-x64.exe.sha256
 ```
 
-模型使用独立 Release：
+每个正式模型首先完整保存在源码仓库：
+
+```text
+models/vX.Y.Z/
+  checkpoints/locator.pt
+  checkpoints/minigame.pt
+  runtime/locator.onnx
+  runtime/minigame.onnx
+  source-manifest.json
+  MODEL_CARD.md
+  MODEL_LICENSE.txt
+```
+
+模型同时使用独立 Release 作为最终用户下载渠道：
 
 ```text
 models-vX.Y.Z/
   locator.onnx
   minigame.onnx
   model-manifest.json
+  MODEL_CARD.md
+  MODEL_LICENSE.txt
 ```
 
-模型不压进 Setup。这样用户可以独立下载、更新和删除模型，而不必重新安装软件；应用升级也不会覆盖模型。
+模型不压进 Setup。这样用户可以独立下载、更新和删除模型，而不必重新安装软件；应用升级也不会覆盖模型。Release 不是模型唯一的开源位置：两个 `.pt` 和两个 ONNX 必须已存在于相同 Git 标签的 `models/vX.Y.Z/`，Release 资产只能是其中运行时文件的逐字节相同副本。
 
 这个 Setup 不是几 MB 的联网引导程序。它离线包含 C# 软件本体、.NET/WinUI 运行依赖以及 CPU-only、DirectML 两种安装源；本机实测 Setup 约 `113 MB`。其他软件的几 MB Setup 通常只负责联网下载本体，本项目首版不采用该方式。
 
@@ -115,6 +130,11 @@ Setup 默认推荐 DirectML，但保留 CPU-only。CPU-only 依赖更少，在�
 <安装目录>/
   release.json
   USER_GUIDE.md
+  LICENSE
+  THIRD_PARTY_NOTICES.md
+  licenses/
+    AGPL-3.0.txt
+    third-party/
   program/
     VrcFisher.exe
   config/
@@ -123,6 +143,8 @@ Setup 默认推荐 DirectML，但保留 CPU-only。CPU-only 依赖更少，在�
   models/
     locator.onnx
     minigame.onnx
+    MODEL_CARD.md
+    MODEL_LICENSE.txt
     installed-models.json
   downloads/
   logs/
@@ -134,7 +156,7 @@ Setup 默认推荐 DirectML，但保留 CPU-only。CPU-only 依赖更少，在�
 
 应用通过 `program\\VrcFisher.exe` 的父目录识别安装根目录。程序文件放在 `program/`，模型、配置、日志、指标、截图或下载暂存仍全部位于用户选定的安装目录；禁止写入 `%LOCALAPPDATA%`、`ProgramData`、用户主目录或其他隐藏位置。
 
-`USER_GUIDE.md` 从仓库根目录原样包含进安装包，保证 GitHub 与软件目录中的手册一致。
+`USER_GUIDE.md` 从仓库根目录原样包含进安装包，保证 GitHub 与软件目录中的手册一致。Setup 同时携带原创代码 MIT、第三方声明、AGPL-3.0 和实际发布依赖包要求的许可证/NOTICE；构建脚本找不到这些法律文件时必须停止。
 
 ## 7. 模型下载与删除
 
@@ -150,9 +172,9 @@ program\\VrcFisher.exe --download-models --non-interactive
 查询兼容的 models-v* Release
   -> 下载 model-manifest.json
   -> 验证清单版本与 runtime_api
-  -> 下载两个 ONNX 到 <安装目录>/downloads/
-  -> 验证文件大小与 SHA-256
-  -> 两个文件全部成功后原子替换 models/
+  -> 下载两个 ONNX、模型卡和模型许可证到 <安装目录>/downloads/
+  -> 验证四个文件的大小与 SHA-256
+  -> 四个文件全部成功后原子替换 models/
   -> 写入 installed-models.json
 ```
 
@@ -165,16 +187,16 @@ program\\VrcFisher.exe --download-models --non-interactive
 - 查看已安装版本、文件大小和校验状态；
 - 下载或更新两个兼容模型；
 - 取消和重试下载；
-- 删除两个 ONNX 与模型记录，但保留软件；
+- 删除两个 ONNX、模型卡、模型许可证与模型记录，但保留软件；
 - 模型缺失时重新下载。
 
-两个模型构成一个不可分割的模型版本。首版不允许只更新其中一个，以免类别、输入尺寸或后处理契约不匹配。模型缺失或校验失败时软件可以打开，但“仅观察”和“自动运行”保持禁用。
+两个模型及其模型卡、模型许可证构成一个不可分割的模型版本。首版不允许只更新其中一个文件，以免类别、输入尺寸、后处理契约或许可证记录不匹配。任一文件缺失或校验失败时软件可以打开，但“仅观察”和“自动运行”保持禁用。
 
 清单至少包含：
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "runtime_api": 1,
   "version": "1.0.0",
   "automatic_allowed": false,
@@ -189,15 +211,31 @@ program\\VrcFisher.exe --download-models --non-interactive
       "size": 12345678,
       "sha256": "64-character-lowercase-hex"
     }
+  ],
+  "documentation": [
+    {
+      "filename": "MODEL_CARD.md",
+      "size": 12345,
+      "sha256": "64-character-lowercase-hex"
+    },
+    {
+      "filename": "MODEL_LICENSE.txt",
+      "size": 34567,
+      "sha256": "64-character-lowercase-hex"
+    }
   ]
 }
 ```
 
 ## 8. GitHub Releases 协议
 
-应用版本和模型版本独立。应用只选择满足 `runtime_api` 的最新非草稿、非预发布 `models-v*` Release。GitHub Releases API 是首版唯一下载源，不设计 CDN 或镜像自动切换。
+应用版本和模型版本独立。应用只选择满足 `runtime_api` 的最新非草稿、非预发布 `models-v*` Release。GitHub Releases API 是首版软件内唯一下载源，不设计 CDN 或镜像自动切换；源码使用者可以直接从相同标签的 `models/vX.Y.Z/` 取得 `.pt` 和 ONNX。发布模型 Release 前必须确认仓库目录已提交并推送，且 Release 中两个 ONNX 的 SHA-256 与 `source-manifest.json` 一致。
 
 构建时生成 `release.json`，记录仓库 `owner/name`、应用版本和 `runtime_api`。模型清单中的 `automatic_allowed` 必须由人工验收后才可设为 `true`；缺少该字段或为 `false` 时，软件仍可仅观察，但拒绝自动输入。当前 C# 下载器使用 10 分钟 HTTP 请求超时、最多三次瞬时故障尝试、取消令牌、独立暂存目录以及大小和 SHA-256 校验。
+
+模型构建脚本要求显式传入已填写的模型卡。模型卡中仍有 `TBD`，没有上游标注的 `AGPL-3.0`，或缺少发布版本、两个 `.pt` 与两个 ONNX 的实际大小和 SHA-256 时，脚本必须停止。模型 Release 还必须提供与 `training/LICENSE` 一致的 `MODEL_LICENSE.txt`，并在同一项目中提供对应版本完整源码。构建脚本将模型卡与许可证的大小和 SHA-256 写入 schema v2 清单；当前应用拒绝缺少这两个侧车文件的旧清单。
+
+当前模型按普通 Git 二进制文件提交，`.gitattributes` 禁止把 `.pt` 和 ONNX 当作文本比较。构建脚本要求四个模型文件各自小于 100 MiB，避免 GitHub 拒绝推送；YOLO11n 满足这一门槛。未来模型超过门槛时必须先正式引入 Git LFS，并让克隆、源码归档和离线构建流程都验证 LFS 对象完整，不能只删除大小检查。
 
 ## 9. 应用升级
 
@@ -227,8 +265,11 @@ program\\VrcFisher.exe --download-models --non-interactive
 4. 干净 Windows x64 环境无需预装 .NET、Python 或 CUDA 即可启动。
 5. Setup 不包含 ONNX、Python、PyTorch、Ultralytics、数据集或录屏。
 6. 未安装模型时 GUI 可启动，但识别和输入均禁用。
-7. 模型下载失败不破坏旧版本，并可取消、重试和删除。
+7. 模型与模型卡/许可证下载失败不破坏旧版本，并可取消、重试和一并删除。
 8. 覆盖安装保留用户数据，卸载只删除软件拥有的目录内容。
 9. Setup、安装后体积和所有运行资源均以正式构建实测。
+10. Setup 携带 MIT、第三方声明、AGPL 和实际依赖的许可证/NOTICE。
+11. 对应 Git 标签的 `models/vX.Y.Z/` 携带两个 `.pt`、两个 ONNX、无占位符模型卡、AGPL 全文和源码清单。
+12. 模型 Release 携带运行时清单与仓库逐字节一致的两个 ONNX，并提供同标签源码入口。
 
 容量门槛与完整测试矩阵见 [性能与存储预算](performance-budget.md)。

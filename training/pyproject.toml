@@ -3,17 +3,25 @@ name = "vrc-fisher-training"
 version = "0.1.0"
 description = "Training and ONNX export tools for VRC-Fisher."
 requires-python = ">=3.11,<3.12"
+license = "AGPL-3.0"
 dependencies = [
-  "torch>=2.6,<3",
-  "torchvision>=0.21,<1",
+  "torch==2.13.0",
+  "torchvision==0.28.0",
   "ultralytics>=8.3,<9",
   "onnx>=1.17,<2",
   "onnxslim>=0.1,<1",
+  "pillow>=11,<13",
+  "av>=13,<17",
 ]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9"]
 
 [project.scripts]
 vrc-train = "vrc_training.train:main"
+vrc-preflight = "vrc_training.preflight:main"
 vrc-export = "vrc_training.export:main"
+vrc-review-video = "vrc_training.video_review:main"
 
 [build-system]
 requires = ["setuptools>=75"]
@@ -22,3 +30,15 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.uv]
+cache-dir = ".uv-cache"
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://mirrors.nju.edu.cn/pytorch/whl/cu130"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu130" }
+torchvision = { index = "pytorch-cu130" }

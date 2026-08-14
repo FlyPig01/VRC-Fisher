@@ -8,45 +8,47 @@ from pathlib import Path
 
 from PIL import Image
 
-from .labels import annotation_path, frame_files, read_labels
+from .labels import annotation_path, frame_files, read_labels, validate_frame_labels
 
 
 @dataclass(frozen=True, slots=True)
 class AuditReport:
     frames: int = 0
-    annotated_frames: int = 0
+    positive_frames: int = 0
+    negative_frames: int = 0
     unannotated_frames: int = 0
     errors: tuple[str, ...] = ()
 
 
 def audit_annotations(frames: Path, annotations: Path) -> AuditReport:
     errors: list[str] = []
-    frames_count = 0
-    annotated = 0
+    frame_list = sorted(frame_files(frames))
+    positive = 0
+    negative = 0
     unannotated = 0
-    for frame in sorted(frame_files(frames)):
-        frames_count += 1
+    for frame in frame_list:
         label_path = annotation_path(annotations, frame)
         if not label_path.is_file():
             unannotated += 1
             continue
-        annotated += 1
         try:
             labels = read_labels(label_path)
+            if labels:
+                positive += 1
+            else:
+                negative += 1
             with Image.open(frame) as image:
                 width, height = image.size
-            groups = [label for label in labels if label.class_id == 1]
-            if len(groups) > 1:
-                errors.append(f"{label_path}: multiple fishing_ui_group labels")
-            if any(label.class_id >= 4 for label in labels) and not groups:
-                errors.append(f"{label_path}: minigame labels without fishing_ui_group")
+            errors.extend(f"{label_path}: {error}" for error in validate_frame_labels(labels))
             for label in labels:
                 left, top, right, bottom = label.pixels(width, height)
                 if left < -1 or top < -1 or right > width + 1 or bottom > height + 1:
                     errors.append(f"{label_path}: box outside image bounds")
         except (OSError, ValueError) as error:
             errors.append(f"{label_path}: {error}")
-    return AuditReport(frames_count, annotated, unannotated, tuple(errors))
+    return AuditReport(
+        len(frame_list), positive, negative, unannotated, tuple(errors)
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -56,8 +58,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     report = audit_annotations(args.frames, args.annotations)
     print(
-        f"frames={report.frames} annotated={report.annotated_frames} "
-        f"unannotated={report.unannotated_frames} errors={len(report.errors)}"
+        f"frames={report.frames} positive={report.positive_frames} "
+        f"negative={report.negative_frames} unannotated={report.unannotated_frames} "
+        f"errors={len(report.errors)}"
     )
     for error in report.errors:
         print(f"ERROR {error}")

@@ -7,17 +7,15 @@ from pathlib import Path
 
 
 ALL_CLASSES = (
-    "prompt",
-    "fishing_ui_group",
-    "success",
-    "failure",
-    "rail",
-    "control_bar",
-    "target",
-    "progress_bar",
+    "bite_indicator",
+    "minigame_panel",
+    "catch_zone",
+    "moving_target",
 )
-LOCATOR_CLASS_IDS = range(4)
-MINIGAME_CLASS_IDS = range(4, 8)
+LOCATOR_CLASS_IDS = range(2)
+MINIGAME_CLASS_IDS = range(2, 4)
+YOLO_SCALE = 100_000_000
+BOUNDARY_TOLERANCE = 1e-7
 
 
 @dataclass(frozen=True, slots=True)
@@ -55,6 +53,23 @@ class Label:
         )
 
 
+def _quantized_axis(center: float, span: float) -> tuple[float, float]:
+    if center - span / 2 < -BOUNDARY_TOLERANCE or center + span / 2 > 1 + BOUNDARY_TOLERANCE:
+        raise ValueError("box is outside image bounds")
+    span_ticks = max(1, min(YOLO_SCALE, round(span * YOLO_SCALE)))
+    center_ticks = round(center * YOLO_SCALE)
+    margin = (span_ticks + 1) // 2
+    center_ticks = max(margin, min(YOLO_SCALE - margin, center_ticks))
+    return center_ticks / YOLO_SCALE, span_ticks / YOLO_SCALE
+
+
+def quantize_label(label: Label) -> Label:
+    label.validate()
+    x_center, width = _quantized_axis(label.x_center, label.width)
+    y_center, height = _quantized_axis(label.y_center, label.height)
+    return Label(label.class_id, x_center, y_center, width, height)
+
+
 def read_labels(path: Path) -> list[Label]:
     labels: list[Label] = []
     if not path.is_file():
@@ -77,12 +92,30 @@ def read_labels(path: Path) -> list[Label]:
 
 def write_labels(path: Path, labels: list[Label]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    quantized = [quantize_label(label) for label in labels]
     content = "".join(
         f"{label.class_id} {label.x_center:.8f} {label.y_center:.8f} "
         f"{label.width:.8f} {label.height:.8f}\n"
-        for label in labels
+        for label in quantized
     )
     path.write_text(content, encoding="ascii")
+
+
+def validate_frame_labels(labels: list[Label]) -> list[str]:
+    errors: list[str] = []
+    counts = {
+        class_id: sum(label.class_id == class_id for label in labels)
+        for class_id in range(len(ALL_CLASSES))
+    }
+    for class_id, count in counts.items():
+        if count > 1:
+            errors.append(f"multiple {ALL_CLASSES[class_id]} boxes")
+    has_minigame_object = counts[2] or counts[3]
+    if has_minigame_object and counts[1] != 1:
+        errors.append("minigame objects require exactly one minigame_panel")
+    if counts[1] and (counts[2] != 1 or counts[3] != 1):
+        errors.append("minigame_panel requires exactly one catch_zone and one moving_target")
+    return errors
 
 
 def frame_files(root: Path):

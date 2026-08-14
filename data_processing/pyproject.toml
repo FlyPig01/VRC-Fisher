@@ -3,6 +3,7 @@ name = "vrc-fisher-data-processing"
 version = "0.1.0"
 description = "Offline video and dataset tools for VRC-Fisher."
 requires-python = ">=3.11,<3.12"
+license = "MIT"
 dependencies = [
   "av>=13,<17",
   "numpy>=2.0,<2.1",
@@ -16,8 +17,12 @@ dev = ["pytest>=8,<9"]
 vrc-extract-frames = "vrc_data_processing.extract_frames:main"
 vrc-build-locator = "vrc_data_processing.build_locator_dataset:main"
 vrc-build-minigame = "vrc_data_processing.build_minigame_dataset:main"
+vrc-build-review = "vrc_data_processing.build_review_images:main"
 vrc-split-recordings = "vrc_data_processing.split_by_recording:main"
 vrc-audit-annotations = "vrc_data_processing.audit_annotations:main"
+vrc-prelabel = "vrc_data_processing.prelabel:main"
+vrc-annotate = "vrc_data_processing.local_annotator:serve_main"
+vrc-commit-annotations = "vrc_data_processing.local_annotator:commit_main"
 
 [build-system]
 requires = ["setuptools>=75"]
@@ -26,3 +31,6 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.setuptools.package-data]
+vrc_data_processing = ["annotator_web/*.html", "annotator_web/*.css", "annotator_web/*.js"]

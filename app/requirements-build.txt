@@ -1,2 +1,0 @@
-pytest>=8,<9
-pyinstaller>=6,<7

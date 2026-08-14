@@ -5,8 +5,9 @@
 ```text
 <任务>/
   data.yaml
-  images/{train,val,test}/
-  labels/{train,val,test}/
+  split.json
+  images/{train,val}/
+  labels/{train,val}/
 ```
 
-`data.yaml` 和空目录结构可以提交；图片与标签由 Git 忽略。不要手工把同一录屏的相邻帧随机拆到不同集合。
+`split.json` 只记录整段录屏的 `train`/`val` 归属，供训练前预检和人工审核使用。图片、标签和本地划分结果由 Git 忽略；不要手工把同一录屏的相邻帧随机拆到不同集合。完整视频测试另放在 `training/test/videos/`，不需要标签。
