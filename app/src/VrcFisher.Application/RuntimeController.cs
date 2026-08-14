@@ -18,6 +18,7 @@ public sealed class RuntimeController : IRuntimeController
         "Unavailable",
         0,
         0,
+        InferencePerformanceSnapshot.Default,
         new RuntimeStatus(RuntimeMessageCode.ModelsUnavailable),
         DateTimeOffset.UtcNow);
 
@@ -138,6 +139,7 @@ public sealed class RuntimeController : IRuntimeController
             FramesCaptured = metrics.FramesCaptured,
             FramesDropped = metrics.FramesDropped,
             Phase = metrics.Phase,
+            Performance = metrics.Performance,
             Status = metrics.Status,
             Provider = detectionRuntime.Provider
         });

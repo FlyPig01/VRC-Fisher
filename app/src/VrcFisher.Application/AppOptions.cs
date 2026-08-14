@@ -9,6 +9,12 @@ public sealed record AppOptions(
     bool AutomaticMode = false,
     double ConfidenceThreshold = 0.35,
     double IoUThreshold = 0.45,
+    double BiteFallbackSeconds = 0,
+    bool AdaptiveInference = true,
+    int LocatorIntervalMs = 80,
+    int HookingIntervalMs = 80,
+    int MinigameIntervalMs = 33,
+    int PanelRecheckIntervalMs = 250,
     string? CaptureDisplay = null)
 {
     public static AppOptions Default => new();
@@ -21,11 +27,19 @@ public sealed record AppOptions(
         var iou = double.IsFinite(IoUThreshold)
             ? Math.Clamp(IoUThreshold, 0.01, 0.99)
             : Default.IoUThreshold;
+        var fallback = double.IsFinite(BiteFallbackSeconds)
+            ? Math.Clamp(BiteFallbackSeconds, 0, 20)
+            : Default.BiteFallbackSeconds;
         return this with
         {
             Language = Language is "zh-CN" or "en-US" ? Language : Default.Language,
             ConfidenceThreshold = confidence,
-            IoUThreshold = iou
+            IoUThreshold = iou,
+            BiteFallbackSeconds = fallback,
+            LocatorIntervalMs = Math.Clamp(LocatorIntervalMs, 80, 250),
+            HookingIntervalMs = Math.Clamp(HookingIntervalMs, 80, 250),
+            MinigameIntervalMs = Math.Clamp(MinigameIntervalMs, 33, 67),
+            PanelRecheckIntervalMs = Math.Clamp(PanelRecheckIntervalMs, 250, 1000)
         };
     }
 }
@@ -50,6 +64,7 @@ public sealed class OptionsStore(string rootDirectory)
 
     public async Task SaveAsync(AppOptions options, CancellationToken cancellationToken = default)
     {
+        options = options.Normalize();
         Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
         await File.WriteAllTextAsync(
             _path,

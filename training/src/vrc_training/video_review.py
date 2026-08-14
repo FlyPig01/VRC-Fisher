@@ -161,16 +161,20 @@ def review_video(
     padding: float = 0.08,
     locator_image_size: int = 960,
     minigame_image_size: int = 640,
+    inference_stride: int = 1,
 ) -> tuple[int, int, int]:
     for path in (input_path, locator_path, minigame_path):
         if not path.is_file():
             raise FileNotFoundError(f"required review input not found: {path}")
     if min(locator_image_size, minigame_image_size) <= 0:
         raise ValueError("model image sizes must be positive")
+    if inference_stride <= 0:
+        raise ValueError("inference_stride must be positive")
     locator = UltralyticsDetector(locator_path, device, locator_image_size)
     minigame = UltralyticsDetector(minigame_path, device, minigame_image_size)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     frames = locator_count = minigame_count = 0
+    last_annotated: np.ndarray | None = None
     with av.open(str(input_path)) as source, av.open(str(output_path), mode="w") as destination:
         stream = next((item for item in source.streams if item.type == "video"), None)
         if stream is None:
@@ -182,13 +186,15 @@ def review_video(
         output_stream.pix_fmt = "yuv420p"
         for decoded in source.decode(stream):
             frame = decoded.to_ndarray(format="rgb24")
-            annotated, report = review_frame(frame, locator, minigame, confidence, padding)
+            if last_annotated is None or frames % inference_stride == 0:
+                last_annotated, report = review_frame(frame, locator, minigame, confidence, padding)
+                locator_count += report.locator_detections
+                minigame_count += report.minigame_detections
+            annotated = last_annotated
             packet_frame = av.VideoFrame.from_ndarray(annotated, format="rgb24")
             for packet in output_stream.encode(packet_frame):
                 destination.mux(packet)
             frames += 1
-            locator_count += report.locator_detections
-            minigame_count += report.minigame_detections
         for packet in output_stream.encode():
             destination.mux(packet)
     return frames, locator_count, minigame_count
@@ -205,6 +211,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--padding", type=float, default=0.08)
     parser.add_argument("--locator-image-size", type=int, default=960)
     parser.add_argument("--minigame-image-size", type=int, default=640)
+    parser.add_argument(
+        "--inference-stride",
+        type=int,
+        default=1,
+        help="run inference every N frames and reuse the last annotated frame between runs",
+    )
     args = parser.parse_args(argv)
     output = args.output or Path("test/results") / f"{args.input.stem}-review.mp4"
     try:
@@ -218,11 +230,13 @@ def main(argv: list[str] | None = None) -> int:
             args.padding,
             args.locator_image_size,
             args.minigame_image_size,
+            args.inference_stride,
         )
     except (FileNotFoundError, OSError, ValueError, RuntimeError) as error:
         parser.error(str(error))
     print(
-        f"frames={frames} locator_detections={locator_count} "
+        f"frames={frames} inference_frames={(frames + args.inference_stride - 1) // args.inference_stride} "
+        f"inference_stride={args.inference_stride} locator_detections={locator_count} "
         f"minigame_detections={minigame_count} output={output}"
     )
     return 0

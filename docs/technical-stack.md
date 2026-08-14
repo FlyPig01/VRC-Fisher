@@ -55,9 +55,13 @@ Setup 只安装用户选择的一种组件：
 | CPU-only | `Microsoft.ML.OnnxRuntime` | `Auto`、`CPU` | 任意兼容 x64 CPU |
 | DirectML | `Microsoft.ML.OnnxRuntime.DirectML` | `Auto`、`CPU`、`GPU` | 支持 DirectX 12 的 NVIDIA、AMD、Intel GPU |
 
+当前 CPU-only 包使用 ONNX Runtime `1.29.0`，DirectML 包使用其当前可用的 `1.24.4`。两个包必须分别构建和测试，不能假定不同版本的 CPUExecutionProvider 性能完全相同。
+
 `Auto` 在 CPU-only 组件中等同于 CPU；在 DirectML 组件中优先 GPU，初始化失败时回退 CPU。`GPU` 是严格模式，DirectML 不可用时直接报告错误。
 
 两个组件读取相同的 `locator.onnx` 与 `minigame.onnx`，切换组件或设备不需要重新训练、转换或下载模型。DirectML 的包较小不代表必然更快；它复用 Windows 的 DirectML/DirectX 系统组件，而 CUDA Provider 需要携带或依赖 NVIDIA 专用运行库。项目当前不发布 CUDA 组件，因此用户硬件不局限于 NVIDIA。
+
+运行时默认启用受限自动调频。它对实际发生的三类检测分别记录 P95，不增加 ONNX 调用；CPU 与 DirectML 使用相同算法但不同首轮初值。画像按 Provider、CPU/GPU、模型版本和捕获分辨率隔离，并只写入用户选择的安装目录。自动调频不改变 FP32 模型、`960/640` 输入、置信度或 NMS 阈值。
 
 正式模型使用两个静态输入契约：`locator.onnx` 为 `960 x 960`，`minigame.onnx` 为 `640 x 640`。C# 分别读取并校验两个 ONNX 的输入元数据，不提供会同时覆盖两个模型的全局输入尺寸。以后增加 CUDA Provider 时仍可使用同一组 ONNX，无需重新训练；FP16、INT8 或 TensorRT 等专项产物需要单独转换和验证。
 

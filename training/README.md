@@ -8,7 +8,7 @@
 
 训练数据默认私有，不因 AGPL 或根目录 MIT 自动公开或获得再授权。模型发布前必须根据 [MODEL_CARD.template.md](MODEL_CARD.template.md) 生成无 `TBD` 的模型卡，并阅读 [许可证边界](../docs/licensing.md)。验收通过的两个 `.pt` 与两个 ONNX 必须一起固化到源码仓库的 `models/vX.Y.Z/`；Release 只是给软件下载安装 ONNX 的渠道。本项目不使用 `vrc-auto-fish` 的代码、权重、截图或标注。
 
-> 项目视觉基线为四类：locator 使用 `bite_indicator`、`minigame_panel`，minigame 使用 `catch_zone`、`moving_target`。数据生成代码已同步；C# 推理映射仍是旧八类契约，必须在新模型接入软件前同步。标注审计失败时不得开始训练。
+> 项目视觉基线为四类：locator 使用 `bite_indicator`、`minigame_panel`，minigame 使用 `catch_zone`、`moving_target`。数据生成和 C# 推理映射均已同步；标注审计失败时不得开始训练，完整视频与现场验收失败时不得发布模型。
 
 ## 准备环境
 
@@ -86,7 +86,7 @@ uv run vrc-preflight --task all
 
 两者均使用 `device=0`、`workers=4`、`seed=42`、`pretrained=true`、`plots=true` 和 AMP。locator 提高分辨率是为了保留完整屏幕中缩放动画较小时的感叹号细节，batch 相应降为 4 控制显存。未列出的优化器、学习率和增强参数采用锁定的 Ultralytics 8.4.118 默认值；当前数据量下 `optimizer=auto` 会选择 AdamW，并自动决定初始学习率。正式模型卡必须保存实际运行产生的完整参数，不能只抄本表。
 
-2026-08-14 加入 `屏幕录制 2026-08-14 032049` 和局部困难负样本后，训练前预检为 `READY`，第三轮训练已经完成。为保持指标可比，两个任务继续固定使用 `屏幕录制 2026-08-12 223804` 作为独立验证录屏；新录屏只进入训练集。同一段录屏没有跨越同一任务的 train/val。
+2026-08-14 加入 `屏幕录制 2026-08-14 032049` 和局部困难负样本后，训练前预检为 `READY`，第三轮训练已经完成。`屏幕录制 2026-08-12 223804` 与 `感叹号验证集` 都参与过训练/验证流程，只能用于训练过程复验，不能再作为最终独立审核视频。新提交的 `training/test/videos/屏幕录制 2026-08-14 225423.mp4` 未出现在两个 `split.json`、训练数据文件名或数据处理输出中，作为本轮独立审核素材。同一段录屏没有跨越同一任务的 train/val。
 
 | 任务 | train 录屏/图片 | val 录屏/图片 | train 类别框 | val 类别框 |
 |---|---:|---:|---:|---:|
@@ -133,12 +133,12 @@ Ultralytics 结果写入 `runs/locator*` 和 `runs/minigame*`。每次运行会�
 | locator | 0.849 | 0.917 | 0.898 | 0.697 | `runs/locator/weights/best.pt` |
 | minigame | 0.969 | 0.688 | 0.953 | 0.635 | `runs/minigame/weights/best.pt` |
 
-这两个权重仅为首轮实验基线，尚未验收或导出 ONNX：
+这两个权重是首轮实验基线，后续已用于继续训练和对照；本表用于说明历史基线，不是当前发布模型：
 
 - locator 的独立验证集只有 6 个 `bite_indicator`，指标波动较大；该类 Recall 为 0.833、mAP50 为 0.807。
 - minigame 的 `catch_zone` Recall 为 0.985，但 `moving_target` Recall 只有 0.392。即使把置信度阈值降至 0.005，召回率仍未提高。
 - minigame 训练录屏主要含灰色和红色目标，独立验证录屏大量含绿色鱼形目标，存在明显外观域偏移。应补齐各种目标外观的独立录屏后重新划分和训练，不能只调低运行阈值。
-- 未经完整测试视频的人工审核，不得把本轮权重复制到 `app/models/`、导出发布模型或视为可用版本。
+- 这些限制解释了为什么后续必须继续补数据、统一复验并进行完整视频人工审核。
 
 同日加入 `屏幕录制 2026-08-14 073419` 后完成第二轮双初始化对照。四组使用相同数据、验证录屏、训练参数和随机种子，只改变初始权重；下表来自训练结束后对各自 `best.pt` 的统一复验：
 
@@ -158,7 +158,9 @@ Ultralytics 结果写入 `runs/locator*` 和 `runs/minigame*`。每次运行会�
 | `minigame-official` / `moving_target` | 0.984 | 0.930 | 0.978 | 0.590 |
 | `minigame-best-init` / `moving_target` | 1.000 | 0.823 | 0.979 | 0.587 |
 
-当前视频审核候选为 `locator-best-init/weights/best.pt` 与 `minigame-best-init/weights/best.pt`。locator 的选择依据是关键感叹号类别更高的 Precision 和 mAP，但验证集仍只有 6 个感叹号；minigame 中鼠标直接控制的是 `catch_zone`，目标是使其包住 `moving_target`，因此人工审核使用总体 mAP50-95 更高的 best-init 版本，并同时检查两类的连续性和位置抖动。候选尚未完成视频人工审核，不导出 ONNX、不进入发布目录。
+当前发布模型为 `runs/locator-round3/weights/best.pt` 与 `runs/minigame-round3/weights/best.pt`，已固化到 `../models/v0.1.0/`。Round3 的正式验证指标和与上一轮对比见 [`reports/round3.md`](reports/round3.md)。minigame 中鼠标直接控制 `catch_zone`，目标是使其包住 `moving_target`；完整视频仍需人工检查两类的连续性、漏检和框抖动。
+
+这对发布模型已导出为 `exports/locator.onnx` 与 `exports/minigame.onnx`，并复制到 `../app/models/` 供 C# 开发验证。两者均为 FP32、opset 17、静态 batch 1、无内置 NMS：locator `[1,3,960,960] -> [1,6,18900]`，minigame `[1,3,640,640] -> [1,6,8400]`。完整来源、哈希和许可证见 `../models/v0.1.0/` 与 `MODEL_CARD.md`。
 
 ## 完整视频审核
 
@@ -199,6 +201,14 @@ exports/minigame.onnx
 Copy-Item exports\locator.onnx ..\app\models\locator.onnx
 Copy-Item exports\minigame.onnx ..\app\models\minigame.onnx
 ```
+
+当前导出文件实测为：locator 10,815,002 字节，minigame 10,604,959 字节，合计 20.43 MiB。人工审核视频位于：
+
+```text
+test/results/屏幕录制 2026-08-14 225423-onnx-review.mp4
+```
+
+该视频来自未进入训练/验证清单的录屏。由于 3048 帧逐帧推理耗时过长，本次使用 `--inference-stride 3`：每 3 帧运行一次 ONNX，输出容器保持 3048 帧、原始 30 FPS 和原时长，但每组后两帧复用最近一张已标注画面，视觉更新约为 10 Hz。统计的 394 个 locator 和 486 个 minigame 检测是 1016 个推理帧上的候选框计数，不是逐帧指标。审核视频只是人工验收材料，不能计算 mAP、Precision 或 Recall；它不阻止维护者将当前最佳权重固化为 `models/v0.1.0/`，但不能据此宣称自动钓鱼已验收。
 
 `.pt` 用于开发时训练与实验，用户软件只加载两个 ONNX。CPU-only 与 DirectML 使用同一份 ONNX，不需要重新训练。
 

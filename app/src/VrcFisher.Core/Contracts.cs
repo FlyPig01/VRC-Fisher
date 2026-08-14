@@ -30,6 +30,13 @@ public enum ExecutionDevice
     Gpu
 }
 
+public enum InferenceWorkload
+{
+    Locator,
+    LocatorAndMinigame,
+    CachedMinigame
+}
+
 public enum RuntimeMessageCode
 {
     ModelsUnavailable,
@@ -58,23 +65,16 @@ public readonly record struct BoundingBox(float Left, float Top, float Right, fl
 public sealed record DetectionObservation(
     long FrameNumber,
     DateTimeOffset CapturedAt,
-    BoundingBox? FishingUi = null,
-    BoundingBox? Prompt = null,
-    BoundingBox? Success = null,
-    BoundingBox? Failure = null,
-    BoundingBox? Rail = null,
-    BoundingBox? ControlBar = null,
-    BoundingBox? Target = null,
-    BoundingBox? ProgressBar = null,
-    float? TargetYNorm = null,
-    float? ControlTopNorm = null,
-    float? ControlBottomNorm = null,
-    float? ProgressNorm = null)
+    BoundingBox? BiteIndicator = null,
+    BoundingBox? MinigamePanel = null,
+    BoundingBox? CatchZone = null,
+    BoundingBox? MovingTarget = null,
+    float? MovingTargetYNorm = null,
+    float? CatchZoneTopNorm = null,
+    float? CatchZoneBottomNorm = null)
 {
-    public bool HasFishingUi => FishingUi is not null;
-    public bool HasPrompt => Prompt is not null;
-    public bool HasSuccess => Success is not null;
-    public bool HasFailure => Failure is not null;
+    public bool HasBiteIndicator => BiteIndicator is not null;
+    public bool HasMinigamePanel => MinigamePanel is not null;
 }
 
 public readonly record struct StateDecision(
@@ -84,15 +84,15 @@ public readonly record struct StateDecision(
     int Cycle);
 
 public sealed record StateMachineOptions(
-    int PromptConfirmFrames = 3,
+    int BiteIndicatorConfirmFrames = 3,
+    int BiteIndicatorEvidenceWindow = 5,
     int UiConfirmFrames = 3,
     int UiLostFrames = 5,
-    int SuccessConfirmFrames = 3,
-    int FailureConfirmFrames = 3,
     TimeSpan CastSettle = default,
+    TimeSpan BiteFallback = default,
     TimeSpan BiteTimeout = default,
     TimeSpan HookToUiMinimum = default,
-    TimeSpan PromptToUiTimeout = default,
+    TimeSpan BiteToMinigameTimeout = default,
     TimeSpan MinigameTimeout = default,
     TimeSpan LootTimeout = default,
     TimeSpan RecoveryDelay = default,
@@ -100,10 +100,12 @@ public sealed record StateMachineOptions(
     float VerticalDeadband = 0.04f)
 {
     public static StateMachineOptions Default => new(
+        BiteIndicatorEvidenceWindow: 5,
         CastSettle: TimeSpan.FromMilliseconds(450),
+        BiteFallback: TimeSpan.Zero,
         BiteTimeout: TimeSpan.FromSeconds(20),
         HookToUiMinimum: TimeSpan.FromMilliseconds(120),
-        PromptToUiTimeout: TimeSpan.FromSeconds(3),
+        BiteToMinigameTimeout: TimeSpan.FromSeconds(3),
         MinigameTimeout: TimeSpan.FromSeconds(30),
         LootTimeout: TimeSpan.FromSeconds(5),
         RecoveryDelay: TimeSpan.FromSeconds(1),
@@ -146,8 +148,15 @@ public interface IDetector
 {
     string Provider { get; }
     bool IsReady { get; }
-    DetectionObservation Detect(CapturedFrameEventArgs frame);
+    DetectionResult Detect(
+        CapturedFrameEventArgs frame,
+        FishingPhase phase,
+        TimeSpan minigamePanelRecheckInterval);
 }
+
+public readonly record struct DetectionResult(
+    DetectionObservation Observation,
+    InferenceWorkload Workload);
 
 public sealed record ModelFileInfo(
     [property: JsonPropertyName("filename")] string FileName,
@@ -185,6 +194,7 @@ public sealed record RuntimeSnapshot(
     string Provider,
     long FramesCaptured,
     long FramesDropped,
+    InferencePerformanceSnapshot Performance,
     RuntimeStatus Status,
     DateTimeOffset UpdatedAt);
 
@@ -194,8 +204,36 @@ public sealed record DetectionRuntimeMetrics(
     long FramesCaptured,
     long FramesDropped,
     FishingPhase Phase,
+    InferencePerformanceSnapshot Performance,
     RuntimeStatus Status,
     DateTimeOffset UpdatedAt);
+
+public readonly record struct InferencePerformanceSnapshot(
+    bool Adaptive,
+    bool ProfileLoaded,
+    bool IsCalibrating,
+    bool PerformanceInsufficient,
+    int LocatorIntervalMs,
+    int HookingIntervalMs,
+    int MinigameIntervalMs,
+    int PanelRecheckIntervalMs,
+    double? LocatorP95Ms = null,
+    double? LocatorAndMinigameP95Ms = null,
+    double? CachedMinigameP95Ms = null,
+    double LastFrameAgeMs = 0,
+    long InferenceOverruns = 0,
+    long RecentFramesDropped = 0)
+{
+    public static InferencePerformanceSnapshot Default => new(
+        Adaptive: true,
+        ProfileLoaded: false,
+        IsCalibrating: true,
+        PerformanceInsufficient: false,
+        LocatorIntervalMs: 80,
+        HookingIntervalMs: 80,
+        MinigameIntervalMs: 33,
+        PanelRecheckIntervalMs: 250);
+}
 
 public interface IRuntimeController
 {

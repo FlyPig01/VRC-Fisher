@@ -20,13 +20,7 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
 
     public StateDecision Step(DetectionObservation observation, DateTimeOffset now)
     {
-        _evidence.Update(observation);
-
-        if (_evidence.Failure >= options.FailureConfirmFrames &&
-            _phase is not (FishingPhase.Idle or FishingPhase.Casting or FishingPhase.Recovery or FishingPhase.Stopped))
-        {
-            return Recover(now, "failure detected");
-        }
+        _evidence.Update(observation, options.BiteIndicatorEvidenceWindow);
 
         if (_phase == FishingPhase.Idle)
         {
@@ -42,10 +36,15 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
                 Transition(FishingPhase.WaitingForBite, now);
                 break;
             case FishingPhase.WaitingForBite:
-                if (_evidence.Prompt >= options.PromptConfirmFrames)
+                if (_evidence.BiteIndicatorHits >= options.BiteIndicatorConfirmFrames)
                 {
                     Transition(FishingPhase.Hooking, now);
                     return Decision(InputAction.Click, "bite confirmed");
+                }
+                if (options.BiteFallback > TimeSpan.Zero && elapsed >= options.BiteFallback)
+                {
+                    Transition(FishingPhase.Hooking, now);
+                    return Decision(InputAction.Click, "bite fallback");
                 }
                 if (elapsed >= options.BiteTimeout) return Recover(now, "bite timeout");
                 break;
@@ -55,15 +54,9 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
                     Transition(FishingPhase.Minigame, now);
                     return Decision(InputAction.None, "minigame confirmed");
                 }
-                if (elapsed >= options.PromptToUiTimeout) return Recover(now, "minigame did not start");
+                if (elapsed >= options.BiteToMinigameTimeout) return Recover(now, "minigame did not start");
                 break;
             case FishingPhase.Minigame:
-                if (_evidence.Success >= options.SuccessConfirmFrames)
-                {
-                    var release = ReleaseIfHeld();
-                    Transition(FishingPhase.Reeling, now);
-                    return Decision(release, "success confirmed");
-                }
                 if (_evidence.UiLost >= options.UiLostFrames)
                 {
                     var release = ReleaseIfHeld();
@@ -104,22 +97,19 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
 
     private InputAction MinigameAction(DetectionObservation observation)
     {
-        if ((observation.TargetYNorm is null && observation.Target is null) ||
-            (observation.ControlTopNorm is null && observation.ControlBar is null))
-        {
+        var catchZoneCenter = observation.CatchZoneTopNorm is not null && observation.CatchZoneBottomNorm is not null
+            ? (observation.CatchZoneTopNorm.Value + observation.CatchZoneBottomNorm.Value) / 2f
+            : observation.CatchZone?.CenterY;
+        var targetCenter = observation.MovingTargetYNorm ?? observation.MovingTarget?.CenterY;
+        if (catchZoneCenter is null || targetCenter is null)
             return ReleaseIfHeld();
-        }
 
-        var center = observation.ControlTopNorm is not null && observation.ControlBottomNorm is not null
-            ? (observation.ControlTopNorm.Value + observation.ControlBottomNorm.Value) / 2f
-            : observation.ControlBar!.Value.CenterY;
-        var target = observation.TargetYNorm ?? observation.Target!.Value.CenterY;
-        if (target < center - options.VerticalDeadband && !_leftHeld)
+        if (targetCenter < catchZoneCenter - options.VerticalDeadband && !_leftHeld)
         {
             _leftHeld = true;
             return InputAction.Press;
         }
-        if (target > center + options.VerticalDeadband && _leftHeld)
+        if (targetCenter > catchZoneCenter + options.VerticalDeadband && _leftHeld)
         {
             _leftHeld = false;
             return InputAction.Release;
@@ -152,21 +142,24 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
 
     private sealed class Evidence
     {
-        public int Prompt { get; private set; }
+        private readonly Queue<bool> _biteIndicatorEvidence = new();
+        public int BiteIndicatorHits => _biteIndicatorEvidence.Count(item => item);
         public int Ui { get; private set; }
         public int UiLost { get; private set; }
-        public int Success { get; private set; }
-        public int Failure { get; private set; }
 
-        public void Update(DetectionObservation observation)
+        public void Update(DetectionObservation observation, int biteIndicatorEvidenceWindow = 5)
         {
-            Prompt = observation.HasPrompt ? Prompt + 1 : 0;
-            Ui = observation.HasFishingUi ? Ui + 1 : 0;
-            UiLost = observation.HasFishingUi ? 0 : UiLost + 1;
-            Success = observation.HasSuccess ? Success + 1 : 0;
-            Failure = observation.HasFailure ? Failure + 1 : 0;
+            _biteIndicatorEvidence.Enqueue(observation.HasBiteIndicator);
+            while (_biteIndicatorEvidence.Count > biteIndicatorEvidenceWindow)
+                _biteIndicatorEvidence.Dequeue();
+            Ui = observation.HasMinigamePanel ? Ui + 1 : 0;
+            UiLost = observation.HasMinigamePanel ? 0 : UiLost + 1;
         }
 
-        public void Clear() => (Prompt, Ui, UiLost, Success, Failure) = (0, 0, 0, 0, 0);
+        public void Clear()
+        {
+            _biteIndicatorEvidence.Clear();
+            (Ui, UiLost) = (0, 0);
+        }
     }
 }

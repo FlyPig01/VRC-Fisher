@@ -28,13 +28,19 @@ public partial class App : Microsoft.UI.Xaml.Application
     public App()
     {
         var installedLayout = DirectoryLayout.FromApplicationBase();
-        ApplyInstalledLanguage(installedLayout.Root);
         InitializeComponent();
         _layout = installedLayout;
         _layout.Ensure();
         _loggerFactory = LoggerFactory.Create(builder => builder.AddProvider(new FileLoggerProvider(Path.Combine(_layout.Logs, "vrc-fisher.log"))));
         _optionsStore = new OptionsStore(_layout.Root);
         _options = _optionsStore.Load();
+        var optionsPath = Path.Combine(_layout.Config, "user.json");
+        var language = File.Exists(optionsPath)
+            ? _options.Language
+            : ReadInstalledLanguage(_layout.Root);
+        UiStrings.Configure(language);
+        if (!File.Exists(optionsPath) && _options.Language != language)
+            _options = _options with { Language = language };
         if (_options.Device == VrcFisher.Core.ExecutionDevice.Gpu && !OnnxRuntimeDetector.SupportsDirectML)
             _options = _options with { Device = VrcFisher.Core.ExecutionDevice.Auto };
         _models = new ModelCatalog(
@@ -89,11 +95,11 @@ public partial class App : Microsoft.UI.Xaml.Application
         }
     }
 
-    private static void ApplyInstalledLanguage(string root)
+    private static string ReadInstalledLanguage(string root)
     {
         var path = Path.Combine(root, "config", "installer-language.ini");
         var value = File.Exists(path) ? File.ReadAllText(path).Trim() : null;
-        UiStrings.Configure(value is "zh-CN" or "en-US" ? value : "en-US");
+        return value is "zh-CN" or "en-US" ? value : "en-US";
     }
 
     public async Task StopAsync()

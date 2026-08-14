@@ -120,7 +120,7 @@ CPU-only 和 DirectML 必须输出到不同目录，不能混装两个 ONNX Runt
 
 Setup 默认推荐 DirectML，但保留 CPU-only。CPU-only 依赖更少，在没有可用 DirectX 12 GPU、GPU 争用严重或 DirectML 不稳定时可能表现更好。
 
-重新运行 Setup 可以切换组件。安装器必须先停止 VRC-Fisher，清理旧的程序文件和原生运行库，再安装所选组件；`models/`、`config/user.json`、`logs/` 和 `artifacts/` 不受影响。
+重新运行 Setup 可以切换组件。安装器必须先停止 VRC-Fisher，清理旧的程序文件和原生运行库，再安装所选组件；`models/`、`config/user.json`、`config/performance-profiles.json`、`logs/` 和 `artifacts/` 不受影响。Provider 变化后旧性能画像不会匹配，软件会自动重新采样。
 
 两个组件使用相同 ONNX。切换组件不重新训练、不转换也不重复下载模型。当前不提供 CUDA 组件。
 
@@ -139,6 +139,7 @@ Setup 默认推荐 DirectML，但保留 CPU-only。CPU-only 依赖更少，在�
     VrcFisher.exe
   config/
     user.json
+    performance-profiles.json
     installer-language.ini
   models/
     locator.onnx

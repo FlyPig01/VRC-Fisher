@@ -10,6 +10,8 @@ public sealed class RunPage : Page
 {
     private TextBlock _status = null!;
     private TextBlock _provider = null!;
+    private TextBlock _performance = null!;
+    private InfoBar _performanceWarning = null!;
     private Button _observe = null!;
     private Button _automatic = null!;
     private Button _stop = null!;
@@ -20,8 +22,19 @@ public sealed class RunPage : Page
         root.Children.Add(new TextBlock { Text = UiStrings.Get("Run"), FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
         _status = new TextBlock { Text = UiStrings.Get("StatusLoading"), TextWrapping = TextWrapping.Wrap };
         _provider = new TextBlock { Text = UiStrings.Get("ProviderUnavailable") };
+        _performance = new TextBlock { TextWrapping = TextWrapping.Wrap };
+        _performanceWarning = new InfoBar
+        {
+            IsOpen = false,
+            IsClosable = false,
+            Severity = InfoBarSeverity.Warning,
+            Title = UiStrings.Get("PerformanceInsufficientTitle"),
+            Message = UiStrings.Get("PerformanceInsufficientMessage")
+        };
         root.Children.Add(_status);
         root.Children.Add(_provider);
+        root.Children.Add(_performance);
+        root.Children.Add(_performanceWarning);
         _observe = new Button { Content = UiStrings.Get("Observe"), HorizontalAlignment = HorizontalAlignment.Left };
         _automatic = new Button { Content = UiStrings.Get("Automatic"), HorizontalAlignment = HorizontalAlignment.Left };
         _stop = new Button { Content = UiStrings.Get("Stop"), HorizontalAlignment = HorizontalAlignment.Left };
@@ -68,6 +81,8 @@ public sealed class RunPage : Page
         _status.Text = UiStrings.Format("RuntimeStatus", UiStrings.Phase(snapshot.Phase), UiStrings.RuntimeStatus(snapshot.Status));
         _provider.Text = UiStrings.Format("RuntimeProvider", UiStrings.Provider(snapshot.Provider),
             snapshot.ModelsReady ? UiStrings.Get("Ready") : UiStrings.Get("ModelsNotReady"));
+        _performance.Text = UiStrings.Performance(snapshot.Performance);
+        _performanceWarning.IsOpen = snapshot.Performance.PerformanceInsufficient;
         var canStart = Window.Models.IsReady && Window.Capture.IsConfigured && !snapshot.IsObserving;
         _observe.IsEnabled = canStart;
         _automatic.IsEnabled = canStart && Window.Models.AutomaticAllowed;
@@ -171,10 +186,29 @@ public sealed class ModelsPage : Page
 public sealed class SettingsPage : Page
 {
     private TextBlock _captureStatus = null!;
+    private ComboBox _language = null!;
     private ComboBox _device = null!;
+    private Slider _biteFallback = null!;
+    private TextBlock _biteFallbackValue = null!;
+    private ToggleSwitch _adaptiveInference = null!;
+    private StackPanel _manualFrequencyPanel = null!;
+    private NumberBox _locatorInterval = null!;
+    private NumberBox _hookingInterval = null!;
+    private NumberBox _minigameInterval = null!;
+    private NumberBox _panelRecheckInterval = null!;
+    private bool _refreshing;
 
     public SettingsPage()
     {
+        _language = new ComboBox { Width = 180 };
+        _language.Items.Add(new ComboBoxItem { Content = UiStrings.Get("LanguageChinese"), Tag = "zh-CN" });
+        _language.Items.Add(new ComboBoxItem { Content = UiStrings.Get("LanguageEnglish"), Tag = "en-US" });
+        _language.SelectionChanged += async (_, _) =>
+        {
+            if (_refreshing || Tag is not MainWindow window || _language.SelectedItem is not ComboBoxItem item || item.Tag is not string language)
+                return;
+            await window.ChangeLanguageAsync(language);
+        };
         var select = new Button { Content = UiStrings.Get("SelectCapture") };
         select.Click += async (_, _) =>
         {
@@ -198,16 +232,84 @@ public sealed class SettingsPage : Page
             };
             await window.SaveOptionsAsync(window.Options with { Device = device });
         };
+        _biteFallbackValue = new TextBlock();
+        _biteFallback = new Slider
+        {
+            Minimum = 0,
+            Maximum = 20,
+            StepFrequency = 0.5,
+            Width = 300,
+            HorizontalAlignment = HorizontalAlignment.Left
+        };
+        _biteFallback.ValueChanged += async (_, _) =>
+        {
+            _biteFallbackValue.Text = FormatBiteFallback(_biteFallback.Value);
+            if (_refreshing || Tag is not MainWindow window) return;
+            await window.SaveOptionsAsync(window.Options with { BiteFallbackSeconds = _biteFallback.Value });
+        };
+        _adaptiveInference = new ToggleSwitch
+        {
+            Header = UiStrings.Get("AdaptiveInference"),
+            OnContent = UiStrings.Get("Enabled"),
+            OffContent = UiStrings.Get("Disabled")
+        };
+        _adaptiveInference.Toggled += async (_, _) =>
+        {
+            _manualFrequencyPanel.Visibility = _adaptiveInference.IsOn
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+            if (_refreshing || Tag is not MainWindow window) return;
+            await window.SaveOptionsAsync(window.Options with
+            {
+                AdaptiveInference = _adaptiveInference.IsOn
+            });
+        };
+        _locatorInterval = CreateIntervalBox("LocatorInterval", 80, 250, 10);
+        _hookingInterval = CreateIntervalBox("HookingInterval", 80, 250, 10);
+        _minigameInterval = CreateIntervalBox("MinigameInterval", 33, 67, 1);
+        _panelRecheckInterval = CreateIntervalBox("PanelRecheckInterval", 250, 1000, 50);
+        _locatorInterval.ValueChanged += SaveManualFrequencies;
+        _hookingInterval.ValueChanged += SaveManualFrequencies;
+        _minigameInterval.ValueChanged += SaveManualFrequencies;
+        _panelRecheckInterval.ValueChanged += SaveManualFrequencies;
+        _manualFrequencyPanel = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = UiStrings.Get("ManualFrequencyDescription"),
+                    TextWrapping = TextWrapping.Wrap
+                },
+                _locatorInterval,
+                _hookingInterval,
+                _minigameInterval,
+                _panelRecheckInterval
+            }
+        };
         Content = new StackPanel
         {
             Spacing = 12,
             Children =
             {
                 new TextBlock { Text = UiStrings.Get("Settings"), FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold },
+                new TextBlock { Text = UiStrings.Get("Language") },
+                _language,
                 select,
                 _captureStatus,
                 new TextBlock { Text = UiStrings.Get("Device") },
                 _device,
+                new TextBlock { Text = UiStrings.Get("BiteFallback") },
+                _biteFallback,
+                _biteFallbackValue,
+                _adaptiveInference,
+                new TextBlock
+                {
+                    Text = UiStrings.Get("AdaptiveInferenceDescription"),
+                    TextWrapping = TextWrapping.Wrap
+                },
+                _manualFrequencyPanel,
                 new TextBlock { Text = UiStrings.Get("SoftwareRoot") },
                 new TextBlock { Text = "", TextWrapping = TextWrapping.Wrap }
             }
@@ -217,43 +319,114 @@ public sealed class SettingsPage : Page
 
     private void Refresh(MainWindow window)
     {
+        _refreshing = true;
         _captureStatus.Text = window.Capture.IsConfigured
             ? UiStrings.Format("CaptureTarget", window.Capture.TargetName)
             : UiStrings.Get("CaptureNotSelected");
+        _language.SelectedIndex = window.Options.Language == "en-US" ? 1 : 0;
         _device.SelectedItem = window.Options.Device switch
         {
             VrcFisher.Core.ExecutionDevice.Cpu => "CPU",
             VrcFisher.Core.ExecutionDevice.Gpu => "GPU",
             _ => "Auto"
         };
+        _biteFallback.Value = window.Options.BiteFallbackSeconds;
+        _biteFallbackValue.Text = FormatBiteFallback(_biteFallback.Value);
+        _adaptiveInference.IsOn = window.Options.AdaptiveInference;
+        _manualFrequencyPanel.Visibility = window.Options.AdaptiveInference
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        _locatorInterval.Value = window.Options.LocatorIntervalMs;
+        _hookingInterval.Value = window.Options.HookingIntervalMs;
+        _minigameInterval.Value = window.Options.MinigameIntervalMs;
+        _panelRecheckInterval.Value = window.Options.PanelRecheckIntervalMs;
         if (Content is StackPanel panel && panel.Children.LastOrDefault() is TextBlock rootText)
             rootText.Text = window.Layout.Root;
+        _refreshing = false;
+    }
+
+    private static string FormatBiteFallback(double seconds) => seconds <= 0
+        ? UiStrings.Get("BiteFallbackDisabled")
+        : UiStrings.Format("BiteFallbackSeconds", seconds);
+
+    private static NumberBox CreateIntervalBox(
+        string headerKey,
+        double minimum,
+        double maximum,
+        double step) => new()
+    {
+        Header = UiStrings.Get(headerKey),
+        Minimum = minimum,
+        Maximum = maximum,
+        SmallChange = step,
+        SpinButtonPlacementMode = NumberBoxSpinButtonPlacementMode.Inline,
+        Width = 300,
+        HorizontalAlignment = HorizontalAlignment.Left
+    };
+
+    private async void SaveManualFrequencies(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        if (_refreshing || Tag is not MainWindow window) return;
+        if (!double.IsFinite(_locatorInterval.Value)
+            || !double.IsFinite(_hookingInterval.Value)
+            || !double.IsFinite(_minigameInterval.Value)
+            || !double.IsFinite(_panelRecheckInterval.Value))
+        {
+            return;
+        }
+        await window.SaveOptionsAsync(window.Options with
+        {
+            LocatorIntervalMs = (int)_locatorInterval.Value,
+            HookingIntervalMs = (int)_hookingInterval.Value,
+            MinigameIntervalMs = (int)_minigameInterval.Value,
+            PanelRecheckIntervalMs = (int)_panelRecheckInterval.Value
+        });
     }
 }
 
 public sealed class DiagnosticsPage : Page
 {
+    private readonly TextBlock _status = new() { TextWrapping = TextWrapping.Wrap };
+
     public DiagnosticsPage()
     {
-        var text = new TextBlock { TextWrapping = TextWrapping.Wrap };
-        Loaded += (_, _) =>
-        {
-            if (Tag is MainWindow window)
-            {
-                var snapshot = window.Runtime.Snapshot;
-                text.Text = UiStrings.Format("DiagnosticsStatus", UiStrings.Provider(snapshot.Provider), snapshot.FramesCaptured,
-                    snapshot.FramesDropped, UiStrings.RuntimeStatus(snapshot.Status));
-            }
-        };
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
         Content = new StackPanel
         {
             Spacing = 12,
             Children =
             {
                 new TextBlock { Text = UiStrings.Get("Diagnostics"), FontSize = 22, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold },
-                text,
+                _status,
                 new TextBlock { Text = UiStrings.Get("DiagnosticsDescription"), TextWrapping = TextWrapping.Wrap }
             }
         };
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs args)
+    {
+        if (Tag is not MainWindow window) return;
+        window.Runtime.SnapshotChanged += OnSnapshotChanged;
+        Refresh(window.Runtime.Snapshot);
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs args)
+    {
+        if (Tag is MainWindow window) window.Runtime.SnapshotChanged -= OnSnapshotChanged;
+    }
+
+    private void OnSnapshotChanged(object? sender, RuntimeSnapshot snapshot) =>
+        DispatcherQueue.TryEnqueue(() => Refresh(snapshot));
+
+    private void Refresh(RuntimeSnapshot snapshot)
+    {
+        _status.Text = UiStrings.Format(
+            "DiagnosticsStatus",
+            UiStrings.Provider(snapshot.Provider),
+            snapshot.FramesCaptured,
+            snapshot.FramesDropped,
+            UiStrings.RuntimeStatus(snapshot.Status),
+            UiStrings.Performance(snapshot.Performance));
     }
 }

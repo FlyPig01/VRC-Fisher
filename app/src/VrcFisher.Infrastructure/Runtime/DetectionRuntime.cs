@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using VrcFisher.Application;
 using VrcFisher.Core;
@@ -18,13 +19,18 @@ public sealed class DetectionRuntime(
     private static readonly TimeSpan MaximumFrameAge = TimeSpan.FromMilliseconds(750);
     private readonly object _sync = new();
     private readonly LatestFrameBuffer _frames = new();
-    private readonly FishingStateMachine _stateMachine = new(StateMachineOptions.Default);
+    private readonly PerformanceProfileStore _profileStore = new(layout.Config);
+    private FishingStateMachine _stateMachine = new(StateMachineOptions.Default);
+    private InferencePerformanceScheduler? _performance;
+    private PerformanceProfileIdentity? _profileIdentity;
     private OnnxRuntimeDetector? _detector;
     private CancellationTokenSource? _runCancellation;
     private Task? _runTask;
     private string _provider = "Unavailable";
     private bool _automatic;
     private long _captured;
+    private long _lastDroppedForSample;
+    private DateTimeOffset _lastInferenceAt = DateTimeOffset.MinValue;
 
     public string Provider => _provider;
     public bool IsReady => modelCatalog.IsReady;
@@ -39,6 +45,10 @@ public sealed class DetectionRuntime(
         lock (_sync)
         {
             if (_runTask is not null) return;
+            _stateMachine = new FishingStateMachine(StateMachineOptions.Default with
+            {
+                BiteFallback = TimeSpan.FromSeconds(options.BiteFallbackSeconds)
+            });
             _stateMachine.Reset(DateTimeOffset.UtcNow);
             _detector = new OnnxRuntimeDetector(
                 layout.Models,
@@ -52,8 +62,12 @@ public sealed class DetectionRuntime(
                 throw new InvalidOperationException("当前 ONNX 输出契约尚未验证，自动输入已禁用");
             }
             _provider = _detector.Provider;
+            _performance = new InferencePerformanceScheduler(options, _provider);
+            _profileIdentity = null;
             _automatic = automatic;
             _captured = 0;
+            _lastDroppedForSample = _frames.DroppedCount;
+            _lastInferenceAt = DateTimeOffset.MinValue;
             _runCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             runToken = _runCancellation.Token;
             capture.FrameArrived += OnFrameArrived;
@@ -81,6 +95,8 @@ public sealed class DetectionRuntime(
         Task? task;
         CancellationTokenSource? runCancellation;
         OnnxRuntimeDetector? detector;
+        InferencePerformanceScheduler? performance;
+        PerformanceProfileIdentity? profileIdentity;
         lock (_sync)
         {
             runCancellation = _runCancellation;
@@ -98,6 +114,26 @@ public sealed class DetectionRuntime(
         {
             try { await task; }
             catch (OperationCanceledException) { }
+        }
+        lock (_sync)
+        {
+            performance = _performance;
+            profileIdentity = _profileIdentity;
+            _performance = null;
+            _profileIdentity = null;
+        }
+        if (performance is { Adaptive: true } && profileIdentity is not null)
+        {
+            try
+            {
+                await _profileStore.SaveAsync(
+                    performance.CreateProfile(profileIdentity),
+                    cancellationToken);
+            }
+            catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+            {
+                logger.LogWarning(error, "performance profile could not be saved");
+            }
         }
         detector?.Dispose();
         runCancellation?.Dispose();
@@ -131,7 +167,8 @@ public sealed class DetectionRuntime(
                 continue;
             }
             var detector = _detector;
-            if (detector is null) continue;
+            var performance = _performance;
+            if (detector is null || performance is null) continue;
             try
             {
                 if (DateTimeOffset.UtcNow - frame.CapturedAt > MaximumFrameAge)
@@ -148,23 +185,69 @@ public sealed class DetectionRuntime(
                     Publish(FishingPhase.Recovery, RuntimeMessageCode.TargetNotForeground);
                     continue;
                 }
-                var observation = detector.Detect(frame);
+                EnsurePerformanceProfile(frame, performance);
+                var phase = _stateMachine.Phase;
+                var interval = phase == FishingPhase.Minigame && !detector.HasCachedPanel
+                    ? performance.GetInferenceInterval(FishingPhase.WaitingForBite)
+                    : performance.GetInferenceInterval(phase);
+                if (_lastInferenceAt != DateTimeOffset.MinValue
+                    && frame.CapturedAt - _lastInferenceAt < interval)
+                {
+                    continue;
+                }
+                _lastInferenceAt = frame.CapturedAt;
+                var frameAge = DateTimeOffset.UtcNow - frame.CapturedAt;
+                var inferenceStarted = Stopwatch.GetTimestamp();
+                var detection = detector.Detect(frame, phase, performance.PanelRecheckInterval);
+                var inferenceElapsed = Stopwatch.GetElapsedTime(inferenceStarted);
+                var dropped = _frames.DroppedCount;
+                performance.Record(
+                    detection.Workload,
+                    inferenceElapsed.TotalMilliseconds,
+                    frameAge.TotalMilliseconds,
+                    Math.Max(0, dropped - _lastDroppedForSample),
+                    DateTimeOffset.UtcNow);
+                _lastDroppedForSample = dropped;
                 if (!detector.CanProduceDecisions)
                 {
                     Publish(FishingPhase.Stopped, RuntimeMessageCode.OutputContractUnverified);
                     continue;
                 }
-                var decision = _stateMachine.Step(observation, DateTimeOffset.UtcNow);
+                var decision = _stateMachine.Step(detection.Observation, DateTimeOffset.UtcNow);
                 if (_automatic) Apply(decision.Action);
                 Publish(decision.Phase, RuntimeMessageCode.StateMachineDecision, decision.Reason);
             }
             catch (Exception error)
             {
+                performance.RecordFailure(DateTimeOffset.UtcNow);
                 logger.LogError(error, "frame inference failed; input released");
                 inputController.ReleaseAll();
                 Publish(FishingPhase.Recovery, RuntimeMessageCode.InferenceFailed, error.Message);
             }
         }
+    }
+
+    private void EnsurePerformanceProfile(
+        CapturedFrameEventArgs frame,
+        InferencePerformanceScheduler performance)
+    {
+        if (!performance.Adaptive || _profileIdentity is not null) return;
+        var identity = PerformanceProfileStore.CreateIdentity(
+            _provider,
+            modelCatalog,
+            frame.Width,
+            frame.Height);
+        var profile = _profileStore.Load(identity);
+        if (profile is not null)
+        {
+            performance.ApplyProfile(profile);
+            logger.LogInformation(
+                "loaded inference performance profile provider={Provider} resolution={Width}x{Height}",
+                _provider,
+                frame.Width,
+                frame.Height);
+        }
+        _profileIdentity = identity;
     }
 
     private void Apply(InputAction action)
@@ -183,6 +266,7 @@ public sealed class DetectionRuntime(
             Interlocked.Read(ref _captured),
             _frames.DroppedCount,
             phase,
+            _performance?.Snapshot ?? InferencePerformanceSnapshot.Default,
             new RuntimeStatus(code, detail),
             DateTimeOffset.UtcNow));
     }

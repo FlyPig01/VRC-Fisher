@@ -2,7 +2,7 @@
 
 VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序捕获用户选择的完整显示器，识别咬钩感叹号和小游戏 UI，并通过鼠标控制让移动目标保持在捕获区域内。
 
-> 当前仍是开发中的 MVP。C#/.NET 10/WinUI 3 软件、Windows Graphics Capture、双 ONNX 推理基础设施、模型管理、CPU/DirectML 运行组件和单一 Inno Setup 已实现并通过本机构建、安装与启动验证。Python 数据工具已同步为四类，并支持使用首轮 `best.pt` 生成原生 YOLO 预标注，再通过项目内本地浏览器标注器审核；C# 状态机与推理类别映射仍需从旧八类契约同步。首轮模型因数据覆盖不足尚未验收，可用 ONNX 和真实 VRChat 自动钓鱼验收仍未完成。
+> 当前仍是开发中的 MVP。C#/.NET 10/WinUI 3 软件已接入完整显示器捕获、四类双 ONNX 推理、状态机、CPU/DirectML、模型管理、受限自动调频和屏外感叹号兜底设置。当前 round3 `best.pt` 已固化为 `models/v0.1.0/` 的可发布模型，并导出为静态 FP32 ONNX；完整审核视频、现场仅观察、实时性能和自动钓鱼仍需人工验收，模型清单暂不允许自动输入。
 
 ## 从这里开始
 
@@ -20,11 +20,32 @@ VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序�
 
 1. 启动 VRChat 并进入受支持的钓鱼世界。
 2. 打开 VRC-Fisher，确认两个模型已安装并通过校验。
-3. 选择显示 VRChat 的完整显示器和运行设备。
+3. 选择显示 VRChat 的完整显示器和运行设备；识别频率默认保持“自动”。
 4. 按目标世界设置“屏外感叹号兜底等待时间”，再运行“仅观察”确认状态识别正确。
 5. 再明确启动“自动运行”；任何异常立即按 `F8` 停止。
 
-当前尚无已上传到 GitHub 的正式 Release；本地构建产物只用于开发验收。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
+当前尚未上传 GitHub Release；本地 `releases/app-v0.1.0/` 与 `releases/models-v0.1.0/` 是供维护者审核的发行物。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
+
+## ONNX 性能快照
+
+当前开发机为 Ryzen 7 7840H + RTX 4060 Laptop GPU。正式 C# 检测器在 `2560 x 1600` 测试帧上的平均单帧耗时如下；locator 输入为 `960 x 960`，缓存小游戏裁剪输入为 `640 x 640`。
+
+| 运行模式 | locator | 缓存 minigame | locator + minigame |
+|---|---:|---:|---:|
+| CPU-only / CPU | 58.80 ms | 23.68 ms | 108.81 ms |
+| DirectML 包 / CPU | 68.81 ms | 28.40 ms | 103.54 ms |
+| DirectML / GPU | 11.11 ms | 5.42 ms | 16.17 ms |
+| DirectML / Auto | 10.99 ms | 4.95 ms | 15.83 ms |
+
+```mermaid
+xychart-beta
+    title "C# locator 平均单帧耗时（越低越好）"
+    x-axis ["CPU-only", "DML包-CPU", "DML-GPU", "DML-Auto"]
+    y-axis "毫秒" 0 --> 80
+    bar [58.80, 68.81, 11.11, 10.99]
+```
+
+本机 `Auto` 实际选择 DirectML GPU。保持 FP32 模型、`960/640` 输入和原阈值的 C# 优化后，CPU-only 的 locator、双模型和缓存 minigame P95 分别为 `65.21/119.79/24.79 ms`。运行时会分别统计三类负载并在固定边界内调节四个间隔；本机 CPU 初始值为 `100/150/40/500 ms`，DirectML 初始值为 `80/80/33/250 ms`。统计不增加模型调用。完整算法、开销和测量边界见 [性能与存储预算](docs/performance-budget.md) 与 [ONNX Runtime 单帧性能实测](docs/onnx-runtime-benchmark.md)。
 
 ## 开发者快速验证
 
@@ -72,4 +93,4 @@ VRC-Fisher 是多许可证项目：原创应用、数据处理和通用工具代
 
 ## 当前阻塞
 
-当前三段录屏已完成首轮训练，但数据覆盖不合格：locator 独立验证集只有 6 个 `bite_indicator`，minigame 的 `moving_target` Recall 只有 0.392，且训练/验证目标外观存在明显域偏移。首轮权重只用于生成需要人工复核的预标注；补充多外观、多录屏数据并重新训练前不得导出发布模型。
+`models/v0.1.0/` 已包含当前最好的 round3 `.pt` 和 ONNX，并由本地模型发布脚本生成对应清单。GitHub Release 仍需维护者审核本地发行物后再创建；即使发布模型，真实 VRChat 的“仅观察”、CPU/DirectML 实时性能和输入安全验收仍是独立门槛，当前清单不会自动启用输入。

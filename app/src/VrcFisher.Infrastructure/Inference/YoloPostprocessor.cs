@@ -5,6 +5,12 @@ namespace VrcFisher.Infrastructure.Inference;
 
 public sealed record YoloDetection(string ClassName, float Confidence, BoundingBox Box);
 
+public enum YoloOutputLayout
+{
+    Raw,
+    Nms
+}
+
 public readonly record struct LetterboxTransform(
     float Scale,
     int OffsetX,
@@ -40,90 +46,123 @@ public static class YoloPostprocessor
         IReadOnlyList<string> classNames,
         float confidenceThreshold,
         float iouThreshold,
-        LetterboxTransform transform)
+        LetterboxTransform transform,
+        YoloOutputLayout layout = YoloOutputLayout.Raw)
     {
         ArgumentNullException.ThrowIfNull(output);
         if (classNames.Count == 0) throw new ArgumentException("至少需要一个类别", nameof(classNames));
         if (confidenceThreshold is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(confidenceThreshold));
         if (iouThreshold is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(iouThreshold));
 
-        var rows = ToRows(output, classNames.Count);
-        if (rows.Count == 0) return [];
-
-        var candidates = new List<Candidate>(rows.Count);
-        foreach (var row in rows)
-        {
-            if (row.Length == 6)
-            {
-                var exportedClassId = (int)MathF.Round(row[5]);
-                AddCandidate(candidates, row[0], row[1], row[2], row[3], row[4], exportedClassId,
-                    classNames, confidenceThreshold, transform);
-                continue;
-            }
-
-            var hasObjectness = row.Length == classNames.Count + 5;
-            var expected = classNames.Count + (hasObjectness ? 5 : 4);
-            if (row.Length != expected)
-                throw new InvalidDataException($"YOLO 输出每行有 {row.Length} 个值，期望 {classNames.Count + 4} 或 {classNames.Count + 5}");
-
-            var classStart = hasObjectness ? 5 : 4;
-            var scoreClassId = 0;
-            var classScore = float.NegativeInfinity;
-            for (var index = classStart; index < row.Length; index++)
-            {
-                if (row[index] > classScore)
-                {
-                    classScore = row[index];
-                    scoreClassId = index - classStart;
-                }
-            }
-            var confidence = hasObjectness ? row[4] * classScore : classScore;
-            AddCandidate(candidates, row[0], row[1], row[2], row[3], confidence, scoreClassId,
-                classNames, confidenceThreshold, transform, xywh: true);
-        }
-
-        var kept = ClasswiseNms(candidates, iouThreshold);
-        return kept
-            .OrderByDescending(item => item.Confidence)
-            .Select(item => new YoloDetection(item.ClassName, item.Confidence, item.Box))
-            .ToArray();
-    }
-
-    private static List<float[]> ToRows(Tensor<float> tensor, int classCount)
-    {
-        var dimensions = tensor.Dimensions.ToArray();
+        var dimensions = output.Dimensions.ToArray();
         while (dimensions.Length > 2 && dimensions[0] == 1)
             dimensions = dimensions[1..];
         if (dimensions.Length != 2)
-            throw new InvalidDataException($"不支持的 YOLO 输出形状：[{string.Join(",", tensor.Dimensions.ToArray())}]");
+            throw new InvalidDataException($"不支持的 YOLO 输出形状：[{string.Join(",", output.Dimensions.ToArray())}]");
 
         var first = dimensions[0];
         var second = dimensions[1];
-        var expected4 = classCount + 4;
-        var expected5 = classCount + 5;
+        var expected4 = classNames.Count + 4;
+        var expected5 = classNames.Count + 5;
         var transposed = first == 6 || first == expected4 || first == expected5 ||
                          (first <= 128 && first < second && second > 128);
         var rowCount = transposed ? second : first;
         var valueCount = transposed ? first : second;
         if (valueCount != 6 && valueCount != expected4 && valueCount != expected5)
-            throw new InvalidDataException($"不支持的 YOLO 输出形状：[{string.Join(",", tensor.Dimensions.ToArray())}]");
+            throw new InvalidDataException($"不支持的 YOLO 输出形状：[{string.Join(",", output.Dimensions.ToArray())}]");
+        if (rowCount == 0) return [];
 
-        var rows = new List<float[]>(rowCount);
-        var flat = tensor.ToArray();
+        if (output is DenseTensor<float> dense)
+            return DecodeValues(dense.Buffer.Span, rowCount, valueCount, transposed, classNames,
+                confidenceThreshold, iouThreshold, transform, layout);
+
+        var values = output.ToArray();
+        return DecodeValues(values, rowCount, valueCount, transposed, classNames,
+            confidenceThreshold, iouThreshold, transform, layout);
+    }
+
+    private static IReadOnlyList<YoloDetection> DecodeValues(
+        ReadOnlySpan<float> values,
+        int rowCount,
+        int valueCount,
+        bool transposed,
+        IReadOnlyList<string> classNames,
+        float confidenceThreshold,
+        float iouThreshold,
+        LetterboxTransform transform,
+        YoloOutputLayout layout)
+    {
+        var candidates = new List<Candidate>(Math.Min(rowCount, 64));
         for (var row = 0; row < rowCount; row++)
         {
-            var values = new float[valueCount];
-            // Reading flat storage avoids assumptions about rank after the
-            // optional batch dimension has been squeezed.
-            for (var column = 0; column < valueCount; column++)
+            if (layout == YoloOutputLayout.Nms)
             {
-                var sourceIndex = transposed ? column * rowCount + row : row * valueCount + column;
-                values[column] = flat[sourceIndex];
+                if (valueCount != 6)
+                    throw new InvalidDataException($"NMS 输出每行必须有 6 个值，实际为 {valueCount}");
+                var exportedClassId = (int)MathF.Round(ValueAt(values, row, 5, rowCount, valueCount, transposed));
+                AddCandidate(
+                    candidates,
+                    ValueAt(values, row, 0, rowCount, valueCount, transposed),
+                    ValueAt(values, row, 1, rowCount, valueCount, transposed),
+                    ValueAt(values, row, 2, rowCount, valueCount, transposed),
+                    ValueAt(values, row, 3, rowCount, valueCount, transposed),
+                    ValueAt(values, row, 4, rowCount, valueCount, transposed),
+                    exportedClassId,
+                    classNames, confidenceThreshold, transform);
+                continue;
             }
-            rows.Add(values);
+
+            var hasObjectness = valueCount == classNames.Count + 5;
+            var expected = classNames.Count + (hasObjectness ? 5 : 4);
+            if (valueCount != expected)
+                throw new InvalidDataException($"YOLO 输出每行有 {valueCount} 个值，期望 {classNames.Count + 4} 或 {classNames.Count + 5}");
+
+            var classStart = hasObjectness ? 5 : 4;
+            var scoreClassId = 0;
+            var classScore = float.NegativeInfinity;
+            for (var index = classStart; index < valueCount; index++)
+            {
+                var score = ValueAt(values, row, index, rowCount, valueCount, transposed);
+                if (score > classScore)
+                {
+                    classScore = score;
+                    scoreClassId = index - classStart;
+                }
+            }
+            var confidence = hasObjectness
+                ? ValueAt(values, row, 4, rowCount, valueCount, transposed) * classScore
+                : classScore;
+            AddCandidate(
+                candidates,
+                ValueAt(values, row, 0, rowCount, valueCount, transposed),
+                ValueAt(values, row, 1, rowCount, valueCount, transposed),
+                ValueAt(values, row, 2, rowCount, valueCount, transposed),
+                ValueAt(values, row, 3, rowCount, valueCount, transposed),
+                confidence,
+                scoreClassId,
+                classNames, confidenceThreshold, transform, xywh: true);
         }
-        return rows;
+
+        var kept = ClasswiseNms(candidates, iouThreshold);
+        var detections = new YoloDetection[kept.Count];
+        for (var index = 0; index < kept.Count; index++)
+        {
+            var candidate = kept[index];
+            detections[index] = new YoloDetection(
+                classNames[candidate.ClassId],
+                candidate.Confidence,
+                candidate.Box);
+        }
+        return detections;
     }
+
+    private static float ValueAt(
+        ReadOnlySpan<float> values,
+        int row,
+        int column,
+        int rowCount,
+        int valueCount,
+        bool transposed) => values[transposed ? column * rowCount + row : row * valueCount + column];
 
     private static void AddCandidate(
         List<Candidate> candidates,
@@ -159,22 +198,26 @@ public static class YoloPostprocessor
             : new BoundingBox(x, y, widthOrRight, heightOrBottom);
         box = transform.ToSource(box);
         if (box.Width <= 0 || box.Height <= 0) return;
-        candidates.Add(new Candidate(classNames[classId], confidence, box));
+        candidates.Add(new Candidate(classId, confidence, box));
     }
 
     private static IReadOnlyList<Candidate> ClasswiseNms(List<Candidate> candidates, float threshold)
     {
-        var kept = new List<Candidate>();
-        foreach (var group in candidates.GroupBy(item => item.ClassName, StringComparer.Ordinal))
+        candidates.Sort(static (left, right) => right.Confidence.CompareTo(left.Confidence));
+        var kept = new List<Candidate>(candidates.Count);
+        foreach (var candidate in candidates)
         {
-            var pending = group.OrderByDescending(item => item.Confidence).ToList();
-            while (pending.Count > 0)
+            var suppressed = false;
+            foreach (var accepted in kept)
             {
-                var current = pending[0];
-                kept.Add(current);
-                pending.RemoveAt(0);
-                pending.RemoveAll(item => IntersectionOverUnion(current.Box, item.Box) > threshold);
+                if (candidate.ClassId == accepted.ClassId &&
+                    IntersectionOverUnion(candidate.Box, accepted.Box) > threshold)
+                {
+                    suppressed = true;
+                    break;
+                }
             }
+            if (!suppressed) kept.Add(candidate);
         }
         return kept;
     }
@@ -189,5 +232,5 @@ public static class YoloPostprocessor
         return union <= 0 ? 0 : intersectionArea / union;
     }
 
-    private sealed record Candidate(string ClassName, float Confidence, BoundingBox Box);
+    private readonly record struct Candidate(int ClassId, float Confidence, BoundingBox Box);
 }

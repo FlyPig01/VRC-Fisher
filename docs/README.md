@@ -9,8 +9,9 @@
 3. [软件架构](software-architecture.md)：C# 分层、实时管线、状态机和 WinUI 3 前端。
 4. [视觉与训练](vision-and-training.md)：双 YOLO11n、四类全屏标注、数据生成、训练和 ONNX 契约。
 5. [性能与存储预算](performance-budget.md)：开发占用、发布体积、运行资源和验收方法。
-6. [安装与发布](installation-and-release.md)：单一 Setup、组件选择、模型下载、升级和卸载。
-7. [许可证与发布边界](licensing.md)：MIT 原创代码、Ultralytics AGPL、模型、数据集和第三方声明。
+6. [ONNX Runtime 单帧性能实测](onnx-runtime-benchmark.md)：C# CPU/DirectML 与 Python CPU/CUDA 的平均值、P50/P95 和调度建议。
+7. [安装与发布](installation-and-release.md)：单一 Setup、组件选择、模型下载、升级和卸载。
+8. [许可证与发布边界](licensing.md)：MIT 原创代码、Ultralytics AGPL、模型、数据集和第三方声明。
 
 ## 固定基线
 
@@ -38,6 +39,6 @@
 - **目标设计**：已经确定的正式实现要求，但代码尚未完成。
 - **估算**：构建前的容量或性能预算，不能作为实测结论发布。
 
-当前已实现 C# 分层工程、双 ONNX Runtime 推理、YOLO 输出解码、旧版状态机、连续帧证据、前台 VRChat 输入保护、鼠标安全释放、F8 紧急停止、最新帧缓冲、模型清单/校验/成组事务下载、GitHub Release 查询、取消与有限重试、WinUI 模型管理、CPU/DirectML Provider、WinUI 系统捕获选择器、D3D11/WGC CPU readback、内置中英文资源和 18 项 C# 自动化测试。单一 Inno Setup 已实际生成，并分别完成 CPU-only 与 DirectML 安装和无模型启动验证。
+当前已实现 C# 分层工程、四类双 ONNX Runtime 推理、显式 Raw/NMS 输出解码、动画感叹号时序证据、屏外感叹号兜底滑块、受限自动调频和安装目录性能画像、前台 VRChat 输入保护、鼠标安全释放、F8 紧急停止、最新帧缓冲、模型清单/校验/成组事务下载、GitHub Release 查询、WinUI 模型管理、CPU/DirectML Provider、WGC 完整显示器捕获和内置中英文资源。单一 Inno Setup 已实际生成，并分别完成 CPU-only 与 DirectML 安装和无模型启动验证。
 
-四类视觉契约和新的计时兜底是当前文档基线。Python 数据工具和双数据集生成器已同步为四类，预标注直接使用项目 YOLO TXT，并由仅监听本机的浏览器标注器保存草稿、区分待审核与负样本；C# 仍映射旧八类结果，设置页也没有兜底时间滑块。训练环境已在 RTX 4060 上完成首轮训练，但 locator 感叹号独立验证样本过少，minigame 的 `moving_target` Recall 只有 0.392。首轮权重只用于人工复核的预标注，两个有效 ONNX、识别性能和真实 VRChat 场景验收均未完成。
+round3 的最佳权重已导出为 `training/exports/locator.onnx` 与 `minigame.onnx`，并固化到 `models/v0.1.0/`；开发副本位于 `app/models/`。导出契约、抽样 PT/ONNX 对比以及 C# CPU/DirectML 对真实全屏帧的加载推理均已通过。该版本是可发布的模型版本，但不代表对所有场景的精度或自动钓鱼已经验收；`automatic_allowed` 仍为 `false`。

@@ -24,7 +24,22 @@
   <data name="ModelValid" xml:space="preserve"><value>{0}：版本 {1}，{2:N1} MB，校验通过</value></data>
   <data name="ModelInvalid" xml:space="preserve"><value>{0}：{1:N1} MB，未通过清单校验</value></data>
   <data name="ModelsDescription" xml:space="preserve"><value>两个模型都必须通过完整性校验，才能开始观察。</value></data>
+  <data name="Language" xml:space="preserve"><value>界面语言</value></data>
+  <data name="LanguageChinese" xml:space="preserve"><value>简体中文</value></data>
+  <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
   <data name="Device" xml:space="preserve"><value>运行设备</value></data>
+  <data name="AdaptiveInference" xml:space="preserve"><value>自动调节识别频率</value></data>
+  <data name="AdaptiveInferenceDescription" xml:space="preserve"><value>根据实际 ONNX 推理 P95 在安全范围内调节；设置在下次启动识别时生效。</value></data>
+  <data name="ManualFrequencyDescription" xml:space="preserve"><value>手动间隔（毫秒）。小游戏控制不会允许低于约 15 Hz。</value></data>
+  <data name="LocatorInterval" xml:space="preserve"><value>等待感叹号间隔（80–250 ms）</value></data>
+  <data name="HookingInterval" xml:space="preserve"><value>等待小游戏间隔（80–250 ms）</value></data>
+  <data name="MinigameInterval" xml:space="preserve"><value>小游戏控制间隔（33–67 ms）</value></data>
+  <data name="PanelRecheckInterval" xml:space="preserve"><value>小游戏面板复查间隔（250–1000 ms）</value></data>
+  <data name="Enabled" xml:space="preserve"><value>开启</value></data>
+  <data name="Disabled" xml:space="preserve"><value>关闭</value></data>
+  <data name="BiteFallback" xml:space="preserve"><value>感叹号不可见时的最短等待时间</value></data>
+  <data name="BiteFallbackDisabled" xml:space="preserve"><value>已禁用</value></data>
+  <data name="BiteFallbackSeconds" xml:space="preserve"><value>{0:N1} 秒</value></data>
   <data name="SoftwareRoot" xml:space="preserve"><value>软件根目录：</value></data>
   <data name="DiagnosticsDescription" xml:space="preserve"><value>诊断预览默认关闭。没有正式模型和显示器捕获时，不显示识别结果。</value></data>
   <data name="RuntimeStatus" xml:space="preserve"><value>阶段：{0}
@@ -42,7 +57,21 @@
   <data name="DiagnosticsStatus" xml:space="preserve"><value>Provider：{0}
 捕获帧：{1}
 丢弃帧：{2}
-状态：{3}</value></data>
+状态：{3}
+
+{4}</value></data>
+  <data name="FrequencyModeManual" xml:space="preserve"><value>手动</value></data>
+  <data name="FrequencyModeCalibrating" xml:space="preserve"><value>自动（采样中）</value></data>
+  <data name="FrequencyModeProfile" xml:space="preserve"><value>自动（已加载本机画像）</value></data>
+  <data name="FrequencyModeAdaptive" xml:space="preserve"><value>自动</value></data>
+  <data name="P95Unavailable" xml:space="preserve"><value>样本不足</value></data>
+  <data name="P95Value" xml:space="preserve"><value>{0:N2} ms</value></data>
+  <data name="PerformanceStatus" xml:space="preserve"><value>识别频率：{0}
+间隔：locator {1} ms / Hooking {2} ms / 小游戏 {3} ms / 面板复查 {4} ms
+P95：locator {5} / 双模型 {6} / 缓存小游戏 {7}
+最近帧龄：{8:N1} ms；推理超时：{9}；最近 5 秒丢帧：{10}</value></data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve"><value>设备性能不足</value></data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve"><value>小游戏推理即使使用 67 ms 上限也超出 65% 性能预算。软件不会继续降频；仅观察仍可使用，自动操作可能不稳定。</value></data>
   <data name="PhaseIdle" xml:space="preserve"><value>空闲</value></data>
   <data name="PhaseCasting" xml:space="preserve"><value>抛竿</value></data>
   <data name="PhaseWaitingForBite" xml:space="preserve"><value>等待咬钩</value></data>
@@ -68,6 +97,7 @@
   <data name="UnknownStatus" xml:space="preserve"><value>未知状态</value></data>
   <data name="DecisionCast" xml:space="preserve"><value>抛竿</value></data>
   <data name="DecisionBiteConfirmed" xml:space="preserve"><value>确认咬钩</value></data>
+  <data name="DecisionBiteFallback" xml:space="preserve"><value>达到屏外感叹号兜底等待时间</value></data>
   <data name="DecisionBiteTimeout" xml:space="preserve"><value>等待咬钩超时</value></data>
   <data name="DecisionMinigameConfirmed" xml:space="preserve"><value>确认小游戏界面</value></data>
   <data name="DecisionMinigameDidNotStart" xml:space="preserve"><value>小游戏未开始</value></data>

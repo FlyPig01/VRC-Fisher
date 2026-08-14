@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\VrcFisher.Core\VrcFisher.Core.csproj" />
     <ProjectReference Include="..\VrcFisher.Application\VrcFisher.Application.csproj" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.24.4" Condition="'$(VrcExecutionProvider)' != 'DirectML'" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.29.0" Condition="'$(VrcExecutionProvider)' != 'DirectML'" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" Condition="'$(VrcExecutionProvider)' == 'DirectML'" />
   </ItemGroup>
 </Project>

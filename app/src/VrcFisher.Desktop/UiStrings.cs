@@ -75,10 +75,39 @@ internal static class UiStrings
         _ => Get("UnknownStatus")
     };
 
+    public static string Performance(InferencePerformanceSnapshot performance)
+    {
+        var mode = !performance.Adaptive
+            ? Get("FrequencyModeManual")
+            : performance.IsCalibrating
+                ? Get("FrequencyModeCalibrating")
+                : performance.ProfileLoaded
+                    ? Get("FrequencyModeProfile")
+                    : Get("FrequencyModeAdaptive");
+        return Format(
+            "PerformanceStatus",
+            mode,
+            performance.LocatorIntervalMs,
+            performance.HookingIntervalMs,
+            performance.MinigameIntervalMs,
+            performance.PanelRecheckIntervalMs,
+            P95(performance.LocatorP95Ms),
+            P95(performance.LocatorAndMinigameP95Ms),
+            P95(performance.CachedMinigameP95Ms),
+            performance.LastFrameAgeMs,
+            performance.InferenceOverruns,
+            performance.RecentFramesDropped);
+    }
+
+    private static string P95(double? value) => value is null
+        ? Get("P95Unavailable")
+        : Format("P95Value", value.Value);
+
     private static string StateDecision(string? reason) => reason switch
     {
         "cast" => Get("DecisionCast"),
         "bite confirmed" => Get("DecisionBiteConfirmed"),
+        "bite fallback" => Get("DecisionBiteFallback"),
         "bite timeout" => Get("DecisionBiteTimeout"),
         "minigame confirmed" => Get("DecisionMinigameConfirmed"),
         "minigame did not start" => Get("DecisionMinigameDidNotStart"),

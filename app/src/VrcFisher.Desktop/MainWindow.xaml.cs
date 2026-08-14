@@ -62,6 +62,18 @@ public sealed partial class MainWindow : Window
         await _saveOptions(options);
     }
 
+    public async Task ChangeLanguageAsync(string language)
+    {
+        if (language is not ("zh-CN" or "en-US") || language == _options.Language)
+            return;
+
+        await SaveOptionsAsync(_options with { Language = language });
+        UiStrings.Configure(language);
+        ApplyLocalizedChrome();
+        var pageName = (Navigation.SelectedItem as NavigationViewItem)?.Tag?.ToString() ?? "run";
+        ShowPage(pageName);
+    }
+
     private void OnNavigationChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         if (args.SelectedItem is not NavigationViewItem item) return;

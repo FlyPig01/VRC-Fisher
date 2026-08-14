@@ -24,7 +24,22 @@
   <data name="ModelValid" xml:space="preserve"><value>{0}: version {1}, {2:N1} MB, verified</value></data>
   <data name="ModelInvalid" xml:space="preserve"><value>{0}: {1:N1} MB, manifest verification failed</value></data>
   <data name="ModelsDescription" xml:space="preserve"><value>Both models must pass integrity verification before observation can start.</value></data>
+  <data name="Language" xml:space="preserve"><value>Interface language</value></data>
+  <data name="LanguageChinese" xml:space="preserve"><value>简体中文</value></data>
+  <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
   <data name="Device" xml:space="preserve"><value>Execution device</value></data>
+  <data name="AdaptiveInference" xml:space="preserve"><value>Adaptive inference frequency</value></data>
+  <data name="AdaptiveInferenceDescription" xml:space="preserve"><value>Adjusts frequency within fixed safety limits using measured ONNX P95 latency. Changes apply the next time detection starts.</value></data>
+  <data name="ManualFrequencyDescription" xml:space="preserve"><value>Manual intervals in milliseconds. Minigame control is never reduced below about 15 Hz.</value></data>
+  <data name="LocatorInterval" xml:space="preserve"><value>Wait-for-bite interval (80–250 ms)</value></data>
+  <data name="HookingInterval" xml:space="preserve"><value>Wait-for-minigame interval (80–250 ms)</value></data>
+  <data name="MinigameInterval" xml:space="preserve"><value>Minigame control interval (33–67 ms)</value></data>
+  <data name="PanelRecheckInterval" xml:space="preserve"><value>Minigame panel recheck (250–1000 ms)</value></data>
+  <data name="Enabled" xml:space="preserve"><value>On</value></data>
+  <data name="Disabled" xml:space="preserve"><value>Off</value></data>
+  <data name="BiteFallback" xml:space="preserve"><value>Minimum wait when the bite indicator is not visible</value></data>
+  <data name="BiteFallbackDisabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="BiteFallbackSeconds" xml:space="preserve"><value>{0:N1} seconds</value></data>
   <data name="SoftwareRoot" xml:space="preserve"><value>Software root:</value></data>
   <data name="DiagnosticsDescription" xml:space="preserve"><value>Diagnostics preview is off by default. No recognition result is shown without a verified model and capture target.</value></data>
   <data name="RuntimeStatus" xml:space="preserve"><value>Phase: {0}
@@ -42,7 +57,21 @@ Models: {1}</value></data>
   <data name="DiagnosticsStatus" xml:space="preserve"><value>Provider: {0}
 Captured frames: {1}
 Dropped frames: {2}
-Status: {3}</value></data>
+Status: {3}
+
+{4}</value></data>
+  <data name="FrequencyModeManual" xml:space="preserve"><value>Manual</value></data>
+  <data name="FrequencyModeCalibrating" xml:space="preserve"><value>Adaptive (sampling)</value></data>
+  <data name="FrequencyModeProfile" xml:space="preserve"><value>Adaptive (saved profile loaded)</value></data>
+  <data name="FrequencyModeAdaptive" xml:space="preserve"><value>Adaptive</value></data>
+  <data name="P95Unavailable" xml:space="preserve"><value>not enough samples</value></data>
+  <data name="P95Value" xml:space="preserve"><value>{0:N2} ms</value></data>
+  <data name="PerformanceStatus" xml:space="preserve"><value>Inference frequency: {0}
+Intervals: locator {1} ms / Hooking {2} ms / minigame {3} ms / panel recheck {4} ms
+P95: locator {5} / both models {6} / cached minigame {7}
+Latest frame age: {8:N1} ms; inference overruns: {9}; frames dropped in the latest 5 seconds: {10}</value></data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve"><value>Device performance is insufficient</value></data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve"><value>Minigame inference exceeds the 65% performance budget even at the 67 ms limit. The app will not reduce frequency further; observation remains available, but automatic input may be unstable.</value></data>
   <data name="PhaseIdle" xml:space="preserve"><value>Idle</value></data>
   <data name="PhaseCasting" xml:space="preserve"><value>Casting</value></data>
   <data name="PhaseWaitingForBite" xml:space="preserve"><value>Waiting for bite</value></data>
@@ -68,6 +97,7 @@ Status: {3}</value></data>
   <data name="UnknownStatus" xml:space="preserve"><value>Unknown status</value></data>
   <data name="DecisionCast" xml:space="preserve"><value>Cast</value></data>
   <data name="DecisionBiteConfirmed" xml:space="preserve"><value>Bite confirmed</value></data>
+  <data name="DecisionBiteFallback" xml:space="preserve"><value>Off-screen bite fallback delay reached</value></data>
   <data name="DecisionBiteTimeout" xml:space="preserve"><value>Bite timed out</value></data>
   <data name="DecisionMinigameConfirmed" xml:space="preserve"><value>Minigame confirmed</value></data>
   <data name="DecisionMinigameDidNotStart" xml:space="preserve"><value>Minigame did not start</value></data>

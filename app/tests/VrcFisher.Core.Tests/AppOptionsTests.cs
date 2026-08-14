@@ -12,13 +12,23 @@ public sealed class AppOptionsTests
         var options = new AppOptions(
             Language: "fr-FR",
             ConfidenceThreshold: double.NaN,
-            IoUThreshold: 2);
+            IoUThreshold: 2,
+            BiteFallbackSeconds: 100,
+            LocatorIntervalMs: 10,
+            HookingIntervalMs: 999,
+            MinigameIntervalMs: 1,
+            PanelRecheckIntervalMs: 5000);
 
         var normalized = options.Normalize();
 
         Assert.Equal("zh-CN", normalized.Language);
         Assert.Equal(AppOptions.Default.ConfidenceThreshold, normalized.ConfidenceThreshold);
         Assert.Equal(0.99, normalized.IoUThreshold);
+        Assert.Equal(20, normalized.BiteFallbackSeconds);
+        Assert.Equal(80, normalized.LocatorIntervalMs);
+        Assert.Equal(250, normalized.HookingIntervalMs);
+        Assert.Equal(33, normalized.MinigameIntervalMs);
+        Assert.Equal(1000, normalized.PanelRecheckIntervalMs);
     }
 
     [Fact]

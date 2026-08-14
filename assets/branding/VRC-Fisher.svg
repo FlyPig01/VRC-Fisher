@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">VRC-Fisher icon concept</title>
+  <desc id="desc">A fishing hook and target over water, using teal, orange, and navy.</desc>
+  <rect width="256" height="256" rx="52" fill="#0F172A"/>
+  <path d="M30 181c22-17 44-17 66 0s44 17 66 0 44-17 64 0" fill="none" stroke="#38BDF8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M34 211c20-12 40-12 60 0s40 12 60 0 40-12 68 0" fill="none" stroke="#0EA5A4" stroke-width="9" stroke-linecap="round" opacity=".9"/>
+  <path d="M46 47l108 61" fill="none" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round"/>
+  <path d="M46 47l-11-10" fill="none" stroke="#F97316" stroke-width="12" stroke-linecap="round"/>
+  <path d="M151 108c0 24 14 31 28 31 13 0 22-8 22-20" fill="none" stroke="#F97316" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="158" cy="111" r="34" fill="none" stroke="#FBBF24" stroke-width="6" opacity=".95"/>
+  <circle cx="158" cy="111" r="8" fill="#FBBF24"/>
+  <path d="M158 68v18M158 136v18M115 111h18M183 111h18" stroke="#FBBF24" stroke-width="5" stroke-linecap="round"/>
+</svg>

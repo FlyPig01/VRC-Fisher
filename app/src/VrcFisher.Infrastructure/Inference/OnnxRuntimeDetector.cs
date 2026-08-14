@@ -10,7 +10,6 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     public const string MinigameModel = "minigame.onnx";
     public const int ExpectedLocatorInputSize = 960;
     public const int ExpectedMinigameInputSize = 640;
-
     private readonly InferenceSession _locator;
     private readonly InferenceSession _minigame;
     private readonly string _locatorInput;
@@ -19,8 +18,16 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     private readonly float _iouThreshold;
     private readonly int _locatorInputSize;
     private readonly int _minigameInputSize;
-    private readonly IReadOnlyList<string> _locatorClasses = ["prompt", "fishing_ui_group", "success", "failure"];
-    private readonly IReadOnlyList<string> _minigameClasses = ["rail", "control_bar", "target", "progress_bar"];
+    private readonly DenseTensor<float> _locatorTensor;
+    private readonly DenseTensor<float> _minigameTensor;
+    private readonly NamedOnnxValue[] _locatorInputs;
+    private readonly NamedOnnxValue[] _minigameInputs;
+    private readonly IReadOnlyList<string> _locatorClasses = ["bite_indicator", "minigame_panel"];
+    private readonly IReadOnlyList<string> _minigameClasses = ["catch_zone", "moving_target"];
+    private ResizeMap? _locatorResizeMap;
+    private ResizeMap? _minigameResizeMap;
+    private BoundingBox? _cachedPanel;
+    private DateTimeOffset _lastLocatorAt = DateTimeOffset.MinValue;
 
     public OnnxRuntimeDetector(
         string modelsDirectory,
@@ -48,6 +55,10 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             _minigameInput,
             MinigameModel,
             ExpectedMinigameInputSize);
+        _locatorTensor = new DenseTensor<float>([1, 3, _locatorInputSize, _locatorInputSize]);
+        _minigameTensor = new DenseTensor<float>([1, 3, _minigameInputSize, _minigameInputSize]);
+        _locatorInputs = [NamedOnnxValue.CreateFromTensor(_locatorInput, _locatorTensor)];
+        _minigameInputs = [NamedOnnxValue.CreateFromTensor(_minigameInput, _minigameTensor)];
         _confidenceThreshold = confidenceThreshold;
         _iouThreshold = iouThreshold;
         Provider = sessions.Provider;
@@ -56,6 +67,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     public string Provider { get; }
     public bool IsReady => true;
     public bool CanProduceDecisions => true;
+    public bool HasCachedPanel => _cachedPanel is not null;
     public static bool SupportsDirectML
     {
         get
@@ -68,49 +80,93 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         }
     }
 
-    public DetectionObservation Detect(CapturedFrameEventArgs frame)
+    public DetectionResult Detect(
+        CapturedFrameEventArgs frame,
+        FishingPhase phase,
+        TimeSpan minigamePanelRecheckInterval)
     {
         // The detector deliberately refuses to infer from an empty capture.
         if (frame.Width <= 0 || frame.Height <= 0 || frame.BgraPixels.IsEmpty)
             throw new InvalidDataException("捕获帧为空");
 
-        using var locator = Run(_locator, _locatorInput, frame, _locatorInputSize, out var locatorTransform);
-        var locatorDetections = Decode(locator, _locatorClasses, _confidenceThreshold, _iouThreshold, locatorTransform);
-        var prompt = BestBox(locatorDetections, "prompt");
-        var fishingUi = BestBox(locatorDetections, "fishing_ui_group");
-        var success = BestBox(locatorDetections, "success");
-        var failure = BestBox(locatorDetections, "failure");
-        if (fishingUi is null)
-            return new DetectionObservation(frame.FrameNumber, frame.CapturedAt, Prompt: prompt, Success: success, Failure: failure);
+        if (phase is not (FishingPhase.Hooking or FishingPhase.Minigame))
+            _cachedPanel = null;
 
-        var crop = Crop(frame, fishingUi.Value, 0.08f);
-        using var minigame = Run(_minigame, _minigameInput, crop.Frame, _minigameInputSize, out var minigameTransform);
+        if (phase == FishingPhase.Minigame
+            && _cachedPanel is not null
+            && frame.CapturedAt - _lastLocatorAt < minigamePanelRecheckInterval)
+        {
+            return new DetectionResult(
+                DetectMinigame(frame, _cachedPanel.Value, biteIndicator: null),
+                InferenceWorkload.CachedMinigame);
+        }
+
+        var (biteIndicator, detectedPanel) = DetectLocator(frame);
+        _lastLocatorAt = frame.CapturedAt;
+        if (detectedPanel is null)
+        {
+            _cachedPanel = null;
+            return new DetectionResult(
+                new DetectionObservation(frame.FrameNumber, frame.CapturedAt, BiteIndicator: biteIndicator),
+                InferenceWorkload.Locator);
+        }
+
+        // The panel is stable for one minigame. Keep the first confirmed crop
+        // so locator jitter does not move the control coordinate system.
+        _cachedPanel ??= detectedPanel;
+        return new DetectionResult(
+            DetectMinigame(frame, _cachedPanel.Value, biteIndicator),
+            InferenceWorkload.LocatorAndMinigame);
+    }
+
+    private (BoundingBox? BiteIndicator, BoundingBox? MinigamePanel) DetectLocator(
+        CapturedFrameEventArgs frame)
+    {
+        var region = PixelRegion.Full(frame);
+        using var locator = Run(
+            _locator,
+            _locatorInputs,
+            _locatorTensor,
+            region,
+            _locatorInputSize,
+            ref _locatorResizeMap,
+            out var locatorTransform);
+        var detections = Decode(locator, _locatorClasses, _confidenceThreshold, _iouThreshold, locatorTransform);
+        return (
+            BestBox(detections, "bite_indicator"),
+            BestBox(detections, "minigame_panel"));
+    }
+
+    private DetectionObservation DetectMinigame(
+        CapturedFrameEventArgs frame,
+        BoundingBox minigamePanel,
+        BoundingBox? biteIndicator)
+    {
+        var crop = PixelRegion.Crop(frame, minigamePanel, 0.08f);
+        using var minigame = Run(
+            _minigame,
+            _minigameInputs,
+            _minigameTensor,
+            crop,
+            _minigameInputSize,
+            ref _minigameResizeMap,
+            out var minigameTransform);
         var localDetections = Decode(minigame, _minigameClasses, _confidenceThreshold, _iouThreshold, minigameTransform);
-        var rail = BestBox(localDetections, "rail");
-        var control = BestBox(localDetections, "control_bar");
-        var target = BestBox(localDetections, "target");
-        var progress = BestBox(localDetections, "progress_bar");
-        var targetY = RelativeCenter(rail, target);
-        var controlTop = RelativeEdge(rail, control, top: true);
-        var controlBottom = RelativeEdge(rail, control, top: false);
-        var progressNorm = rail is not null && progress is not null
-            ? Math.Clamp(progress.Value.Height / MathF.Max(1, rail.Value.Height), 0, 1)
-            : (float?)null;
+        var catchZone = BestBox(localDetections, "catch_zone");
+        var movingTarget = BestBox(localDetections, "moving_target");
+        var targetY = RelativeCenter(catchZone, movingTarget);
+        var controlTop = catchZone is null ? (float?)null : 0f;
+        var controlBottom = catchZone is null ? (float?)null : 1f;
         return new DetectionObservation(
             frame.FrameNumber,
             frame.CapturedAt,
-            FishingUi: fishingUi,
-            Prompt: prompt,
-            Success: success,
-            Failure: failure,
-            Rail: ToGlobal(rail, crop.OffsetX, crop.OffsetY),
-            ControlBar: ToGlobal(control, crop.OffsetX, crop.OffsetY),
-            Target: ToGlobal(target, crop.OffsetX, crop.OffsetY),
-            ProgressBar: ToGlobal(progress, crop.OffsetX, crop.OffsetY),
-            TargetYNorm: targetY,
-            ControlTopNorm: controlTop,
-            ControlBottomNorm: controlBottom,
-            ProgressNorm: progressNorm);
+            BiteIndicator: biteIndicator,
+            MinigamePanel: minigamePanel,
+            CatchZone: ToGlobal(catchZone, crop.OriginX, crop.OriginY),
+            MovingTarget: ToGlobal(movingTarget, crop.OriginX, crop.OriginY),
+            MovingTargetYNorm: targetY,
+            CatchZoneTopNorm: controlTop,
+            CatchZoneBottomNorm: controlBottom);
     }
 
     public void Dispose()
@@ -196,13 +252,15 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
 
     private static IDisposableReadOnlyCollection<DisposableNamedOnnxValue> Run(
         InferenceSession session,
-        string inputName,
-        CapturedFrameEventArgs frame,
+        IReadOnlyCollection<NamedOnnxValue> inputs,
+        DenseTensor<float> tensor,
+        PixelRegion region,
         int inputSize,
+        ref ResizeMap? resizeMap,
         out LetterboxTransform transform)
     {
-        var tensor = ToTensor(frame, inputSize, out transform);
-        return session.Run([NamedOnnxValue.CreateFromTensor(inputName, tensor)]);
+        FillTensor(region, inputSize, tensor, ref resizeMap, out transform);
+        return session.Run(inputs);
     }
 
     private static int ReadSquareInputSize(
@@ -230,42 +288,65 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         return dimensions[2];
     }
 
-    private static DenseTensor<float> ToTensor(
-        CapturedFrameEventArgs frame,
+    private static void FillTensor(
+        PixelRegion region,
         int size,
+        DenseTensor<float> tensor,
+        ref ResizeMap? cachedMap,
         out LetterboxTransform transform)
     {
-        var tensor = new DenseTensor<float>([1, 3, size, size]);
-        var source = frame.BgraPixels.Span;
-        var scale = MathF.Min((float)size / frame.Width, (float)size / frame.Height);
-        var resizedWidth = Math.Max(1, (int)MathF.Round(frame.Width * scale));
-        var resizedHeight = Math.Max(1, (int)MathF.Round(frame.Height * scale));
-        var offsetX = (size - resizedWidth) / 2;
-        var offsetY = (size - resizedHeight) / 2;
-        transform = new LetterboxTransform(scale, offsetX, offsetY, size, size, frame.Width, frame.Height);
-        for (var y = 0; y < size; y++)
-        for (var x = 0; x < size; x++)
+        var map = cachedMap;
+        if (map is null || !map.Matches(region.Width, region.Height, size))
         {
-            tensor[0, 0, y, x] = 114f / 255f;
-            tensor[0, 1, y, x] = 114f / 255f;
-            tensor[0, 2, y, x] = 114f / 255f;
+            map = ResizeMap.Create(region.Width, region.Height, size);
+            cachedMap = map;
         }
-        for (var y = 0; y < size; y++)
+
+        transform = new LetterboxTransform(
+            map.Scale,
+            map.OffsetX,
+            map.OffsetY,
+            size,
+            size,
+            region.Width,
+            region.Height);
+
+        const float inverse255 = 1f / 255f;
+        var destination = tensor.Buffer.Span;
+        destination.Fill(114f * inverse255);
+        var source = region.Pixels.Span;
+        var planeLength = size * size;
+
+        for (var destinationY = 0; destinationY < map.ResizedHeight; destinationY++)
         {
-            if (y < offsetY || y >= offsetY + resizedHeight) continue;
-            var sourceY = Math.Min(frame.Height - 1, (int)((y - offsetY) / scale));
-            for (var x = 0; x < size; x++)
+            var topRow = (region.OriginY + map.Y0[destinationY]) * region.Stride;
+            var bottomRow = (region.OriginY + map.Y1[destinationY]) * region.Stride;
+            var yWeight = map.YWeight[destinationY];
+            var outputRow = (map.OffsetY + destinationY) * size + map.OffsetX;
+
+            for (var destinationX = 0; destinationX < map.ResizedWidth; destinationX++)
             {
-                if (x < offsetX || x >= offsetX + resizedWidth) continue;
-                var sourceX = Math.Min(frame.Width - 1, (int)((x - offsetX) / scale));
-                var index = (sourceY * frame.Width + sourceX) * 4;
-                if (index + 2 >= source.Length) continue;
-                tensor[0, 0, y, x] = source[index + 2] / 255f;
-                tensor[0, 1, y, x] = source[index + 1] / 255f;
-                tensor[0, 2, y, x] = source[index] / 255f;
+                var left = region.OriginX + map.X0[destinationX];
+                var right = region.OriginX + map.X1[destinationX];
+                var xWeight = map.XWeight[destinationX];
+                var topLeft = (topRow + left) * 4;
+                var topRight = (topRow + right) * 4;
+                var bottomLeft = (bottomRow + left) * 4;
+                var bottomRight = (bottomRow + right) * 4;
+
+                var topR = source[topLeft + 2] + (source[topRight + 2] - source[topLeft + 2]) * xWeight;
+                var bottomR = source[bottomLeft + 2] + (source[bottomRight + 2] - source[bottomLeft + 2]) * xWeight;
+                var topG = source[topLeft + 1] + (source[topRight + 1] - source[topLeft + 1]) * xWeight;
+                var bottomG = source[bottomLeft + 1] + (source[bottomRight + 1] - source[bottomLeft + 1]) * xWeight;
+                var topB = source[topLeft] + (source[topRight] - source[topLeft]) * xWeight;
+                var bottomB = source[bottomLeft] + (source[bottomRight] - source[bottomLeft]) * xWeight;
+                var outputIndex = outputRow + destinationX;
+
+                destination[outputIndex] = (topR + (bottomR - topR) * yWeight) * inverse255;
+                destination[planeLength + outputIndex] = (topG + (bottomG - topG) * yWeight) * inverse255;
+                destination[planeLength * 2 + outputIndex] = (topB + (bottomB - topB) * yWeight) * inverse255;
             }
         }
-        return tensor;
     }
 
     private static IReadOnlyList<YoloDetection> Decode(
@@ -282,41 +363,137 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     private static BoundingBox? BestBox(IReadOnlyList<YoloDetection> detections, string className) =>
         detections.FirstOrDefault(item => string.Equals(item.ClassName, className, StringComparison.Ordinal))?.Box;
 
-    private static float? RelativeCenter(BoundingBox? rail, BoundingBox? target)
+    private static float? RelativeCenter(BoundingBox? zone, BoundingBox? target)
     {
-        if (rail is null || target is null) return null;
-        return Math.Clamp((target.Value.CenterY - rail.Value.Top) / MathF.Max(1, rail.Value.Height), 0, 1);
-    }
-
-    private static float? RelativeEdge(BoundingBox? rail, BoundingBox? control, bool top)
-    {
-        if (rail is null || control is null) return null;
-        var value = top ? control.Value.Top : control.Value.Bottom;
-        return Math.Clamp((value - rail.Value.Top) / MathF.Max(1, rail.Value.Height), 0, 1);
+        if (zone is null || target is null) return null;
+        return Math.Clamp((target.Value.CenterY - zone.Value.Top) / MathF.Max(1, zone.Value.Height), 0, 1);
     }
 
     private static BoundingBox? ToGlobal(BoundingBox? box, int offsetX, int offsetY) =>
         box is null ? null : new BoundingBox(box.Value.Left + offsetX, box.Value.Top + offsetY,
             box.Value.Right + offsetX, box.Value.Bottom + offsetY);
 
-    private static (CapturedFrameEventArgs Frame, int OffsetX, int OffsetY) Crop(
-        CapturedFrameEventArgs source,
-        BoundingBox box,
-        float padding)
+    private sealed class ResizeMap
     {
-        var padX = (int)MathF.Round(box.Width * padding);
-        var padY = (int)MathF.Round(box.Height * padding);
-        var left = Math.Clamp((int)MathF.Floor(box.Left) - padX, 0, source.Width - 1);
-        var top = Math.Clamp((int)MathF.Floor(box.Top) - padY, 0, source.Height - 1);
-        var right = Math.Clamp((int)MathF.Ceiling(box.Right) + padX, left + 1, source.Width);
-        var bottom = Math.Clamp((int)MathF.Ceiling(box.Bottom) + padY, top + 1, source.Height);
-        var width = right - left;
-        var height = bottom - top;
-        var pixels = new byte[width * height * 4];
-        var input = source.BgraPixels.Span;
-        for (var y = 0; y < height; y++)
-            input.Slice(((top + y) * source.Width + left) * 4, width * 4)
-                .CopyTo(pixels.AsSpan(y * width * 4, width * 4));
-        return (new CapturedFrameEventArgs(source.FrameNumber, source.CapturedAt, pixels, width, height), left, top);
+        private ResizeMap(
+            int sourceWidth,
+            int sourceHeight,
+            int inputSize,
+            float scale,
+            int resizedWidth,
+            int resizedHeight,
+            int offsetX,
+            int offsetY,
+            int[] x0,
+            int[] x1,
+            float[] xWeight,
+            int[] y0,
+            int[] y1,
+            float[] yWeight)
+        {
+            SourceWidth = sourceWidth;
+            SourceHeight = sourceHeight;
+            InputSize = inputSize;
+            Scale = scale;
+            ResizedWidth = resizedWidth;
+            ResizedHeight = resizedHeight;
+            OffsetX = offsetX;
+            OffsetY = offsetY;
+            X0 = x0;
+            X1 = x1;
+            XWeight = xWeight;
+            Y0 = y0;
+            Y1 = y1;
+            YWeight = yWeight;
+        }
+
+        public int SourceWidth { get; }
+        public int SourceHeight { get; }
+        public int InputSize { get; }
+        public float Scale { get; }
+        public int ResizedWidth { get; }
+        public int ResizedHeight { get; }
+        public int OffsetX { get; }
+        public int OffsetY { get; }
+        public int[] X0 { get; }
+        public int[] X1 { get; }
+        public float[] XWeight { get; }
+        public int[] Y0 { get; }
+        public int[] Y1 { get; }
+        public float[] YWeight { get; }
+
+        public bool Matches(int width, int height, int inputSize) =>
+            SourceWidth == width && SourceHeight == height && InputSize == inputSize;
+
+        public static ResizeMap Create(int width, int height, int inputSize)
+        {
+            var scale = MathF.Min((float)inputSize / width, (float)inputSize / height);
+            var resizedWidth = Math.Max(1, (int)MathF.Round(width * scale));
+            var resizedHeight = Math.Max(1, (int)MathF.Round(height * scale));
+            var x0 = new int[resizedWidth];
+            var x1 = new int[resizedWidth];
+            var xWeight = new float[resizedWidth];
+            var y0 = new int[resizedHeight];
+            var y1 = new int[resizedHeight];
+            var yWeight = new float[resizedHeight];
+            FillAxis(resizedWidth, width, scale, x0, x1, xWeight);
+            FillAxis(resizedHeight, height, scale, y0, y1, yWeight);
+            return new ResizeMap(
+                width,
+                height,
+                inputSize,
+                scale,
+                resizedWidth,
+                resizedHeight,
+                (inputSize - resizedWidth) / 2,
+                (inputSize - resizedHeight) / 2,
+                x0,
+                x1,
+                xWeight,
+                y0,
+                y1,
+                yWeight);
+        }
+
+        private static void FillAxis(
+            int destinationLength,
+            int sourceLength,
+            float scale,
+            int[] lower,
+            int[] upper,
+            float[] weight)
+        {
+            for (var destination = 0; destination < destinationLength; destination++)
+            {
+                var source = (destination + 0.5f) / scale - 0.5f;
+                var floor = MathF.Floor(source);
+                lower[destination] = Math.Clamp((int)floor, 0, sourceLength - 1);
+                upper[destination] = Math.Min(sourceLength - 1, lower[destination] + 1);
+                weight[destination] = Math.Clamp(source - floor, 0, 1);
+            }
+        }
+    }
+
+    private readonly record struct PixelRegion(
+        ReadOnlyMemory<byte> Pixels,
+        int Width,
+        int Height,
+        int Stride,
+        int OriginX,
+        int OriginY)
+    {
+        public static PixelRegion Full(CapturedFrameEventArgs frame) =>
+            new(frame.BgraPixels, frame.Width, frame.Height, frame.Width, 0, 0);
+
+        public static PixelRegion Crop(CapturedFrameEventArgs frame, BoundingBox box, float padding)
+        {
+            var padX = (int)MathF.Round(box.Width * padding);
+            var padY = (int)MathF.Round(box.Height * padding);
+            var left = Math.Clamp((int)MathF.Floor(box.Left) - padX, 0, frame.Width - 1);
+            var top = Math.Clamp((int)MathF.Floor(box.Top) - padY, 0, frame.Height - 1);
+            var right = Math.Clamp((int)MathF.Ceiling(box.Right) + padX, left + 1, frame.Width);
+            var bottom = Math.Clamp((int)MathF.Ceiling(box.Bottom) + padY, top + 1, frame.Height);
+            return new PixelRegion(frame.BgraPixels, right - left, bottom - top, frame.Width, left, top);
+        }
     }
 }
