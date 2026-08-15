@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Skärmöverlägget är inte tillgängligt; autofisket startades inte</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat-överlägget är inte tillgängligt</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Autofisket stoppades och musinmatningen släpptes. Starta om VRC-Fisher och försök igen.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Guide</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Maskinvaruinformation</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Minne</value></data>
+  <data name="System" xml:space="preserve"><value>System</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Vald enhet</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Använd enhet</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fysiska kärnor / {2} logiska trådar</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Ingen information om grafikkortet</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · drivrutin {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (automatisk reserv: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Startar</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Stoppar</value></data>
+  <data name="Change" xml:space="preserve"><value>Ändra</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Ändra start-/stoppknapp?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>Den nuvarande knappen fungerar tills den nya har konfliktkontrollerats och bekräftats.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Fortsätt</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Tryck på den nya knappen</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Tryck F1-F24 eller en bokstav/siffra med Ctrl, Alt eller Shift. Esc avbryter.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Väntar på inmatning…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Den här kombinationen stöds inte.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Knapp ändrad</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} är aktiv. Ingen global registreringskonflikt hittades vid kontrollen.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>VRChat-värld som stöds</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Endast denna värld stöds. Ändras fiskegränssnittet kan modellerna behöva uppdateras.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Öppna världen i VRChat</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Snabbstart</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Klicka på bilden ovan och gå in i den värld som stöds.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Installera båda modellerna, gå till fiskeområdet och håll VRChat i förgrunden.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Tryck {0} för att starta. Tryck igen eller lämna VRChat för att stoppa.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Förbereder modeller, inferens och inspelning…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Stoppar och släpper musinmatning…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat lämnade förgrunden; automatiskt fiske stoppades och musen släpptes</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatiskt fiske stoppat</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat är inte längre i förgrunden. Musen släpptes; återgå till spelet och tryck igen.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Fungerar bara när VRChat är i förgrunden och registreras inte permanent som global snabbtangent.</value></data>
 </root>

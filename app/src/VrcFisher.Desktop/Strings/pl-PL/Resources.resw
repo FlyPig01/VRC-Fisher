@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Nakładka ekranowa jest niedostępna; nie uruchomiono automatycznego wędkowania</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Nakładka VRChat jest niedostępna</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automatyczne wędkowanie zostało zatrzymane i zwolniono kontrolę myszy. Uruchom ponownie VRC-Fisher, a następnie spróbuj ponownie.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Instrukcja</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Informacje o sprzęcie</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Pamięć</value></data>
+  <data name="System" xml:space="preserve"><value>System</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Wybrane urządzenie</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Używane urządzenie</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · rdzenie fizyczne: {1} / wątki logiczne: {2}</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Brak informacji o karcie graficznej</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · VRAM {2} · sterownik {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (automatyczny powrót: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Uruchamianie</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Zatrzymywanie</value></data>
+  <data name="Change" xml:space="preserve"><value>Zmień</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Zmienić klawisz startu / zatrzymania?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>Obecny klawisz działa do czasu sprawdzenia konfliktów i potwierdzenia nowego.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Kontynuuj</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Naciśnij nowy klawisz</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Naciśnij F1-F24 albo literę/cyfrę z Ctrl, Alt lub Shift. Esc anuluje.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Oczekiwanie na klawisz…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Ta kombinacja nie jest obsługiwana.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Klawisz zmieniony</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} jest aktywny. Podczas kontroli nie znaleziono konfliktu globalnej rejestracji.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Obsługiwany świat VRChat</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Obsługiwany jest tylko ten świat. Zmiana interfejsu łowienia może wymagać aktualizacji modeli.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Otwórz obsługiwany świat w VRChat</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Szybki start</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Kliknij obraz powyżej i wejdź do obsługiwanego świata.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Zainstaluj oba modele, wejdź do strefy łowienia i trzymaj VRChat na pierwszym planie.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Naciśnij {0}, aby uruchomić. Naciśnij ponownie lub opuść VRChat, aby zatrzymać.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Przygotowywanie modeli, inferencji i przechwytywania…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Zatrzymywanie i zwalnianie myszy…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat opuścił pierwszy plan; automatyczne łowienie zatrzymano, a mysz zwolniono</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatyczne łowienie zatrzymane</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat nie jest już na pierwszym planie. Mysz zwolniono; wróć do gry i ponownie naciśnij klawisz.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Działa tylko gdy VRChat jest na pierwszym planie i nie jest stale rejestrowany jako globalny skrót.</value></data>
 </root>

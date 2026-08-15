@@ -11,7 +11,7 @@
 | 模型训练 `training/` | Git、Python 3.11、uv、受支持的 NVIDIA GPU 与驱动 | Miniconda、全局 CUDA Toolkit、.NET |
 | 安装包 `packaging/` | C# 软件要求、Inno Setup 6 | Python、训练环境、模型文件 |
 
-正式用户安装包与开发环境不同。用户端是 C# 自包含程序，只使用 ONNX Runtime CPU-only 或 DirectML，不要求 Python、Miniconda、PyTorch 或 CUDA。
+正式用户安装包与开发环境不同。用户端是 C# 自包含 DirectML 程序，可在同一包内选择 CPU，不要求 Python、Miniconda、PyTorch 或 CUDA。
 
 ## 2. 安装前置工具
 

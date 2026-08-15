@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>La superposition d'écran est indisponible ; la pêche automatique n'a pas démarré</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>La superposition VRChat est indisponible</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>La pêche automatique a été arrêtée et l'entrée souris a été libérée. Redémarrez VRC-Fisher, puis réessayez.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Guide</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Informations matérielles</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Mémoire</value></data>
+  <data name="System" xml:space="preserve"><value>Système</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Périphérique choisi</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Périphérique utilisé</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} cœurs physiques / {2} threads logiques</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Informations de carte graphique indisponibles</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} de VRAM · pilote {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (repli automatique : {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Démarrage</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Arrêt</value></data>
+  <data name="Change" xml:space="preserve"><value>Modifier</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Modifier la touche de démarrage / arrêt ?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>La touche actuelle reste active jusqu’à la vérification et la confirmation de la nouvelle.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Continuer</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Appuyez sur la nouvelle touche</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Appuyez sur F1-F24, ou sur une lettre/un chiffre avec Ctrl, Alt ou Shift. Esc annule.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>En attente…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Cette combinaison n’est pas prise en charge.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Touche modifiée</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} est active. Aucun conflit d’enregistrement global n’a été détecté.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Monde VRChat pris en charge</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Seul ce monde est pris en charge. Une modification de son interface de pêche peut nécessiter de nouveaux modèles.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Ouvrir le monde pris en charge dans VRChat</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Démarrage rapide</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Cliquez sur l’image ci-dessus et entrez dans le monde pris en charge.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Installez les deux modèles, rejoignez la zone de pêche et gardez VRChat au premier plan.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Appuyez sur {0} pour démarrer. Appuyez à nouveau ou quittez VRChat pour arrêter.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Préparation des modèles, de l’inférence et de la capture…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Arrêt et libération de la souris…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat a quitté le premier plan ; la pêche automatique est arrêtée et la souris libérée</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Pêche automatique arrêtée</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat n’est plus au premier plan. La souris a été libérée ; revenez au jeu et appuyez de nouveau sur la touche.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Fonctionne uniquement lorsque VRChat est au premier plan et n’est pas enregistré en permanence comme raccourci global.</value></data>
 </root>

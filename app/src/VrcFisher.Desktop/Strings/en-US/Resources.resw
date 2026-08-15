@@ -170,4 +170,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>The screen overlay is unavailable; auto fishing was not started</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>The VRChat overlay is unavailable</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Auto fishing was stopped and mouse input was released. Restart VRC-Fisher, then try again.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Guide</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Hardware information</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Memory</value></data>
+  <data name="System" xml:space="preserve"><value>System</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Selected device</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Actual device</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} physical cores / {2} logical threads</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>No graphics adapter information available</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · driver {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (automatic fallback: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Starting</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Stopping</value></data>
+  <data name="Change" xml:space="preserve"><value>Change</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Change start / stop hotkey?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>The current hotkey remains active until the new one passes conflict detection and is confirmed.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Continue</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Press the new hotkey</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Press F1-F24, or a letter/number with Ctrl, Alt, or Shift. Press Esc to cancel.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Waiting for input...</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>This key combination is not supported.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Hotkey changed</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} is active. No global registration conflict was found at the time of the check.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Supported VRChat world</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Only this world is supported. If its fishing UI changes, the models may need an update.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Open the supported world in VRChat</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Quick start</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Click the image above and enter the supported world in VRChat.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Install both models, enter the fishing area, and keep VRChat in the foreground.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Press {0} to start. Press it again, or leave VRChat, to stop.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Preparing models, inference and capture...</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Stopping and releasing mouse input...</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat left the foreground; automatic fishing stopped and mouse input was released</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatic fishing stopped</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat is no longer in the foreground. Mouse input was released; return to the game and press the hotkey to start again.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Works only while VRChat is in the foreground and is not registered as a persistent global hotkey.</value></data>
 </root>

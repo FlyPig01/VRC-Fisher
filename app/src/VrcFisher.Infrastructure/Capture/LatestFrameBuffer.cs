@@ -11,6 +11,16 @@ public sealed class LatestFrameBuffer
 
     public long DroppedCount => Interlocked.Read(ref _dropped);
 
+    public void Clear(bool resetDropped = true)
+    {
+        lock (_sync)
+        {
+            _latest = null;
+            _available.Wait(0);
+            if (resetDropped) Interlocked.Exchange(ref _dropped, 0);
+        }
+    }
+
     public void Publish(CapturedFrameEventArgs frame)
     {
         lock (_sync)

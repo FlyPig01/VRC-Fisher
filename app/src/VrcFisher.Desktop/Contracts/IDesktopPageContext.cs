@@ -11,6 +11,7 @@ internal interface IDesktopPageContext
     AppOptions Options { get; }
     string SoftwareRoot { get; }
     bool SupportsGpu { get; }
+    Task<HardwareSnapshot> Hardware { get; }
 
     Task SaveOptionsAsync(AppOptions options);
     Task ChangeLanguageAsync(string language);

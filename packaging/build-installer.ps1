@@ -7,9 +7,6 @@ param(
     [ValidatePattern('^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$')]
     [string]$Repository,
 
-    [ValidateSet("all")]
-    [string]$Variant = "all",
-
     [string]$DotNet = "dotnet",
     [string]$InnoCompiler = ""
 )
@@ -84,13 +81,12 @@ if (-not $InnoCompiler -or -not (Test-Path -LiteralPath $InnoCompiler -PathType 
     throw "Inno Setup 6 compiler not found. Install it or pass -InnoCompiler <ISCC.exe>."
 }
 
-$Variants = if ($Variant -eq "all") { @("cpu", "directml") } else { @($Variant) }
-if ($Variants.Count -ne 2) {
-    throw "A single Setup must contain both CPU-only and DirectML components."
-}
 if (Test-Path -LiteralPath $StageRoot) { Remove-Item -LiteralPath $StageRoot -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $StageRoot | Out-Null
+if (Test-Path -LiteralPath $ReleaseRoot) { Remove-Item -LiteralPath $ReleaseRoot -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $ReleaseRoot | Out-Null
+$LegacyInstallerHash = Join-Path $ReleaseRoot "VRC-Fisher-Setup-x64.exe.sha256"
+if (Test-Path -LiteralPath $LegacyInstallerHash) { Remove-Item -LiteralPath $LegacyInstallerHash -Force }
 
 $Metadata = @{
     application_version = $Version
@@ -110,42 +106,56 @@ Copy-RequiredFile `
     -Source (Join-Path $ProjectRoot "training\LICENSE") `
     -Destination (Join-Path $StageRoot "licenses\AGPL-3.0.txt")
 
-foreach ($CurrentVariant in $Variants) {
-    $PublishRoot = Join-Path $StageRoot $CurrentVariant
-    New-Item -ItemType Directory -Force -Path $PublishRoot | Out-Null
-    $Provider = if ($CurrentVariant -eq "directml") { "DirectML" } else { "CPU" }
+$PublishRoot = Join-Path $StageRoot "program"
+New-Item -ItemType Directory -Force -Path $PublishRoot | Out-Null
 
-    & $DotNet restore $DesktopProject -p:VrcExecutionProvider=$Provider -p:Platform=x64
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet restore failed for $CurrentVariant."
-    }
+& $DotNet restore $DesktopProject -p:Platform=x64
+if ($LASTEXITCODE -ne 0) {
+    throw "dotnet restore failed for the DirectML runtime."
+}
 
-    & $DotNet publish $DesktopProject `
-        --configuration Release `
-        --runtime win-x64 `
-        --self-contained true `
-        --no-restore `
-        --output $PublishRoot `
-        -p:Platform=x64 `
-        -p:VrcExecutionProvider=$Provider `
-        -p:PublishSingleFile=false `
-        -p:PublishTrimmed=false
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet publish failed for $CurrentVariant."
-    }
+& $DotNet publish $DesktopProject `
+    --configuration Release `
+    --runtime win-x64 `
+    --self-contained true `
+    --no-restore `
+    --output $PublishRoot `
+    -p:Platform=x64 `
+    -p:Version=$Version `
+    -p:AssemblyVersion="$Version.0" `
+    -p:FileVersion="$Version.0" `
+    -p:InformationalVersion=$Version `
+    -p:PublishSingleFile=false `
+    -p:PublishTrimmed=false
+if ($LASTEXITCODE -ne 0) {
+    throw "dotnet publish failed for the DirectML runtime."
+}
 
-    $BundledModels = @(Get-ChildItem -LiteralPath $PublishRoot -Recurse -File -Filter "*.onnx")
-    if ($BundledModels.Count -ne 0) {
-        throw "Publish output contains ONNX models; models must remain Release downloads."
-    }
-    if (-not (Test-Path -LiteralPath (Join-Path $PublishRoot "VrcFisher.pri") -PathType Leaf)) {
-        throw "Publish output is missing the compiled application language resources: VrcFisher.pri"
-    }
-    $Dependencies = Get-Content -LiteralPath (Join-Path $PublishRoot "VrcFisher.deps.json") -Raw
-    $HasDirectMLPackage = $Dependencies.Contains('Microsoft.ML.OnnxRuntime.DirectML')
-    if (($CurrentVariant -eq "directml") -ne $HasDirectMLPackage) {
-        throw "Publish output contains the wrong ONNX Runtime package for $CurrentVariant."
-    }
+# Symbols and the optional DirectML debug layer are development artifacts.
+# Keep them out of the end-user installer while retaining the retail DirectML.dll.
+$UnneededPublishArtifacts = @(Get-ChildItem -LiteralPath $PublishRoot -Recurse -File | Where-Object {
+    $_.Extension -eq ".pdb" -or $_.Name -eq "DirectML.Debug.dll"
+})
+foreach ($Artifact in $UnneededPublishArtifacts) {
+    Remove-Item -LiteralPath $Artifact.FullName -Force
+}
+if (Get-ChildItem -LiteralPath $PublishRoot -Recurse -File -Filter "*.pdb") {
+    throw "Publish output still contains debugging symbols."
+}
+if (Test-Path -LiteralPath (Join-Path $PublishRoot "DirectML.Debug.dll") -PathType Leaf) {
+    throw "Publish output still contains the optional DirectML debug layer."
+}
+
+$BundledModels = @(Get-ChildItem -LiteralPath $PublishRoot -Recurse -File -Filter "*.onnx")
+if ($BundledModels.Count -ne 0) {
+    throw "Publish output contains ONNX models; models must remain Release downloads."
+}
+if (-not (Test-Path -LiteralPath (Join-Path $PublishRoot "VrcFisher.pri") -PathType Leaf)) {
+    throw "Publish output is missing the compiled application language resources: VrcFisher.pri"
+}
+$Dependencies = Get-Content -LiteralPath (Join-Path $PublishRoot "VrcFisher.deps.json") -Raw
+if (-not $Dependencies.Contains('Microsoft.ML.OnnxRuntime.DirectML')) {
+    throw "Publish output is missing Microsoft.ML.OnnxRuntime.DirectML."
 }
 
 $NuGetPackages = if ($env:NUGET_PACKAGES) {
@@ -156,13 +166,10 @@ $NuGetPackages = if ($env:NUGET_PACKAGES) {
 $LegalRoot = Join-Path $StageRoot "licenses\third-party"
 $WindowsAppSdkVersion = Get-PackageVersion $DesktopProject "Microsoft.WindowsAppSDK"
 $LoggingVersion = Get-PackageVersion $DesktopProject "Microsoft.Extensions.Logging"
-$OnnxRuntimeVersion = Get-PackageVersion $InfrastructureProject "Microsoft.ML.OnnxRuntime"
 $OnnxRuntimeDirectMlVersion = Get-PackageVersion $InfrastructureProject "Microsoft.ML.OnnxRuntime.DirectML"
 $LegalFiles = @(
     @("microsoft.windowsappsdk\$WindowsAppSdkVersion\license.txt", "WindowsAppSDK-LICENSE.txt"),
     @("microsoft.windowsappsdk\$WindowsAppSdkVersion\NOTICE.txt", "WindowsAppSDK-NOTICE.txt"),
-    @("microsoft.ml.onnxruntime\$OnnxRuntimeVersion\LICENSE", "ONNXRuntime-LICENSE.txt"),
-    @("microsoft.ml.onnxruntime\$OnnxRuntimeVersion\ThirdPartyNotices.txt", "ONNXRuntime-NOTICES.txt"),
     @("microsoft.ml.onnxruntime.directml\$OnnxRuntimeDirectMlVersion\LICENSE", "ONNXRuntime.DirectML-LICENSE.txt"),
     @("microsoft.ml.onnxruntime.directml\$OnnxRuntimeDirectMlVersion\ThirdPartyNotices.txt", "ONNXRuntime.DirectML-NOTICES.txt"),
     @("microsoft.extensions.logging\$LoggingVersion\THIRD-PARTY-NOTICES.TXT", "Microsoft.Extensions.Logging-NOTICES.txt")
@@ -189,7 +196,6 @@ $RequiredStageLegalFiles = @(
     "THIRD_PARTY_NOTICES.md",
     "licenses\AGPL-3.0.txt",
     "licenses\third-party\WindowsAppSDK-LICENSE.txt",
-    "licenses\third-party\ONNXRuntime-NOTICES.txt",
     "licenses\third-party\ONNXRuntime.DirectML-NOTICES.txt",
     "licenses\third-party\.NET-NOTICES.txt",
     "licenses\third-party\Inno-Setup-LICENSE.txt"
@@ -215,6 +221,4 @@ if (-not (Test-Path -LiteralPath $Installer -PathType Leaf)) {
 if ((Get-Item -LiteralPath $Installer).Length -ge 1GB) {
     throw "Installer is 1 GB or larger: $Installer"
 }
-$Hash = (Get-FileHash -LiteralPath $Installer -Algorithm SHA256).Hash.ToLowerInvariant()
-"$Hash  VRC-Fisher-Setup-x64.exe" | Set-Content -LiteralPath "$Installer.sha256" -Encoding ASCII
 Write-Host ("Installer size: {0:N1} MB" -f ((Get-Item -LiteralPath $Installer).Length / 1MB))

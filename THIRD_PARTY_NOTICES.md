@@ -6,7 +6,7 @@ license is present. Third-party software and model artifacts remain under their
 own licenses.
 
 This inventory records the direct dependencies pinned by the repository as of
-2026-08-14. A release maintainer must review the resolved lock files and final
+2026-08-15. A release maintainer must review the resolved lock files and final
 binary output again whenever a dependency is changed.
 
 ## Distributed application dependencies
@@ -15,7 +15,6 @@ binary output again whenever a dependency is changed.
 |---|---:|---|---|
 | Microsoft Windows App SDK NuGet distribution | 1.8.260710003 | Microsoft Software License Terms plus bundled notices; upstream source repository is MIT | https://github.com/microsoft/WindowsAppSDK |
 | Microsoft.Extensions.Logging | 10.0.0 | MIT | https://github.com/dotnet/runtime |
-| Microsoft.ML.OnnxRuntime | 1.24.4 | MIT | https://github.com/microsoft/onnxruntime |
 | Microsoft.ML.OnnxRuntime.DirectML | 1.24.4 | MIT | https://github.com/microsoft/onnxruntime |
 | .NET self-contained runtime | 10.x | MIT and bundled third-party notices | https://github.com/dotnet/runtime |
 | Inno Setup | 6.x | Inno Setup License; commercial users are requested to purchase a license, while the official FAQ says purchase is not strictly required | https://jrsoftware.org/isorder.php |

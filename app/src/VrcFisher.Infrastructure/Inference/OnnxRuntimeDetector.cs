@@ -1,6 +1,7 @@
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using VrcFisher.Core;
+using VrcFisher.Infrastructure.Runtime;
 
 namespace VrcFisher.Infrastructure.Inference;
 
@@ -61,10 +62,10 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         _minigameInputs = [NamedOnnxValue.CreateFromTensor(_minigameInput, _minigameTensor)];
         _confidenceThreshold = confidenceThreshold;
         _iouThreshold = iouThreshold;
-        Provider = sessions.Provider;
+        Execution = sessions.Execution;
     }
 
-    public string Provider { get; }
+    public ExecutionRuntimeInfo Execution { get; }
     public bool IsReady => true;
     public bool CanProduceDecisions => true;
     public bool HasCachedPanel => _cachedPanel is not null;
@@ -189,7 +190,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         _locator.Dispose();
     }
 
-    private static (InferenceSession Locator, InferenceSession Minigame, string Provider) CreateSessions(
+    private static (InferenceSession Locator, InferenceSession Minigame, ExecutionRuntimeInfo Execution) CreateSessions(
         string locatorPath,
         string minigamePath,
         ExecutionDevice device)
@@ -197,40 +198,75 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         if (device == ExecutionDevice.Gpu)
         {
 #if VRC_DIRECTML
-            return CreatePair(locatorPath, minigamePath, useDirectMl: true, "DmlExecutionProvider");
+            return CreatePair(
+                locatorPath,
+                minigamePath,
+                useDirectMl: true,
+                new ExecutionRuntimeInfo(
+                    device,
+                    InferenceBackend.DirectML,
+                    WindowsGraphicsAdapterReader.GetDirectMlDeviceName(0),
+                    false,
+                    null));
 #else
             throw new PlatformNotSupportedException("当前构建未包含 DirectML Provider");
 #endif
         }
 
         if (device == ExecutionDevice.Cpu)
-            return CreatePair(locatorPath, minigamePath, useDirectMl: false, "CPUExecutionProvider");
+            return CreatePair(
+                locatorPath,
+                minigamePath,
+                useDirectMl: false,
+                new ExecutionRuntimeInfo(device, InferenceBackend.Cpu, "CPU", false, null));
 
 #if VRC_DIRECTML
         try
         {
-            return CreatePair(locatorPath, minigamePath, useDirectMl: true, "DmlExecutionProvider");
+            return CreatePair(
+                locatorPath,
+                minigamePath,
+                useDirectMl: true,
+                new ExecutionRuntimeInfo(
+                    device,
+                    InferenceBackend.DirectML,
+                    WindowsGraphicsAdapterReader.GetDirectMlDeviceName(0),
+                    false,
+                    null));
         }
         catch (Exception error) when (error is OnnxRuntimeException or DllNotFoundException or BadImageFormatException)
         {
-            return CreatePair(locatorPath, minigamePath, useDirectMl: false, "CPUExecutionProvider");
+            return CreatePair(
+                locatorPath,
+                minigamePath,
+                useDirectMl: false,
+                new ExecutionRuntimeInfo(
+                    device,
+                    InferenceBackend.Cpu,
+                    "CPU",
+                    true,
+                    error.GetBaseException().Message));
         }
 #else
-        return CreatePair(locatorPath, minigamePath, useDirectMl: false, "CPUExecutionProvider");
+        return CreatePair(
+            locatorPath,
+            minigamePath,
+            useDirectMl: false,
+            new ExecutionRuntimeInfo(device, InferenceBackend.Cpu, "CPU", true, "DirectML is unavailable"));
 #endif
     }
 
-    private static (InferenceSession Locator, InferenceSession Minigame, string Provider) CreatePair(
+    private static (InferenceSession Locator, InferenceSession Minigame, ExecutionRuntimeInfo Execution) CreatePair(
         string locatorPath,
         string minigamePath,
         bool useDirectMl,
-        string provider)
+        ExecutionRuntimeInfo execution)
     {
         var locator = new InferenceSession(locatorPath, CreateOptions(useDirectMl));
         try
         {
             var minigame = new InferenceSession(minigamePath, CreateOptions(useDirectMl));
-            return (locator, minigame, provider);
+            return (locator, minigame, execution);
         }
         catch
         {

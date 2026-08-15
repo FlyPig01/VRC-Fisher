@@ -3,7 +3,7 @@
 本地构建产物按 GitHub Release 标签分目录生成：
 
 ```text
-app-vX.Y.Z/       单个 C#/WinUI 3 Windows Setup 和 SHA-256；Setup 内含许可证与第三方声明
+app-vX.Y.Z/       单个 C#/WinUI 3 Windows Setup；Setup 内含许可证与第三方声明
 models-vX.Y.Z/    两个 ONNX、model-manifest.json、MODEL_CARD.md 和 MODEL_LICENSE.txt
 ```
 

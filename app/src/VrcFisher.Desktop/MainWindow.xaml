@@ -17,30 +17,14 @@
             BorderThickness="0,0,1,0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel
-                    Margin="20,24,16,22"
-                    Orientation="Horizontal"
-                    Spacing="10">
-                    <Image
-                        Width="28"
-                        Height="28"
-                        Source="Assets/VRC-Fisher.svg" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="20"
-                        FontWeight="SemiBold"
-                        Text="VRC-Fisher" />
-                </StackPanel>
-
                 <ListView
                     x:Name="NavigationList"
-                    Grid.Row="1"
-                    Margin="8,0"
+                    Grid.Row="0"
+                    Margin="8,20,8,0"
                     Background="Transparent"
                     BorderThickness="0"
                     SelectionChanged="OnNavigationChanged"
@@ -57,6 +41,12 @@
                             <TextBlock x:Name="ModelsNavigationLabel" VerticalAlignment="Center" Text="Models" />
                         </StackPanel>
                     </ListViewItem>
+                    <ListViewItem x:Name="GuideNavigationItem" Tag="guide">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <FontIcon Glyph="&#xE909;" />
+                            <TextBlock x:Name="GuideNavigationLabel" VerticalAlignment="Center" Text="Guide" />
+                        </StackPanel>
+                    </ListViewItem>
                     <ListViewItem x:Name="SettingsNavigationItem" Tag="settings">
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <SymbolIcon Symbol="Setting" />
@@ -66,7 +56,7 @@
                 </ListView>
 
                 <Border
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Margin="16,8,16,18"
                     Padding="0,14,0,0"
                     BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"

@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Экранный оверлей недоступен; автоматическая рыбалка не запущена</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Оверлей VRChat недоступен</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Автоматическая рыбалка остановлена, и ввод мыши освобождён. Перезапустите VRC-Fisher и попробуйте снова.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Руководство</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Сведения об оборудовании</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Память</value></data>
+  <data name="System" xml:space="preserve"><value>Система</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Выбранное устройство</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Используемое устройство</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · физических ядер: {1} / логических потоков: {2}</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Сведения о видеокарте недоступны</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · видеопамять {2} · драйвер {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (автопереход: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Запуск</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Остановка</value></data>
+  <data name="Change" xml:space="preserve"><value>Изменить</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Изменить клавишу запуска / остановки?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>Текущая клавиша действует, пока новая не пройдет проверку конфликтов и подтверждение.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Продолжить</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Нажмите новую клавишу</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Нажмите F1-F24 либо букву/цифру с Ctrl, Alt или Shift. Esc отменяет ввод.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Ожидание ввода…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Эта комбинация не поддерживается.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Клавиша изменена</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} активна. При проверке конфликт глобальной регистрации не найден.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Поддерживаемый мир VRChat</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Поддерживается только этот мир. При изменении интерфейса рыбалки может потребоваться обновление моделей.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Открыть поддерживаемый мир в VRChat</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Быстрый старт</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Нажмите изображение выше и войдите в поддерживаемый мир VRChat.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Установите обе модели, войдите в зону рыбалки и оставьте VRChat на переднем плане.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Нажмите {0} для запуска. Повторное нажатие или выход из VRChat остановит работу.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Подготовка моделей, инференса и захвата…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Остановка и освобождение мыши…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat ушел с переднего плана; авторыбалка остановлена, ввод мыши освобожден</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Авторыбалка остановлена</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat больше не на переднем плане. Ввод мыши освобожден; вернитесь в игру и снова нажмите клавишу.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Работает только когда VRChat на переднем плане и не регистрируется как постоянная глобальная горячая клавиша.</value></data>
 </root>

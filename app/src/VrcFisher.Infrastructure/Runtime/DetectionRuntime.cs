@@ -15,6 +15,7 @@ public sealed class DetectionRuntime(
     IInputController inputController,
     ILogger<DetectionRuntime> logger) : IDetectionRuntime, IAsyncDisposable
 {
+    private static readonly TimeSpan FirstFrameTimeout = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan FrameWaitTimeout = TimeSpan.FromMilliseconds(750);
     private static readonly TimeSpan MaximumFrameAge = TimeSpan.FromMilliseconds(750);
     private readonly object _sync = new();
@@ -25,26 +26,57 @@ public sealed class DetectionRuntime(
     private PerformanceProfileIdentity? _profileIdentity;
     private OnnxRuntimeDetector? _detector;
     private CancellationTokenSource? _runCancellation;
+    private TaskCompletionSource<bool>? _firstFrame;
     private Task? _runTask;
-    private string _provider = "Unavailable";
+    private ExecutionRuntimeInfo _execution = ExecutionRuntimeInfo.Unavailable();
+    private bool _prepared;
     private long _captured;
     private long _lastDroppedForSample;
     private DateTimeOffset _lastInferenceAt = DateTimeOffset.MinValue;
 
-    public string Provider => _provider;
+    public ExecutionRuntimeInfo Execution
+    {
+        get { lock (_sync) return _execution; }
+    }
+
     public bool IsReady => modelCatalog.IsReady;
     public event EventHandler<DetectionRuntimeMetrics>? MetricsChanged;
     public event EventHandler<DetectionVisualizationFrame>? VisualizationChanged;
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task PrepareAsync(CancellationToken cancellationToken)
     {
         if (!modelCatalog.IsReady)
             throw new InvalidOperationException("模型未安装或未通过校验");
-        CancellationToken runToken;
-        var options = optionsProvider();
+
         lock (_sync)
         {
-            if (_runTask is not null) return;
+            if (_prepared) return;
+        }
+
+        var options = optionsProvider();
+        var detector = new OnnxRuntimeDetector(
+            layout.Models,
+            options.Device,
+            (float)options.ConfidenceThreshold,
+            (float)options.IoUThreshold);
+        if (!modelCatalog.AutomaticAllowed || !detector.CanProduceDecisions)
+        {
+            detector.Dispose();
+            throw new InvalidOperationException("当前 ONNX 输出契约尚未验证，自动输入已禁用");
+        }
+
+        var runCancellation = new CancellationTokenSource();
+        var firstFrame = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        lock (_sync)
+        {
+            if (_prepared)
+            {
+                detector.Dispose();
+                runCancellation.Dispose();
+                return;
+            }
+
+            _frames.Clear();
             _stateMachine = new FishingStateMachine(StateMachineOptions.Default with
             {
                 BiteFallback = options.BiteFallbackEnabled
@@ -52,43 +84,56 @@ public sealed class DetectionRuntime(
                     : TimeSpan.Zero
             });
             _stateMachine.Reset(DateTimeOffset.UtcNow);
-            _detector = new OnnxRuntimeDetector(
-                layout.Models,
-                options.Device,
-                (float)options.ConfidenceThreshold,
-                (float)options.IoUThreshold);
-            if (!modelCatalog.AutomaticAllowed || !_detector.CanProduceDecisions)
-            {
-                _detector.Dispose();
-                _detector = null;
-                throw new InvalidOperationException("当前 ONNX 输出契约尚未验证，自动输入已禁用");
-            }
-            _provider = _detector.Provider;
-            _performance = new InferencePerformanceScheduler(options, _provider);
+            _detector = detector;
+            _execution = detector.Execution;
+            _performance = new InferencePerformanceScheduler(options, detector.Execution.ProfileKey);
             _profileIdentity = null;
             _captured = 0;
-            _lastDroppedForSample = _frames.DroppedCount;
+            _lastDroppedForSample = 0;
             _lastInferenceAt = DateTimeOffset.MinValue;
-            _runCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            runToken = _runCancellation.Token;
+            _runCancellation = runCancellation;
+            _firstFrame = firstFrame;
+            _prepared = true;
             capture.FrameArrived += OnFrameArrived;
         }
+
         try
         {
-            await capture.StartAsync(runToken);
-            lock (_sync) _runTask = Task.Run(() => ProcessFramesAsync(runToken), runToken);
+            await capture.StartAsync(runCancellation.Token);
+            using var startupCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+                cancellationToken,
+                runCancellation.Token);
+            await firstFrame.Task.WaitAsync(FirstFrameTimeout, startupCancellation.Token);
+        }
+        catch (TimeoutException error)
+        {
+            await StopAsync(CancellationToken.None);
+            throw new TimeoutException("屏幕捕获已启动，但 5 秒内没有收到有效画面", error);
         }
         catch
         {
-            capture.FrameArrived -= OnFrameArrived;
-            _detector?.Dispose();
-            _detector = null;
-            _runCancellation?.Dispose();
-            _runCancellation = null;
-            _provider = "Unavailable";
+            await StopAsync(CancellationToken.None);
             throw;
         }
-        logger.LogInformation("automatic detection runtime started provider={Provider}", _provider);
+
+        logger.LogInformation(
+            "automatic detection runtime prepared backend={Backend} requested={Requested} fallback={Fallback}",
+            detector.Execution.Backend,
+            detector.Execution.Requested,
+            detector.Execution.FellBack);
+    }
+
+    public void Activate()
+    {
+        lock (_sync)
+        {
+            if (!_prepared || _runCancellation is null)
+                throw new InvalidOperationException("检测运行时尚未完成准备");
+            if (_runTask is not null) return;
+            var runToken = _runCancellation.Token;
+            _runTask = Task.Run(() => ProcessFramesAsync(runToken), runToken);
+        }
+        logger.LogInformation("automatic detection runtime activated");
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
@@ -107,21 +152,32 @@ public sealed class DetectionRuntime(
             capture.FrameArrived -= OnFrameArrived;
             detector = _detector;
             _detector = null;
-            _provider = "Unavailable";
+            performance = _performance;
+            profileIdentity = _profileIdentity;
+            _performance = null;
+            _profileIdentity = null;
+            _firstFrame = null;
+            _prepared = false;
+            _execution = ExecutionRuntimeInfo.Unavailable(optionsProvider().Device);
+            _frames.Clear();
         }
-        await capture.StopAsync(cancellationToken);
+
+        Exception? captureFailure = null;
+        try
+        {
+            await capture.StopAsync(cancellationToken);
+        }
+        catch (Exception error)
+        {
+            captureFailure = error;
+        }
+
         if (task is not null)
         {
             try { await task; }
             catch (OperationCanceledException) { }
         }
-        lock (_sync)
-        {
-            performance = _performance;
-            profileIdentity = _profileIdentity;
-            _performance = null;
-            _profileIdentity = null;
-        }
+
         if (performance is { Adaptive: true } && profileIdentity is not null)
         {
             try
@@ -135,12 +191,16 @@ public sealed class DetectionRuntime(
                 logger.LogWarning(error, "performance profile could not be saved");
             }
         }
+
         detector?.Dispose();
         runCancellation?.Dispose();
         lock (_sync)
         {
             if (ReferenceEquals(_runCancellation, runCancellation)) _runCancellation = null;
         }
+
+        if (captureFailure is not null)
+            throw captureFailure;
     }
 
     public async ValueTask DisposeAsync() => await StopAsync(CancellationToken.None);
@@ -149,6 +209,12 @@ public sealed class DetectionRuntime(
     {
         Interlocked.Increment(ref _captured);
         _frames.Publish(frame);
+        if (frame.Width > 0 && frame.Height > 0 && !frame.BgraPixels.IsEmpty)
+        {
+            TaskCompletionSource<bool>? firstFrame;
+            lock (_sync) firstFrame = _firstFrame;
+            firstFrame?.TrySetResult(true);
+        }
     }
 
     private async Task ProcessFramesAsync(CancellationToken cancellationToken)
@@ -242,8 +308,9 @@ public sealed class DetectionRuntime(
         InferencePerformanceScheduler performance)
     {
         if (!performance.Adaptive || _profileIdentity is not null) return;
+        var execution = Execution;
         var identity = PerformanceProfileStore.CreateIdentity(
-            _provider,
+            execution.ProfileKey,
             modelCatalog,
             frame.Width,
             frame.Height);
@@ -252,8 +319,8 @@ public sealed class DetectionRuntime(
         {
             performance.ApplyProfile(profile);
             logger.LogInformation(
-                "loaded inference performance profile provider={Provider} resolution={Width}x{Height}",
-                _provider,
+                "loaded inference performance profile backend={Backend} resolution={Width}x{Height}",
+                execution.Backend,
                 frame.Width,
                 frame.Height);
         }

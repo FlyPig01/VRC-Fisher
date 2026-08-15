@@ -225,6 +225,7 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
 
 internal static class Direct3DDeviceFactory
 {
+    private static readonly Guid IidDxgiDevice = new("54EC77FA-1377-44E6-8C32-88FD5F44C84C");
     private const uint D3D11CreateDeviceFlagBgraSupport = 0x20;
     private const uint D3DFeatureLevel11_0 = 0xb000;
     private const uint D3DDriverTypeHardware = 1;
@@ -245,8 +246,7 @@ internal static class Direct3DDeviceFactory
         Marshal.ThrowExceptionForHR(result);
         try
         {
-            var iid = new Guid("CAFCB56C-6AC3-4889-BF47-9E23BBD260EC");
-            Marshal.ThrowExceptionForHR(Marshal.QueryInterface(device, in iid, out var dxgiDevice));
+            Marshal.ThrowExceptionForHR(Marshal.QueryInterface(device, in IidDxgiDevice, out var dxgiDevice));
             IntPtr abi;
             try
             {

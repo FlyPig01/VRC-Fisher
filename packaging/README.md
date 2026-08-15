@@ -4,15 +4,15 @@
 
 ## 当前状态
 
-正式发布链已经切换为 C#：`build-installer.ps1` 分别发布 CPU-only 与 DirectML 两套 `win-x64` 程序目录，再由一个 `installer.iss` 生成 Setup。旧的 Python/PyInstaller 入口已经移除。
+正式发布链使用 C#：`build-installer.ps1` 只发布一套 DirectML `win-x64` 自包含程序，再由 `installer.iss` 生成单一 Setup。DirectML 包内仍可选择 CPU；旧 CPU-only、Python/PyInstaller 入口均已移除。
 
 构建示例：
 
 ```powershell
-.\packaging\build.ps1 -Version 0.1.0 -Repository owner/name
+.\packaging\build.ps1 -Version 0.1.1 -Repository owner/name
 ```
 
-本机需要 .NET SDK、Windows App SDK NuGet 依赖和 Inno Setup 6 `ISCC.exe`。19 种非英语安装器翻译已作为构建资源固定在 `languages/`，最终用户不下载语言包。Setup 按 Windows UI 语言从 20 种语言中预选，无匹配时回退 English，并在覆盖安装时保留先前选择；最终安装器语言会写入安装目录，供软件首次启动使用。脚本每次同时构建 CPU-only 与 DirectML 两套程序源，拒绝把 `.onnx` 放进 Setup，并在 `releases/app-vX.Y.Z/` 输出一个安装器和 SHA-256。安装器、模型 Release、更新与卸载契约见 [安装与发布设计](../docs/installation-and-release.md)。
+本机需要 .NET SDK、Windows App SDK NuGet 依赖和 Inno Setup 6 `ISCC.exe`。19 种非英语安装器翻译已固定在 `languages/`，最终用户不下载语言包。Setup 按 Windows UI 语言从 20 种语言中预选，无匹配时回退 English，并在覆盖安装时保留先前选择；最终安装器语言会写入安装目录。脚本拒绝把 `.onnx` 放进 Setup，并在 `releases/app-vX.Y.Z/` 只输出一个安装器。GitHub Release 页面会自动显示该资产的 SHA-256，不再生成重复附件。完整契约见 [安装与发布设计](../docs/installation-and-release.md)。
 
 Setup 构建会强制收集根目录 MIT、第三方声明、AGPL-3.0 以及已还原的 Windows App SDK、ONNX Runtime、.NET、Logging 和 Inno Setup 法律文件；缺失任何必需文件时停止构建。
 

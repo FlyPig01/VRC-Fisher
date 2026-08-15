@@ -4,14 +4,14 @@
 
 本页记录 2026-08-15 在当前开发机上的 FP32 ONNX 实测。模型、输入尺寸、置信度和 NMS 阈值均未降低；正式调度应优先参考 P95。
 
-| 正式软件模式 | locator 平均 / P95 | locator + minigame 平均 / P95 | 缓存 minigame 平均 / P95 |
+| 测试构建 / 模式 | locator 平均 / P95 | locator + minigame 平均 / P95 | 缓存 minigame 平均 / P95 |
 |---|---:|---:|---:|
-| CPU-only / CPU | 58.80 / 65.21 ms | 108.81 / 119.79 ms | 23.68 / 24.79 ms |
+| 历史 CPU-only / CPU | 58.80 / 65.21 ms | 108.81 / 119.79 ms | 23.68 / 24.79 ms |
 | DirectML 包 / CPU | 68.81 / 73.93 ms | 103.54 / 108.62 ms | 28.40 / 29.55 ms |
 | DirectML / GPU | 11.11 / 12.15 ms | 16.17 / 16.92 ms | 5.42 / 5.82 ms |
 | DirectML / Auto | 10.99 / 12.37 ms | 15.83 / 16.75 ms | 4.95 / 5.30 ms |
 
-优化后，CPU-only 的单次 locator 与缓存 minigame 能分别落在 `80 ms` 和 `33 ms` 内，但双模型帧在 CPU 上仍需约 `104-109 ms`。因此正式运行不再把这组最短值当作所有硬件的固定频率，而是按三类运行时 P95 在受限范围内调节。明确只使用 CPU 的用户仍应优先安装 CPU-only；DirectML 包强制 CPU 的余量更小。
+独立 CPU-only 构建已退出产品，只保留为历史对照。当前正式软件应参考 DirectML 包的三组数据：CPU 双模型帧仍需约 `104 ms`，因此运行时按三类 P95 在受限范围内调节；用户可在同一安装包内选择 CPU，不再安装另一套程序。
 
 ## 2. 测试条件
 
@@ -49,15 +49,15 @@ C# 每种模式预热 10 次，再连续测量 100 次。计时包含 C# letterb
 
 `locator + minigame` 是一次完整检测调用的独立实测，不是另外两项平均值的数学相加。不同画面产生的候选框数量、CPU 调频和执行缓存都会影响结果。
 
-## 4. C# 正式运行链路
+## 4. C# 运行链路
 
 ### 4.1 完整结果
 
 | 安装组件 / 选项 | 实际 Provider | 模式 | 平均 | P50 | P95 | 平均等效速度 |
 |---|---|---|---:|---:|---:|---:|
-| CPU-only / CPU | CPUExecutionProvider | locator | 58.80 ms | 57.99 ms | 65.21 ms | 17.01 FPS |
-| CPU-only / CPU | CPUExecutionProvider | locator + minigame | 108.81 ms | 107.99 ms | 119.79 ms | 9.19 FPS |
-| CPU-only / CPU | CPUExecutionProvider | cached minigame | 23.68 ms | 23.65 ms | 24.79 ms | 42.23 FPS |
+| 历史 CPU-only / CPU | CPUExecutionProvider | locator | 58.80 ms | 57.99 ms | 65.21 ms | 17.01 FPS |
+| 历史 CPU-only / CPU | CPUExecutionProvider | locator + minigame | 108.81 ms | 107.99 ms | 119.79 ms | 9.19 FPS |
+| 历史 CPU-only / CPU | CPUExecutionProvider | cached minigame | 23.68 ms | 23.65 ms | 24.79 ms | 42.23 FPS |
 | DirectML 包 / CPU | CPUExecutionProvider | locator | 68.81 ms | 68.01 ms | 73.93 ms | 14.53 FPS |
 | DirectML 包 / CPU | CPUExecutionProvider | locator + minigame | 103.54 ms | 103.02 ms | 108.62 ms | 9.66 FPS |
 | DirectML 包 / CPU | CPUExecutionProvider | cached minigame | 28.40 ms | 28.50 ms | 29.55 ms | 35.21 FPS |
@@ -137,8 +137,8 @@ Python 数据只用于训练后的预标注和审核。它包含 Ultralytics 图
 
 ## 7. 调度含义与限制
 
-1. CPU-only 的 locator P95 为 `65.21 ms`，缓存 minigame P95 为 `24.79 ms`；它们能落入自动调频的 `80-250 ms` 与 `33-67 ms` 范围。
-2. DirectML 包强制 CPU 时余量更小。明确使用 CPU 的用户应安装 CPU-only，而不是安装 DirectML 后强制 CPU。
+1. 历史 CPU-only 数据只用于比较 ONNX Runtime 版本，不再对应可发布组件。
+2. DirectML 包强制 CPU 的 locator / 双模型 / 缓存小游戏 P95 为 `73.93/108.62/29.55 ms`，可在同一软件内直接选择。
 3. CPU 双模型 P95 仍约 `109-120 ms`。按 `P95 / 0.80` 和 `P95 x 4`，本机 CPU 的 Hooking 与面板复查初值取 `150/500 ms`，必须在真实 VRChat 中重点观察。
 4. DirectML 在本机对 `80 ms` locator、`80 ms` Hooking、`33 ms` minigame 和 `250 ms` 面板复查有充足余量。
 5. 已实现的自适应只调节有上下限的运行频率，不采用 INT8、FP16、降低输入尺寸、降低模型精度或修改阈值。它不改变本页的原始单帧基准结果。

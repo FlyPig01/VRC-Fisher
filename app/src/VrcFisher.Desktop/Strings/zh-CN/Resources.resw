@@ -170,4 +170,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>屏幕覆盖层不可用，自动钓鱼未启动</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat 屏幕覆盖层不可用</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自动钓鱼已停止，鼠标输入已释放。请重启 VRC-Fisher 后重试。</value></data>
+  <data name="Guide" xml:space="preserve"><value>使用指南</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>硬件信息</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>内存</value></data>
+  <data name="System" xml:space="preserve"><value>系统</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>用户选择</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>实际使用</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} 个物理核心 / {2} 个逻辑线程</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>无法获取显卡信息</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} 显存 · 驱动 {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0}（自动回退：{1}）</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>正在启动</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>正在停止</value></data>
+  <data name="Change" xml:space="preserve"><value>修改</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>修改启动 / 停止热键？</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>新热键通过冲突检测并完成确认前，当前热键会继续生效。</value></data>
+  <data name="Continue" xml:space="preserve"><value>继续</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>按下新热键</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>可单独按 F1-F24，或使用 Ctrl、Alt、Shift 搭配字母或数字。按 Esc 取消。</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>等待按键…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>不支持此按键组合。</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>热键已修改</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} 已生效；检测时未发现全局注册冲突。</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>支持的 VRChat 世界</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>当前仅支持此世界；钓鱼 UI 更新后可能需要更新模型。</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>在 VRChat 中打开支持的世界</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>快速开始</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>点击上方图片，在 VRChat 中进入支持的世界。</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>安装两个模型，进入钓鱼区域，并让 VRChat 保持在前台。</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>按 {0} 启动；再次按下或切出 VRChat 即停止。</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>正在准备模型、推理和画面捕获…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>正在停止并释放鼠标输入…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat 已离开前台；自动钓鱼已停止，鼠标输入已释放</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>自动钓鱼已停止</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat 已不在前台。鼠标输入已释放；返回游戏后请重新按热键启动。</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>仅在 VRChat 位于前台时生效，不会长期注册为系统全局热键。</value></data>
 </root>

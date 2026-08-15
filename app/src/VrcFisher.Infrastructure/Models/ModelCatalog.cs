@@ -32,6 +32,8 @@ public sealed class ModelCatalog : IModelCatalog
     private bool _updateCheckSucceeded;
     private ResolvedModelRelease? _latestRelease;
 
+    public event EventHandler? StatusChanged;
+
     public ModelCatalog(
         DirectoryLayout layout,
         HttpClient httpClient,
@@ -128,6 +130,7 @@ public sealed class ModelCatalog : IModelCatalog
                     .Sum(path => new FileInfo(path).Length)
                 : 0;
         }
+        RaiseStatusChanged();
     }
 
     public async Task CheckForUpdatesAsync(CancellationToken cancellationToken)
@@ -143,10 +146,12 @@ public sealed class ModelCatalog : IModelCatalog
                 _updateAvailable = IsNewerVersion(_latestVersion, _installedVersion);
                 _updateCheckSucceeded = true;
             }
+            RaiseStatusChanged();
         }
         catch
         {
             lock (_sync) _updateCheckSucceeded = false;
+            RaiseStatusChanged();
             throw;
         }
         finally
@@ -305,6 +310,7 @@ public sealed class ModelCatalog : IModelCatalog
                 _updateAvailable = false;
                 _updateCheckSucceeded = true;
             }
+            RaiseStatusChanged();
             return manifest;
         }
         finally
@@ -572,6 +578,8 @@ public sealed class ModelCatalog : IModelCatalog
     {
         if (Directory.Exists(path)) Directory.Delete(path, recursive: true);
     }
+
+    private void RaiseStatusChanged() => StatusChanged?.Invoke(this, EventArgs.Empty);
 
     private sealed record GitHubRelease(
         [property: JsonPropertyName("tag_name")] string? TagName,

@@ -6,12 +6,11 @@
     <Platforms>AnyCPU;x64</Platforms>
     <PlatformTarget Condition="'$(Platform)' == 'x64'">x64</PlatformTarget>
     <PlatformTarget Condition="'$(Platform)' != 'x64'">x64</PlatformTarget>
-    <DefineConstants Condition="'$(VrcExecutionProvider)' == 'DirectML'">$(DefineConstants);VRC_DIRECTML</DefineConstants>
+    <DefineConstants>$(DefineConstants);VRC_DIRECTML</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\VrcFisher.Core\VrcFisher.Core.csproj" />
     <ProjectReference Include="..\VrcFisher.Application\VrcFisher.Application.csproj" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.29.0" Condition="'$(VrcExecutionProvider)' != 'DirectML'" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" Condition="'$(VrcExecutionProvider)' == 'DirectML'" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" />
   </ItemGroup>
 </Project>

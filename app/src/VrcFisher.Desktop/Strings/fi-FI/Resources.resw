@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Näyttöpeitto ei ole käytettävissä; automaattista kalastusta ei käynnistetty</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat-peitto ei ole käytettävissä</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automaattinen kalastus pysäytettiin ja hiiren syöte vapautettiin. Käynnistä VRC-Fisher uudelleen ja yritä uudelleen.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Ohje</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Laitteistotiedot</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Muisti</value></data>
+  <data name="System" xml:space="preserve"><value>Järjestelmä</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Valittu laite</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Käytetty laite</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fyysistä ydintä / {2} loogista säiettä</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Näytönohjaimen tietoja ei ole saatavilla</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · ajuri {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (automaattinen varatila: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Käynnistetään</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Pysäytetään</value></data>
+  <data name="Change" xml:space="preserve"><value>Muuta</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Muutetaanko käynnistys-/pysäytysnäppäintä?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>Nykyinen näppäin toimii, kunnes uusi on tarkistettu ja vahvistettu.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Jatka</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Paina uutta näppäintä</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Paina F1-F24 tai kirjainta/numeroa Ctrl-, Alt- tai Shift-näppäimen kanssa. Esc peruuttaa.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Odotetaan syötettä…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Tätä näppäinyhdistelmää ei tueta.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Näppäin muutettu</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} on käytössä. Tarkistuksessa ei löytynyt globaalia rekisteröintiristiriitaa.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Tuettu VRChat-maailma</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Vain tätä maailmaa tuetaan. Kalastusliittymän muutos voi vaatia mallien päivityksen.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Avaa tuettu maailma VRChatissa</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Pika-aloitus</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Napsauta yllä olevaa kuvaa ja siirry tuettuun maailmaan.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Asenna molemmat mallit, siirry kalastusalueelle ja pidä VRChat etualalla.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Käynnistä painamalla {0}. Paina uudelleen tai poistu VRChatista pysäyttääksesi.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Valmistellaan malleja, päättelyä ja kaappausta…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Pysäytetään ja vapautetaan hiiri…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat poistui etualalta; automaattikalastus pysäytettiin ja hiiri vapautettiin</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automaattikalastus pysäytetty</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat ei ole enää etualalla. Hiiri vapautettiin; palaa peliin ja paina näppäintä uudelleen.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Toimii vain VRChatin ollessa etualalla eikä rekisteröidy pysyväksi globaaliksi pikanäppäimeksi.</value></data>
 </root>

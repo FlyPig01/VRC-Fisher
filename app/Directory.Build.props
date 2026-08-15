@@ -1,6 +1,8 @@
 <Project>
   <PropertyGroup>
-    <VrcExecutionProvider Condition="'$(VrcExecutionProvider)' == ''">CPU</VrcExecutionProvider>
+    <VrcExecutionProvider Condition="'$(VrcExecutionProvider)' == ''">DirectML</VrcExecutionProvider>
+    <VersionPrefix>0.1.1</VersionPrefix>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <BaseIntermediateOutputPath>obj\$(VrcExecutionProvider)\</BaseIntermediateOutputPath>
     <BaseOutputPath>bin\$(VrcExecutionProvider)\</BaseOutputPath>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(MSBuildProjectDirectory)\obj\**;$(MSBuildProjectDirectory)\bin\**</DefaultItemExcludes>

@@ -15,8 +15,6 @@ public sealed record AppOptions(
     int SettingsVersion = 3)
 {
     public const int CurrentSettingsVersion = 3;
-    public static readonly IReadOnlyList<string> SupportedToggleHotkeys =
-        ["F6", "F7", "F8", "F9", "F10", "F11", "F12"];
 
     public static AppOptions Default => new();
 
@@ -40,11 +38,72 @@ public sealed record AppOptions(
             ConfidenceThreshold = confidence,
             IoUThreshold = iou,
             BiteFallbackSeconds = fallback,
-            ToggleHotkey = SupportedToggleHotkeys.Contains(ToggleHotkey, StringComparer.Ordinal)
-                ? ToggleHotkey
+            ToggleHotkey = HotkeyGestureRules.TryNormalize(ToggleHotkey, out var hotkey)
+                ? hotkey
                 : Default.ToggleHotkey,
             SettingsVersion = CurrentSettingsVersion
         };
+    }
+}
+
+public static class HotkeyGestureRules
+{
+    public static bool TryNormalize(string? value, out string normalized)
+    {
+        normalized = string.Empty;
+        if (string.IsNullOrWhiteSpace(value)) return false;
+        var tokens = value.Split('+', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        if (tokens.Length == 0) return false;
+
+        var ctrl = false;
+        var alt = false;
+        var shift = false;
+        string? key = null;
+        foreach (var token in tokens)
+        {
+            if (token.Equals("Ctrl", StringComparison.OrdinalIgnoreCase))
+            {
+                if (ctrl) return false;
+                ctrl = true;
+            }
+            else if (token.Equals("Alt", StringComparison.OrdinalIgnoreCase))
+            {
+                if (alt) return false;
+                alt = true;
+            }
+            else if (token.Equals("Shift", StringComparison.OrdinalIgnoreCase))
+            {
+                if (shift) return false;
+                shift = true;
+            }
+            else
+            {
+                if (key is not null) return false;
+                key = token.ToUpperInvariant();
+            }
+        }
+
+        if (key is null || !IsSupportedKey(key, out var functionKey)) return false;
+        if (!functionKey && !ctrl && !alt && !shift) return false;
+        if (alt && key == "F4") return false;
+
+        var result = new List<string>(4);
+        if (ctrl) result.Add("Ctrl");
+        if (alt) result.Add("Alt");
+        if (shift) result.Add("Shift");
+        result.Add(key);
+        normalized = string.Join('+', result);
+        return true;
+    }
+
+    private static bool IsSupportedKey(string key, out bool functionKey)
+    {
+        functionKey = key.Length is 2 or 3
+            && key[0] == 'F'
+            && int.TryParse(key.AsSpan(1), out var number)
+            && number is >= 1 and <= 24;
+        return functionKey
+            || key.Length == 1 && (key[0] is >= 'A' and <= 'Z' || key[0] is >= '0' and <= '9');
     }
 }
 
@@ -124,6 +183,7 @@ public sealed class DirectoryLayout(string rootDirectory)
 
 public interface IModelCatalog
 {
+    event EventHandler? StatusChanged;
     IReadOnlyList<ModelStatus> GetStatus();
     bool IsReady { get; }
     bool AutomaticAllowed { get; }
@@ -144,10 +204,11 @@ public interface IModelCatalog
 
 public interface IDetectionRuntime
 {
-    string Provider { get; }
+    ExecutionRuntimeInfo Execution { get; }
     bool IsReady { get; }
     event EventHandler<DetectionRuntimeMetrics>? MetricsChanged;
     event EventHandler<DetectionVisualizationFrame>? VisualizationChanged;
-    Task StartAsync(CancellationToken cancellationToken);
+    Task PrepareAsync(CancellationToken cancellationToken);
+    void Activate();
     Task StopAsync(CancellationToken cancellationToken);
 }

@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Obrazový překryv není k dispozici; automatický rybolov nebyl spuštěn</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Překryv pro VRChat není k dispozici</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automatický rybolov byl zastaven a vstup myši byl uvolněn. Restartujte VRC-Fisher a zkuste to znovu.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Průvodce</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Informace o hardwaru</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Paměť</value></data>
+  <data name="System" xml:space="preserve"><value>Systém</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Vybrané zařízení</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Použité zařízení</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fyzických jader / {2} logických vláken</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Informace o grafické kartě nejsou dostupné</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · ovladač {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (automatický návrat: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Spouštění</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Zastavování</value></data>
+  <data name="Change" xml:space="preserve"><value>Změnit</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Změnit klávesu spuštění / zastavení?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>Současná klávesa zůstane aktivní, dokud nová neprojde kontrolou konfliktů a potvrzením.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Pokračovat</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Stiskněte novou klávesu</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Stiskněte F1-F24 nebo písmeno/číslo s Ctrl, Alt či Shift. Esc zruší akci.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Čekání na vstup…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Tato kombinace není podporována.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Klávesa změněna</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} je aktivní. Při kontrole nebyl nalezen konflikt globální registrace.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Podporovaný svět VRChat</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Podporován je pouze tento svět. Změna rybářského UI může vyžadovat aktualizaci modelů.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Otevřít podporovaný svět ve VRChat</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Rychlý start</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Klikněte na obrázek výše a vstupte do podporovaného světa.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Nainstalujte oba modely, vstupte do rybářské oblasti a ponechte VRChat v popředí.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Stiskněte {0} pro spuštění. Další stisk nebo opuštění VRChat běh zastaví.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Příprava modelů, inference a snímání…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Zastavování a uvolnění myši…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat opustil popředí; automatické rybaření bylo zastaveno a myš uvolněna</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatické rybaření zastaveno</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat již není v popředí. Myš byla uvolněna; vraťte se do hry a znovu stiskněte klávesu.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Funguje jen když je VRChat v popředí a není trvale registrována jako globální klávesa.</value></data>
 </root>

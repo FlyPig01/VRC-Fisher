@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>画面オーバーレイが利用できないため、自動釣りは開始されませんでした。</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChatオーバーレイが利用できません</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自動釣りは停止され、マウス入力は解放されました。VRC-Fisherを再起動して、もう一度お試しください。</value></data>
+  <data name="Guide" xml:space="preserve"><value>使い方</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>ハードウェア情報</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>メモリ</value></data>
+  <data name="System" xml:space="preserve"><value>システム</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>選択したデバイス</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>実際のデバイス</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · 物理 {1} コア / 論理 {2} スレッド</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>GPU 情報を取得できません</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · VRAM {2} · ドライバー {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0}（自動フォールバック: {1}）</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>起動中</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>停止中</value></data>
+  <data name="Change" xml:space="preserve"><value>変更</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>開始 / 停止キーを変更しますか？</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>新しいキーの競合確認と確定が終わるまで、現在のキーは有効です。</value></data>
+  <data name="Continue" xml:space="preserve"><value>続行</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>新しいキーを押してください</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>F1-F24、または Ctrl / Alt / Shift と文字・数字を押してください。Esc でキャンセルします。</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>入力待ち…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>このキーの組み合わせには対応していません。</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>キーを変更しました</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} が有効です。確認時点でグローバル登録の競合は見つかりませんでした。</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>対応 VRChat ワールド</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>現在はこのワールドのみ対応しています。釣り UI の変更時はモデル更新が必要な場合があります。</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>対応ワールドを VRChat で開く</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>クイックスタート</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>上の画像をクリックし、VRChat で対応ワールドに入ります。</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>2 つのモデルを導入し、釣り場へ移動して VRChat を前面に保ちます。</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>{0} で開始します。もう一度押すか VRChat から切り替えると停止します。</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>モデル、推論、キャプチャを準備中…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>停止してマウス入力を解放中…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat が前面でなくなったため、自動釣りを停止してマウス入力を解放しました</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>自動釣りを停止しました</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat が前面にありません。マウス入力を解放しました。ゲームに戻り、もう一度キーを押してください。</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>VRChat が前面のときだけ動作し、永続的なグローバルホットキーとして登録されません。</value></data>
 </root>

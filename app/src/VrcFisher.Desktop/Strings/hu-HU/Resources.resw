@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>A képernyő-átfedés nem érhető el; az automatikus horgászat nem indult el</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>A VRChat átfedése nem érhető el</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Az automatikus horgászat leállt, és az egérbemenet feloldásra került. Indítsa újra a VRC-Fisher programot, majd próbálja újra.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Útmutató</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Hardveradatok</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Memória</value></data>
+  <data name="System" xml:space="preserve"><value>Rendszer</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Kiválasztott eszköz</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Használt eszköz</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fizikai mag / {2} logikai szál</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Nincs elérhető videokártya-információ</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · illesztőprogram {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (automatikus visszaállás: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Indítás</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Leállítás</value></data>
+  <data name="Change" xml:space="preserve"><value>Módosítás</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Módosítja az indító/leállító billentyűt?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>A jelenlegi billentyű addig aktív, amíg az újat nem ellenőrizte és erősítette meg.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Folytatás</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Nyomja meg az új billentyűt</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Nyomja meg az F1-F24 egyikét, vagy betűt/számot Ctrl, Alt vagy Shift mellett. Esc: mégse.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Bevitelre vár…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Ez a billentyűkombináció nem támogatott.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Billentyű módosítva</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>A(z) {0} aktív. Az ellenőrzéskor nem volt globális regisztrációs ütközés.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Támogatott VRChat-világ</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Csak ez a világ támogatott. A horgászfelület változása modellfrissítést igényelhet.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Támogatott világ megnyitása a VRChatben</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Gyors kezdés</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Kattintson a fenti képre, és lépjen be a támogatott világba.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Telepítse mindkét modellt, menjen a horgászterületre, és tartsa a VRChatet előtérben.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Indításhoz nyomja meg: {0}. Újabb megnyomás vagy a VRChat elhagyása leállítja.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Modellek, következtetés és rögzítés előkészítése…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Leállítás és az egér felengedése…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>A VRChat elhagyta az előteret; az automatikus horgászat leállt, az egér felengedve</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatikus horgászat leállítva</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>A VRChat már nincs előtérben. Az egér fel lett engedve; térjen vissza és nyomja meg újra a billentyűt.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Csak akkor működik, ha a VRChat előtérben van, és nem regisztrálódik tartós globális gyorsbillentyűként.</value></data>
 </root>

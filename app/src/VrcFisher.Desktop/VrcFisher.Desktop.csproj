@@ -32,6 +32,10 @@
              Link="Assets\VRC-Fisher.svg"
              CopyToOutputDirectory="PreserveNewest"
              CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\..\assets\worlds\wrld_ae001ea3-ed05-42f0-adf2-3d47efd10a77\cover.jpg"
+             Link="Assets\Worlds\wrld_ae001ea3-ed05-42f0-adf2-3d47efd10a77\cover.jpg"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <Target Name="RemoveWinUiDirectMlPublishConflict"
           AfterTargets="ComputeFilesToPublish"

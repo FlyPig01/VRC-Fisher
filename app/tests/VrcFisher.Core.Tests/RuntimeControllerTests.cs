@@ -13,34 +13,123 @@ public sealed class RuntimeControllerTests
         var models = new StubModelCatalog();
         var detection = new StubDetectionRuntime();
         var input = new StubInputController { IsTargetForeground = false };
-        var controller = new RuntimeController(
+        var controller = Create(models, detection, input);
+
+        await controller.StartAsync(CancellationToken.None);
+
+        Assert.Equal(RuntimeLifecycle.Stopped, controller.Snapshot.Lifecycle);
+        Assert.Equal(RuntimeMessageCode.StartTargetNotForeground, controller.Snapshot.Status.Code);
+        Assert.False(controller.Snapshot.IsObserving);
+        Assert.Equal(0, models.RefreshCount);
+        Assert.Equal(0, detection.PrepareCount);
+    }
+
+    [Fact]
+    public async Task Start_does_not_publish_running_until_preparation_has_a_valid_frame()
+    {
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var detection = new StubDetectionRuntime
+        {
+            PrepareHandler = async cancellationToken =>
+            {
+                entered.SetResult();
+                await release.Task.WaitAsync(cancellationToken);
+            }
+        };
+        var controller = Create(new StubModelCatalog(), detection, new StubInputController());
+
+        var start = controller.StartAsync(CancellationToken.None);
+        await entered.Task;
+
+        Assert.Equal(RuntimeLifecycle.Starting, controller.Snapshot.Lifecycle);
+        Assert.False(controller.Snapshot.IsAutomatic);
+        Assert.Equal(0, detection.ActivateCount);
+
+        release.SetResult();
+        await start;
+
+        Assert.Equal(RuntimeLifecycle.Running, controller.Snapshot.Lifecycle);
+        Assert.True(controller.Snapshot.IsAutomatic);
+        Assert.Equal(1, detection.ActivateCount);
+        Assert.Equal(InferenceBackend.Cpu, controller.Snapshot.Execution.Backend);
+    }
+
+    [Fact]
+    public async Task Preparation_failure_rolls_back_and_never_activates_input_processing()
+    {
+        var detection = new StubDetectionRuntime
+        {
+            PrepareHandler = _ => throw new InvalidOperationException("capture failed")
+        };
+        var input = new StubInputController();
+        var controller = Create(new StubModelCatalog(), detection, input);
+
+        await controller.StartAsync(CancellationToken.None);
+
+        Assert.Equal(RuntimeLifecycle.Stopped, controller.Snapshot.Lifecycle);
+        Assert.Equal(RuntimeMessageCode.DetectionStopped, controller.Snapshot.Status.Code);
+        Assert.Contains("capture failed", controller.Snapshot.Status.Detail);
+        Assert.Equal(0, detection.ActivateCount);
+        Assert.True(detection.StopCount >= 1);
+        Assert.True(input.ReleaseCount >= 1);
+    }
+
+    [Fact]
+    public async Task Stop_during_start_cancels_the_transaction_and_is_idempotent()
+    {
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var detection = new StubDetectionRuntime
+        {
+            PrepareHandler = async cancellationToken =>
+            {
+                entered.SetResult();
+                await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            }
+        };
+        var input = new StubInputController();
+        var controller = Create(new StubModelCatalog(), detection, input);
+
+        var start = controller.StartAsync(CancellationToken.None);
+        await entered.Task;
+        var stop = controller.StopAsync(CancellationToken.None);
+        await Task.WhenAll(start, stop);
+        await controller.StopAsync(CancellationToken.None);
+
+        Assert.Equal(RuntimeLifecycle.Stopped, controller.Snapshot.Lifecycle);
+        Assert.Equal(0, detection.ActivateCount);
+        Assert.True(detection.StopCount >= 2);
+        Assert.True(input.ReleaseCount >= 2);
+    }
+
+    private static RuntimeController Create(
+        StubModelCatalog models,
+        StubDetectionRuntime detection,
+        StubInputController input) => new(
             models,
             detection,
             input,
             NullLogger<RuntimeController>.Instance);
 
-        await controller.StartAsync(CancellationToken.None);
-
-        Assert.Equal(RuntimeMessageCode.StartTargetNotForeground, controller.Snapshot.Status.Code);
-        Assert.False(controller.Snapshot.IsObserving);
-        Assert.Equal(0, models.RefreshCount);
-        Assert.Equal(0, detection.StartCount);
-    }
-
     private sealed class StubInputController : IInputController
     {
-        public bool IsTargetForeground { get; set; }
+        public bool IsTargetForeground { get; set; } = true;
+        public int ReleaseCount { get; private set; }
         public void Click() { }
         public void PressLeft() { }
         public void ReleaseLeft() { }
-        public void ReleaseAll() { }
+        public void ReleaseAll() => ReleaseCount++;
     }
 
     private sealed class StubDetectionRuntime : IDetectionRuntime
     {
-        public string Provider => "CPUExecutionProvider";
+        public ExecutionRuntimeInfo Execution { get; private set; } =
+            new(ExecutionDevice.Cpu, InferenceBackend.Cpu, "CPU", false, null);
         public bool IsReady => true;
-        public int StartCount { get; private set; }
+        public int PrepareCount { get; private set; }
+        public int ActivateCount { get; private set; }
+        public int StopCount { get; private set; }
+        public Func<CancellationToken, Task>? PrepareHandler { get; init; }
         public event EventHandler<DetectionRuntimeMetrics>? MetricsChanged
         {
             add { }
@@ -52,17 +141,24 @@ public sealed class RuntimeControllerTests
             remove { }
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task PrepareAsync(CancellationToken cancellationToken)
         {
-            StartCount++;
-            return Task.CompletedTask;
+            PrepareCount++;
+            if (PrepareHandler is not null) await PrepareHandler(cancellationToken);
         }
 
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        public void Activate() => ActivateCount++;
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            StopCount++;
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class StubModelCatalog : IModelCatalog
     {
+        public event EventHandler? StatusChanged;
         public bool IsReady => true;
         public bool AutomaticAllowed => true;
         public long InstalledSize => 0;
@@ -79,6 +175,7 @@ public sealed class RuntimeControllerTests
         public Task RefreshAsync(CancellationToken cancellationToken)
         {
             RefreshCount++;
+            StatusChanged?.Invoke(this, EventArgs.Empty);
             return Task.CompletedTask;
         }
 

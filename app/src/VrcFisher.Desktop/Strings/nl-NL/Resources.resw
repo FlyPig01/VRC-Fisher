@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>De schermoverlay is niet beschikbaar; automatisch vissen is niet gestart</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>De VRChat-overlay is niet beschikbaar</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automatisch vissen is gestopt en de muisinvoer is vrijgegeven. Start VRC-Fisher opnieuw en probeer het opnieuw.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Handleiding</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Hardware-informatie</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Geheugen</value></data>
+  <data name="System" xml:space="preserve"><value>Systeem</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Gekozen apparaat</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Gebruikt apparaat</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fysieke kernen / {2} logische threads</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Geen videokaartinformatie beschikbaar</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · stuurprogramma {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (automatische terugval: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Starten</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Stoppen</value></data>
+  <data name="Change" xml:space="preserve"><value>Wijzigen</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Start-/stoptoets wijzigen?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>De huidige toets blijft actief totdat de nieuwe op conflicten is gecontroleerd en bevestigd.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Doorgaan</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Druk op de nieuwe toets</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Druk op F1-F24 of een letter/cijfer met Ctrl, Alt of Shift. Esc annuleert.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Wachten op invoer…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Deze toetscombinatie wordt niet ondersteund.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Toets gewijzigd</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} is actief. Bij de controle is geen globaal registratieconflict gevonden.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Ondersteunde VRChat-wereld</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Alleen deze wereld wordt ondersteund. Wijzigingen aan de visinterface kunnen nieuwe modellen vereisen.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Ondersteunde wereld openen in VRChat</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Snel starten</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Klik op de afbeelding hierboven en betreed de ondersteunde wereld.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Installeer beide modellen, ga naar de visplek en houd VRChat op de voorgrond.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Druk op {0} om te starten. Druk opnieuw of verlaat VRChat om te stoppen.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Modellen, inferentie en opname voorbereiden…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Stoppen en muisinvoer vrijgeven…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat verliet de voorgrond; automatisch vissen is gestopt en de muis is vrijgegeven</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatisch vissen gestopt</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat staat niet meer op de voorgrond. De muis is vrijgegeven; ga terug naar het spel en druk opnieuw op de toets.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Werkt alleen wanneer VRChat op de voorgrond staat en wordt niet permanent als globale sneltoets geregistreerd.</value></data>
 </root>

@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>화면 오버레이를 사용할 수 없으므로 자동 낚시가 시작되지 않았습니다.</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat 오버레이를 사용할 수 없습니다.</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>자동 낚시가 중지되었고 마우스 입력이 해제되었습니다. VRC-Fisher를 다시 시작한 후 다시 시도하세요.</value></data>
+  <data name="Guide" xml:space="preserve"><value>사용 안내</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>하드웨어 정보</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>메모리</value></data>
+  <data name="System" xml:space="preserve"><value>시스템</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>선택한 장치</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>실제 장치</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · 물리 코어 {1}개 / 논리 스레드 {2}개</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>그래픽 카드 정보를 가져올 수 없음</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · VRAM {2} · 드라이버 {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (자동 전환: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>시작 중</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>중지 중</value></data>
+  <data name="Change" xml:space="preserve"><value>변경</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>시작 / 중지 키를 변경할까요?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>새 키의 충돌 확인과 최종 승인이 끝날 때까지 현재 키가 유지됩니다.</value></data>
+  <data name="Continue" xml:space="preserve"><value>계속</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>새 키를 누르세요</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>F1-F24 또는 Ctrl, Alt, Shift와 문자/숫자를 누르세요. Esc는 취소입니다.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>입력 대기 중…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>지원하지 않는 키 조합입니다.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>키 변경 완료</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} 키가 적용되었습니다. 확인 시 전역 등록 충돌이 발견되지 않았습니다.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>지원하는 VRChat 월드</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>현재 이 월드만 지원합니다. 낚시 UI가 바뀌면 모델 업데이트가 필요할 수 있습니다.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>VRChat에서 지원 월드 열기</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>빠른 시작</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>위 이미지를 클릭하고 VRChat에서 지원 월드에 입장하세요.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>두 모델을 설치하고 낚시 구역으로 이동한 뒤 VRChat을 전면에 유지하세요.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>{0}을 눌러 시작합니다. 다시 누르거나 VRChat에서 전환하면 중지됩니다.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>모델, 추론 및 화면 캡처 준비 중…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>중지하고 마우스 입력을 해제하는 중…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat이 전면에서 벗어나 자동 낚시를 중지하고 마우스 입력을 해제했습니다</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>자동 낚시 중지됨</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat이 더 이상 전면에 없습니다. 마우스 입력을 해제했습니다. 게임으로 돌아가 키를 다시 누르세요.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>VRChat이 전면일 때만 작동하며 지속적인 전역 단축키로 등록되지 않습니다.</value></data>
 </root>

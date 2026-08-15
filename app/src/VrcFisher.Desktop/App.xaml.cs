@@ -10,6 +10,7 @@ using VrcFisher.Infrastructure.Inference;
 using VrcFisher.Infrastructure.Logging;
 using VrcFisher.Infrastructure.Models;
 using VrcFisher.Infrastructure.Runtime;
+using VrcFisher.Core;
 
 namespace VrcFisher.Desktop;
 
@@ -24,6 +25,7 @@ public partial class App : Microsoft.UI.Xaml.Application
     private readonly ModelCatalog _models;
     private readonly OptionsStore _optionsStore;
     private readonly Win32InputController _input;
+    private readonly Task<HardwareSnapshot> _hardware;
     private AppOptions _options;
     private RuntimeToggleHotkey? _hotkey;
     private readonly SemaphoreSlim _hotkeyGate = new(1, 1);
@@ -53,6 +55,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         _capture = new WindowsGraphicsCaptureSource();
         _wgc = new WgcCaptureAdapter(_capture);
         _input = new Win32InputController();
+        _hardware = new WindowsHardwareInfoProvider().ReadAsync(CancellationToken.None);
         _detection = new DetectionRuntime(_layout, () => _options, _wgc, _models, _input, _loggerFactory.CreateLogger<DetectionRuntime>());
         _runtime = new RuntimeController(_models, _detection, _input, _loggerFactory.CreateLogger<RuntimeController>());
         _hotkey = TryStartHotkey(_options.ToggleHotkey);
@@ -82,7 +85,8 @@ public partial class App : Microsoft.UI.Xaml.Application
             _options,
             SaveOptionsAsync,
             ChangeHotkeyAsync,
-            OnnxRuntimeDetector.SupportsDirectML);
+            OnnxRuntimeDetector.SupportsDirectML,
+            _hardware);
         _window.Closed += (_, _) => _ = StopAsync();
         try
         {
@@ -148,11 +152,21 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     private async Task ToggleRuntimeAsync()
     {
-        if (Volatile.Read(ref _stopped) != 0 || !await _hotkeyGate.WaitAsync(0))
+        if (Volatile.Read(ref _stopped) != 0)
             return;
+        if (!await _hotkeyGate.WaitAsync(0))
+        {
+            if (_runtime.Snapshot.Lifecycle == VrcFisher.Core.RuntimeLifecycle.Starting)
+            {
+                _input.ReleaseAll();
+                await _runtime.StopAsync(CancellationToken.None);
+            }
+            return;
+        }
         try
         {
-            if (_runtime.Snapshot.IsObserving)
+            if (_runtime.Snapshot.Lifecycle is VrcFisher.Core.RuntimeLifecycle.Starting
+                or VrcFisher.Core.RuntimeLifecycle.Running)
             {
                 await _runtime.StopAsync(CancellationToken.None);
                 return;
@@ -206,13 +220,13 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     private async Task ChangeHotkeyAsync(string key)
     {
-        if (!AppOptions.SupportedToggleHotkeys.Contains(key, StringComparer.Ordinal))
+        if (!HotkeyGestureRules.TryNormalize(key, out key))
             throw new ArgumentOutOfRangeException(nameof(key));
         if (string.Equals(key, _options.ToggleHotkey, StringComparison.Ordinal)) return;
 
         var previousOptions = _options;
         var previousHotkey = _hotkey;
-        var replacement = new RuntimeToggleHotkey(key, () => _ = ToggleRuntimeAsync());
+        var replacement = CreateHotkey(key);
         try
         {
             replacement.Start();
@@ -232,7 +246,7 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     private RuntimeToggleHotkey? TryStartHotkey(string key)
     {
-        var hotkey = new RuntimeToggleHotkey(key, () => _ = ToggleRuntimeAsync());
+        var hotkey = CreateHotkey(key);
         try
         {
             hotkey.Start();
@@ -244,6 +258,27 @@ public partial class App : Microsoft.UI.Xaml.Application
             _loggerFactory.CreateLogger<App>().LogWarning(error, "failed to register {Hotkey}", key);
             return null;
         }
+    }
+
+    private RuntimeToggleHotkey CreateHotkey(string key) => new(
+        key,
+        () => _ = ToggleRuntimeAsync(),
+        () => _input.IsTargetForeground,
+        () =>
+        {
+            _input.ReleaseAll();
+            _ = StopAfterTargetLossAsync();
+        });
+
+    private async Task StopAfterTargetLossAsync()
+    {
+        if (_runtime.Snapshot.Lifecycle is not (VrcFisher.Core.RuntimeLifecycle.Starting
+            or VrcFisher.Core.RuntimeLifecycle.Running))
+            return;
+        await _runtime.StopAsync(CancellationToken.None);
+        _window?.ShowRuntimeNotice(
+            new VrcFisher.Core.RuntimeStatus(VrcFisher.Core.RuntimeMessageCode.TargetNotForeground),
+            activate: false);
     }
 
     private void HandleOverlayFailure(Exception error)

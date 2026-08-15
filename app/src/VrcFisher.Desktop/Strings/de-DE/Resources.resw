@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Das Bildschirm-Overlay ist nicht verfügbar; das automatische Angeln wurde nicht gestartet</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Das VRChat-Overlay ist nicht verfügbar</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Das automatische Angeln wurde gestoppt und die Mauseingabe freigegeben. Starte VRC-Fisher neu und versuche es erneut.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Anleitung</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Hardwareinformationen</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Arbeitsspeicher</value></data>
+  <data name="System" xml:space="preserve"><value>System</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Ausgewähltes Gerät</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Tatsächlich verwendet</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} physische Kerne / {2} logische Threads</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Keine Grafikkarteninformationen verfügbar</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · Treiber {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (automatischer Rückfall: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Wird gestartet</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Wird beendet</value></data>
+  <data name="Change" xml:space="preserve"><value>Ändern</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Start-/Stopp-Taste ändern?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>Die aktuelle Taste bleibt aktiv, bis die neue auf Konflikte geprüft und bestätigt wurde.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Weiter</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Neue Taste drücken</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>Drücke F1-F24 oder einen Buchstaben/eine Zahl mit Ctrl, Alt oder Shift. Esc bricht ab.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Warte auf Eingabe…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Diese Tastenkombination wird nicht unterstützt.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Taste geändert</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} ist aktiv. Bei der Prüfung wurde kein globaler Registrierungskonflikt gefunden.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Unterstützte VRChat-Welt</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Nur diese Welt wird unterstützt. Bei Änderungen an der Angel-UI können neue Modelle nötig sein.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Unterstützte Welt in VRChat öffnen</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Schnellstart</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Klicke auf das Bild oben und betrete die unterstützte Welt in VRChat.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Installiere beide Modelle, gehe zum Angelbereich und lasse VRChat im Vordergrund.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Drücke {0} zum Starten. Erneut drücken oder VRChat verlassen beendet den Lauf.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Modelle, Inferenz und Aufnahme werden vorbereitet…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Wird beendet und Mauseingaben werden freigegeben…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat ist nicht mehr im Vordergrund; automatisches Angeln wurde beendet und die Maus freigegeben</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatisches Angeln beendet</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat ist nicht mehr im Vordergrund. Die Maus wurde freigegeben; kehre ins Spiel zurück und drücke erneut die Taste.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Funktioniert nur, wenn VRChat im Vordergrund ist, und wird nicht dauerhaft als globaler Hotkey registriert.</value></data>
 </root>

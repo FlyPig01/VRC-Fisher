@@ -22,6 +22,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
     private readonly Func<AppOptions, Task> _saveOptions;
     private readonly Func<string, Task> _changeHotkey;
     private readonly bool _supportsGpu;
+    private readonly Task<HardwareSnapshot> _hardware;
     private AppOptions _options;
     private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(200) };
     private DateTimeOffset _nextCaptureRefresh = DateTimeOffset.MinValue;
@@ -34,7 +35,8 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
         AppOptions options,
         Func<AppOptions, Task> saveOptions,
         Func<string, Task> changeHotkey,
-        bool supportsGpu)
+        bool supportsGpu,
+        Task<HardwareSnapshot> hardware)
     {
         InitializeComponent();
         ApplyLocalizedChrome();
@@ -45,6 +47,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
         _saveOptions = saveOptions;
         _changeHotkey = changeHotkey;
         _supportsGpu = supportsGpu;
+        _hardware = hardware;
         _options = options;
         Title = string.Empty;
         AppWindow.Title = string.Empty;
@@ -66,6 +69,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
     AppOptions IDesktopPageContext.Options => _options;
     string IDesktopPageContext.SoftwareRoot => _layout.Root;
     bool IDesktopPageContext.SupportsGpu => _supportsGpu;
+    Task<HardwareSnapshot> IDesktopPageContext.Hardware => _hardware;
 
     async Task IDesktopPageContext.SaveOptionsAsync(AppOptions options)
     {
@@ -133,6 +137,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
         ContentFrame.Content = pageName switch
         {
             "models" => new ModelsPage(this),
+            "guide" => new GuidePage(this),
             "settings" => new SettingsPage(this),
             _ => (Page)new RunPage(this)
         };
@@ -143,6 +148,11 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
 
     internal void ShowRuntimeNotice(RuntimeStatus status, bool activate)
     {
+        if (!DispatcherQueue.HasThreadAccess)
+        {
+            DispatcherQueue.TryEnqueue(() => ShowRuntimeNotice(status, activate));
+            return;
+        }
         var notice = UiStrings.RuntimeNotice(status);
         if (notice is null)
         {
@@ -188,6 +198,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
     {
         RunNavigationLabel.Text = UiStrings.Get("Run");
         ModelsNavigationLabel.Text = UiStrings.Get("Models");
+        GuideNavigationLabel.Text = UiStrings.Get("Guide");
         SettingsNavigationLabel.Text = UiStrings.Get("Settings");
         StatusBadge.Text = UiStrings.Get("ModelsNotReady");
         StatusIcon.Symbol = Symbol.Important;

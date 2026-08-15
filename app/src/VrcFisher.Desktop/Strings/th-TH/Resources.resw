@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>ไม่สามารถแสดงโอเวอร์เลย์บนหน้าจอได้ จึงไม่เริ่มการตกปลาอัตโนมัติ</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>ไม่สามารถแสดงโอเวอร์เลย์บน VRChat ได้</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>การตกปลาอัตโนมัติหยุดลงและคืนการควบคุมเมาส์แล้ว โปรดรีสตาร์ท VRC-Fisher แล้วลองอีกครั้ง</value></data>
+  <data name="Guide" xml:space="preserve"><value>คู่มือ</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>ข้อมูลฮาร์ดแวร์</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>หน่วยความจำ</value></data>
+  <data name="System" xml:space="preserve"><value>ระบบ</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>อุปกรณ์ที่เลือก</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>อุปกรณ์ที่ใช้จริง</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} คอร์จริง / {2} เธรดลอจิคัล</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>ไม่พบข้อมูลการ์ดจอ</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · VRAM {2} · ไดรเวอร์ {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (สลับอัตโนมัติ: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>กำลังเริ่ม</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>กำลังหยุด</value></data>
+  <data name="Change" xml:space="preserve"><value>เปลี่ยน</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>เปลี่ยนปุ่มเริ่ม / หยุดหรือไม่</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>ปุ่มเดิมจะยังใช้งานได้จนกว่าปุ่มใหม่จะผ่านการตรวจสอบและยืนยัน</value></data>
+  <data name="Continue" xml:space="preserve"><value>ดำเนินการต่อ</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>กดปุ่มใหม่</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>กด F1-F24 หรือกดตัวอักษร/ตัวเลขพร้อม Ctrl, Alt หรือ Shift กด Esc เพื่อยกเลิก</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>รอการกดปุ่ม…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>ไม่รองรับปุ่มผสมนี้</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>เปลี่ยนปุ่มแล้ว</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} ใช้งานแล้ว ไม่พบการชนกันของการลงทะเบียนปุ่มส่วนกลางขณะตรวจสอบ</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>โลก VRChat ที่รองรับ</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>รองรับเฉพาะโลกนี้ หาก UI ตกปลาเปลี่ยน อาจต้องอัปเดตโมเดล</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>เปิดโลกที่รองรับใน VRChat</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>เริ่มใช้อย่างรวดเร็ว</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>คลิกรูปด้านบนแล้วเข้าโลกที่รองรับใน VRChat</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>ติดตั้งโมเดลทั้งสอง เข้าเขตตกปลา และให้ VRChat อยู่ด้านหน้า</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>กด {0} เพื่อเริ่ม กดอีกครั้งหรือสลับออกจาก VRChat เพื่อหยุด</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>กำลังเตรียมโมเดล การอนุมาน และการจับภาพ…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>กำลังหยุดและปล่อยอินพุตเมาส์…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat ไม่ได้อยู่ด้านหน้าแล้ว ระบบตกปลาอัตโนมัติหยุดและปล่อยอินพุตเมาส์</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>หยุดตกปลาอัตโนมัติแล้ว</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat ไม่ได้อยู่ด้านหน้า อินพุตเมาส์ถูกปล่อยแล้ว กลับเข้าเกมและกดปุ่มอีกครั้ง</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>ทำงานเฉพาะเมื่อ VRChat อยู่ด้านหน้า และไม่ลงทะเบียนเป็นปุ่มลัดส่วนกลางแบบถาวร</value></data>
 </root>

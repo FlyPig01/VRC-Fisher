@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Ekran kaplaması kullanılamıyor; otomatik balıkçılık başlatılmadı</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat kaplaması kullanılamıyor</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Otomatik balıkçılık durduruldu ve fare girişi serbest bırakıldı. VRC-Fisher'ı yeniden başlatın ve tekrar deneyin.</value></data>
+  <data name="Guide" xml:space="preserve"><value>Kılavuz</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>Donanım bilgileri</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>Bellek</value></data>
+  <data name="System" xml:space="preserve"><value>Sistem</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>Seçilen cihaz</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Kullanılan cihaz</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fiziksel çekirdek / {2} mantıksal iş parçacığı</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>Ekran kartı bilgisi alınamadı</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · sürücü {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0} (otomatik geri dönüş: {1})</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>Başlatılıyor</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>Durduruluyor</value></data>
+  <data name="Change" xml:space="preserve"><value>Değiştir</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>Başlatma / durdurma tuşu değiştirilsin mi?</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>Yeni tuş çakışma denetiminden geçip onaylanana kadar mevcut tuş etkin kalır.</value></data>
+  <data name="Continue" xml:space="preserve"><value>Devam</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>Yeni tuşa basın</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>F1-F24'e veya Ctrl, Alt ya da Shift ile bir harf/rakama basın. Esc iptal eder.</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>Giriş bekleniyor…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>Bu tuş birleşimi desteklenmiyor.</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>Tuş değiştirildi</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} etkin. Denetim sırasında genel kayıt çakışması bulunmadı.</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>Desteklenen VRChat dünyası</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>Yalnızca bu dünya desteklenir. Balık tutma arayüzü değişirse modellerin güncellenmesi gerekebilir.</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Desteklenen dünyayı VRChat'te aç</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>Hızlı başlangıç</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Yukarıdaki görsele tıklayın ve desteklenen dünyaya girin.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Her iki modeli kurun, balık tutma alanına gidin ve VRChat'i ön planda tutun.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Başlatmak için {0} tuşuna basın. Tekrar basmak veya VRChat'ten çıkmak durdurur.</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>Modeller, çıkarım ve yakalama hazırlanıyor…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>Durduruluyor ve fare girdisi bırakılıyor…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat ön plandan ayrıldı; otomatik balık tutma durdu ve fare girdisi bırakıldı</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Otomatik balık tutma durdu</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat artık ön planda değil. Fare girdisi bırakıldı; oyuna dönüp tuşa tekrar basın.</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Yalnızca VRChat ön plandayken çalışır ve kalıcı genel kısayol olarak kaydedilmez.</value></data>
 </root>

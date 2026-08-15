@@ -30,6 +30,21 @@ public enum ExecutionDevice
     Gpu
 }
 
+public enum InferenceBackend
+{
+    Unavailable,
+    Cpu,
+    DirectML
+}
+
+public enum RuntimeLifecycle
+{
+    Stopped,
+    Starting,
+    Running,
+    Stopping
+}
+
 public enum ApplicationMode
 {
     Run,
@@ -53,7 +68,9 @@ public enum RuntimeMessageCode
     ModelsUnavailable,
     ModelsRequired,
     AutomaticNotAllowed,
+    Starting,
     AutomaticStarted,
+    Stopping,
     DetectionStopped,
     Stopped,
     CaptureStopped,
@@ -156,7 +173,7 @@ public sealed class CapturedFrameEventArgs(long frameNumber, DateTimeOffset capt
 
 public interface IDetector
 {
-    string Provider { get; }
+    ExecutionRuntimeInfo Execution { get; }
     bool IsReady { get; }
     DetectionResult Detect(
         CapturedFrameEventArgs frame,
@@ -211,16 +228,67 @@ public sealed record ModelDownloadProgress(
     int TotalFiles);
 
 public sealed record RuntimeSnapshot(
+    RuntimeLifecycle Lifecycle,
     FishingPhase Phase,
     bool IsObserving,
     bool IsAutomatic,
     bool ModelsReady,
-    string Provider,
+    ExecutionRuntimeInfo Execution,
     long FramesCaptured,
     long FramesDropped,
     InferencePerformanceSnapshot Performance,
     RuntimeStatus Status,
     DateTimeOffset UpdatedAt);
+
+public sealed record ExecutionRuntimeInfo(
+    ExecutionDevice Requested,
+    InferenceBackend Backend,
+    string? DeviceName,
+    bool FellBack,
+    string? FallbackReason)
+{
+    public static ExecutionRuntimeInfo Unavailable(ExecutionDevice requested = ExecutionDevice.Auto) =>
+        new(requested, InferenceBackend.Unavailable, null, false, null);
+
+    public string ProfileKey => Backend switch
+    {
+        InferenceBackend.DirectML => "directml",
+        InferenceBackend.Cpu => "cpu",
+        _ => "unavailable"
+    };
+}
+
+public sealed record GraphicsAdapterInfo(
+    int Index,
+    string Name,
+    long DedicatedMemoryBytes,
+    string? DriverVersion);
+
+public sealed record HardwareSnapshot(
+    string CpuName,
+    int PhysicalCores,
+    int LogicalProcessors,
+    IReadOnlyList<GraphicsAdapterInfo> GraphicsAdapters,
+    long TotalMemoryBytes,
+    string WindowsVersion,
+    bool IsX64,
+    string? Error = null)
+{
+    public static HardwareSnapshot Unavailable(string? error = null) => new(
+        "Unavailable",
+        0,
+        Environment.ProcessorCount,
+        [],
+        0,
+        "Unavailable",
+        Environment.Is64BitOperatingSystem,
+        error);
+}
+
+public interface IHardwareInfoProvider
+{
+    Task<HardwareSnapshot> ReadAsync(CancellationToken cancellationToken);
+}
 
 public sealed record RuntimeStatus(RuntimeMessageCode Code, string? Detail = null);
 

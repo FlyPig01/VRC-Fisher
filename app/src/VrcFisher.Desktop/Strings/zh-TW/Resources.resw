@@ -492,4 +492,41 @@
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>畫面覆蓋層無法使用，自動釣魚未啟動。</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat 覆蓋層無法使用</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自動釣魚已停止，且滑鼠輸入已釋放。請重新啟動 VRC-Fisher，然後再試一次。</value></data>
+  <data name="Guide" xml:space="preserve"><value>使用指南</value></data>
+  <data name="HardwareInfo" xml:space="preserve"><value>硬體資訊</value></data>
+  <data name="Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="Memory" xml:space="preserve"><value>記憶體</value></data>
+  <data name="System" xml:space="preserve"><value>系統</value></data>
+  <data name="SelectedDevice" xml:space="preserve"><value>使用者選擇</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>實際使用</value></data>
+  <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} 個實體核心 / {2} 個邏輯執行緒</value></data>
+  <data name="NoGraphicsAdapter" xml:space="preserve"><value>無法取得顯示卡資訊</value></data>
+  <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} 顯示記憶體 · 驅動程式 {3}</value></data>
+  <data name="FallbackToCpuFormat" xml:space="preserve"><value>{0}（自動回退：{1}）</value></data>
+  <data name="LifecycleStarting" xml:space="preserve"><value>正在啟動</value></data>
+  <data name="LifecycleStopping" xml:space="preserve"><value>正在停止</value></data>
+  <data name="Change" xml:space="preserve"><value>修改</value></data>
+  <data name="BeginHotkeyChangeTitle" xml:space="preserve"><value>修改啟動 / 停止快捷鍵？</value></data>
+  <data name="BeginHotkeyChangeMessage" xml:space="preserve"><value>新快捷鍵通過衝突檢查並完成確認前，目前快捷鍵會繼續生效。</value></data>
+  <data name="Continue" xml:space="preserve"><value>繼續</value></data>
+  <data name="CaptureHotkeyTitle" xml:space="preserve"><value>按下新快捷鍵</value></data>
+  <data name="CaptureHotkeyMessage" xml:space="preserve"><value>可單獨按 F1-F24，或使用 Ctrl、Alt、Shift 搭配字母或數字。按 Esc 取消。</value></data>
+  <data name="CaptureHotkeyWaiting" xml:space="preserve"><value>等待按鍵…</value></data>
+  <data name="HotkeyCaptureInvalid" xml:space="preserve"><value>不支援此按鍵組合。</value></data>
+  <data name="HotkeyChangedTitle" xml:space="preserve"><value>快捷鍵已修改</value></data>
+  <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} 已生效；檢查時未發現全域註冊衝突。</value></data>
+  <data name="SupportedWorldTitle" xml:space="preserve"><value>支援的 VRChat 世界</value></data>
+  <data name="SupportedWorldScope" xml:space="preserve"><value>目前僅支援此世界；釣魚 UI 更新後可能需要更新模型。</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>在 VRChat 中開啟支援的世界</value></data>
+  <data name="QuickStart" xml:space="preserve"><value>快速開始</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>點擊上方圖片，在 VRChat 中進入支援的世界。</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>安裝兩個模型，進入釣魚區域，並讓 VRChat 保持在前景。</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>按 {0} 啟動；再次按下或切出 VRChat 即停止。</value></data>
+  <data name="RuntimeStarting" xml:space="preserve"><value>正在準備模型、推論和畫面擷取…</value></data>
+  <data name="RuntimeStopping" xml:space="preserve"><value>正在停止並釋放滑鼠輸入…</value></data>
+  <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat 已離開前景；自動釣魚已停止，滑鼠輸入已釋放</value></data>
+  <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>自動釣魚已停止</value></data>
+  <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat 已不在前景。滑鼠輸入已釋放；返回遊戲後請重新按快捷鍵啟動。</value></data>
+  <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>僅在 VRChat 位於前景時生效，不會長期註冊為系統全域快捷鍵。</value></data>
 </root>

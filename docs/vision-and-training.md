@@ -116,13 +116,13 @@ input/annotations/<录屏名>/frame-00000010.txt
 
 抽样验证固定使用运行阈值 `confidence=0.35`：locator 32 张图中 PT 的 16 个检测全部与 ONNX 匹配，minigame 32 张图中 PT 的 39 个检测全部匹配，ONNX 额外产生 2 个候选框；两组都没有类别存在性差异。随后同一张真实全屏帧在 C# CPU 和 DirectML 下均检测到 `minigame_panel`，并在裁剪中检测到 `catch_zone` 与 `moving_target`。这些结果验证导出和解码一致性，不替代独立视频与现场准确率验收。
 
-CPU-only、DirectML 和 CUDA Provider 可以使用同一 ONNX 文件。Provider 改变执行后端，不改变权重，因此不需要重新训练；FP16、INT8、TensorRT 等专项产物需要另行转换和验证，但也不是重新训练。
+CPU、DirectML 和 CUDA 执行后端可以使用同一 ONNX 文件。执行后端不改变权重，因此不需要重新训练；FP16、INT8、TensorRT 等专项产物需要另行转换和验证，但也不是重新训练。
 
 ### `.pt` 与 ONNX 的边界
 
 `.pt` 是 PyTorch/Ultralytics 训练检查点，适合继续训练、查看实验和回退到某个 epoch，但运行它通常需要 Python、PyTorch 及对应依赖。把 `.pt` 发给用户会扩大安装体积，并把训练框架带入正式软件。
 
-ONNX 是导出后的推理图，C# 可以直接通过 ONNX Runtime 加载，同一文件可交给 CPU-only 或 DirectML Provider。当前 `locator.onnx` 为 10,815,002 字节，`minigame.onnx` 为 10,604,959 字节，合计 21,419,961 字节（20.43 MiB）。文件体积已实测，但预处理、NMS 和 Provider 的现场执行时间仍需分别测量；不能仅凭导出格式断言一定比 `.pt` 更快。
+ONNX 是导出后的推理图，C# 可以直接通过 ONNX Runtime 加载，同一文件可交给 CPU 或 DirectML。当前 `locator.onnx` 为 10,815,002 字节，`minigame.onnx` 为 10,604,959 字节，合计 21,419,961 字节（20.43 MiB）。文件体积已实测，但预处理、NMS 和执行后端的现场时间仍需分别测量；不能仅凭导出格式断言一定比 `.pt` 更快。
 
 正式模型首先固化到源码仓库的 `models/vX.Y.Z/`：保留两个选定的 `.pt` 作为可修改权重，保留两个 ONNX 作为运行时模型，并附带已填写的 `MODEL_CARD.md`、完整 `MODEL_LICENSE.txt` 和覆盖所有文件的 `source-manifest.json`。模型卡记录基础权重、训练版本、私有数据集的非识别性统计、划分、指标、限制、文件大小和 SHA-256；缺少这些信息不得提交模型或创建 Release。模型 Release 只从这个仓库目录提取两个 ONNX、模型卡和许可证，不能从另一个本地来源临时拼装。
 

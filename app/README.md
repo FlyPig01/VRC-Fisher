@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-正式 C# 工程位于 `src/`，包括 Core、Application、Infrastructure 和 Desktop。模型管理与更新检查、CPU/DirectML Provider、VRChat 进程限定捕获、四类双模型推理、受限自动调频、状态机、默认禁用的屏外感叹号兜底、可确认更改的全局热键、15 Hz 调试覆盖层和 20 种语言 WinUI 已接入；自包含发布和 Inno Setup 已实际构建、安装并启动。自动调频分别记录 locator、双模型和缓存小游戏 P95，不额外执行推理，并将硬件、Provider、模型版本和分辨率画像写入安装目录的 `config/performance-profiles.json`。候选 ONNX 已通过 CPU/DirectML 加载与真实全屏帧推理，正式模型、真实 VRChat 资源占用和自动流程仍待人工验收。
+正式 C# 工程位于 `src/`，包括 Core、Application、Infrastructure 和 Desktop。模型管理、CPU/DirectML、VRChat 进程限定捕获、事务启动、四类双模型推理、受限自动调频、状态机、局内热键、15 Hz 调试覆盖层、静态硬件信息、使用指南和 20 种语言 WinUI 已接入。启动必须依次通过模型、推理、WGC 与首帧校验后才进入运行并抛竿；切出 VRChat 会释放输入并完整停止。候选 ONNX 已通过 CPU/DirectML 加载与真实全屏帧推理，真实 VRChat 资源占用和完整自动流程仍待人工验收。
 
 正式软件不需要 Python、MSS、TOML、PyInstaller 或 CUDA。Python 只存在于仓库的离线数据处理与训练目录，不进入发布包。`models/v0.1.0/` 是源码公开的模型版本；安装目录只放用户选择安装的 ONNX 运行时副本。
 
@@ -18,7 +18,7 @@ src/
   VrcFisher.Application/     运行用例、配置和模型目录接口
   VrcFisher.Infrastructure/  ONNX、模型下载、捕获源和 Win32 输入实现
   VrcFisher.Desktop/
-    Pages/                    运行、模型、设置页面；只编排界面交互
+    Pages/                    运行、模型、使用指南、设置页面；只编排界面交互
     Ui/                       共享样式与控件构造
     Localization/             本地化访问
     Contracts/                页面可使用的桌面能力边界
@@ -28,7 +28,7 @@ src/
     MainWindow.*              固定导航壳和页面切换
 ```
 
-依赖只能由 Desktop/Infrastructure 指向 Application/Core。页面不持有 ONNX、下载器、Win32 输入或捕获实现，只通过 `IDesktopPageContext` 使用运行、模型、捕获选择和设置保存能力。
+依赖只能由 Desktop/Infrastructure 指向 Application/Core。Core/Application 使用结构化运行设备与硬件契约；WGC、DirectML、Win32 热键轮询和 WinUI 调度分别保留在平台实现层。页面不持有 ONNX、下载器、Win32 输入或捕获实现。
 
 ## 目标入口
 

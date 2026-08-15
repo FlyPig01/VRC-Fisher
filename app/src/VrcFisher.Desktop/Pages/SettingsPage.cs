@@ -1,10 +1,13 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using VrcFisher.Application;
 using VrcFisher.Core;
 using VrcFisher.Desktop.Contracts;
 using VrcFisher.Desktop.Localization;
 using VrcFisher.Desktop.Ui;
+using VrcFisher.Infrastructure.Input;
+using Windows.System;
 
 namespace VrcFisher.Desktop.Pages;
 
@@ -14,7 +17,12 @@ internal sealed class SettingsPage : Page
     private readonly ComboBox _language = new() { MinWidth = 220 };
     private readonly ComboBox _workMode = new() { MinWidth = 220 };
     private readonly ComboBox _device = new() { MinWidth = 220 };
-    private readonly ComboBox _hotkey = new() { MinWidth = 220 };
+    private readonly TextBlock _hotkeyValue = new()
+    {
+        MinWidth = 120,
+        FontSize = 16,
+        VerticalAlignment = VerticalAlignment.Center
+    };
     private readonly ToggleSwitch _biteFallbackEnabled = new();
     private readonly Slider _biteFallback = new()
     {
@@ -55,9 +63,14 @@ internal sealed class SettingsPage : Page
         if (_context.SupportsGpu) AddDevice(ExecutionDevice.Gpu, "DeviceGpu");
         _device.SelectionChanged += async (_, _) => await SaveDeviceAsync();
 
-        foreach (var hotkey in AppOptions.SupportedToggleHotkeys)
-            _hotkey.Items.Add(new ComboBoxItem { Content = hotkey, Tag = hotkey });
-        _hotkey.SelectionChanged += async (_, _) => await SaveHotkeyAsync();
+        var changeHotkey = UiFactory.CommandButton(Symbol.Edit, UiStrings.Get("Change"));
+        changeHotkey.Click += async (_, _) => await ChangeHotkeyAsync();
+        var hotkeyControl = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 14,
+            Children = { _hotkeyValue, changeHotkey }
+        };
 
         _biteFallbackEnabled.OnContent = UiStrings.Get("Enabled");
         _biteFallbackEnabled.OffContent = UiStrings.Get("Disabled");
@@ -85,8 +98,8 @@ internal sealed class SettingsPage : Page
         ToolTipService.SetToolTip(deviceRow, UiStrings.Get("DeviceDescription"));
         var workModeRow = UiFactory.FormRow(UiStrings.Get("WorkMode"), _workMode);
         ToolTipService.SetToolTip(workModeRow, UiStrings.Get("WorkModeDescription"));
-        var hotkeyRow = UiFactory.FormRow(UiStrings.Get("ToggleHotkey"), _hotkey);
-        ToolTipService.SetToolTip(hotkeyRow, UiStrings.Get("ToggleHotkeyDescription"));
+        var hotkeyRow = UiFactory.FormRow(UiStrings.Get("ToggleHotkey"), hotkeyControl);
+        ToolTipService.SetToolTip(hotkeyRow, UiStrings.Get("ToggleHotkeyDescriptionLocal"));
         var general = new StackPanel
         {
             Spacing = 20,
@@ -105,21 +118,14 @@ internal sealed class SettingsPage : Page
             Spacing = 16,
             Children = { _biteFallback, _biteFallbackValue }
         };
-        var fallbackDelayRow = UiFactory.FormRow(
-            UiStrings.Get("BiteFallbackDelay"),
-            fallbackControl);
+        var fallbackDelayRow = UiFactory.FormRow(UiStrings.Get("BiteFallbackDelay"), fallbackControl);
         ToolTipService.SetToolTip(fallbackDelayRow, UiStrings.Get("BiteFallbackDelayDescription"));
         var fallbackToggleRow = UiFactory.FormRow(UiStrings.Get("BiteFallback"), _biteFallbackEnabled);
         ToolTipService.SetToolTip(fallbackToggleRow, UiStrings.Get("BiteFallbackDescription"));
-
         var automationSettings = new StackPanel
         {
             Spacing = 20,
-            Children =
-            {
-                fallbackToggleRow,
-                fallbackDelayRow
-            }
+            Children = { fallbackToggleRow, fallbackDelayRow }
         };
 
         var storagePath = new TextBlock
@@ -159,7 +165,7 @@ internal sealed class SettingsPage : Page
         SelectLanguage(_context.Options.Language);
         SelectWorkMode(_context.Options.WorkMode);
         SelectDevice(_context.Options.Device);
-        SelectHotkey(_context.Options.ToggleHotkey);
+        _hotkeyValue.Text = _context.Options.ToggleHotkey;
         _biteFallbackEnabled.IsOn = _context.Options.BiteFallbackEnabled;
         _biteFallback.Value = _context.Options.BiteFallbackSeconds;
         _biteFallback.IsEnabled = _context.Options.BiteFallbackEnabled;
@@ -167,83 +173,88 @@ internal sealed class SettingsPage : Page
         _refreshing = false;
     }
 
-    private async Task SaveLanguageAsync()
+    private async Task ChangeHotkeyAsync()
     {
-        if (_refreshing
-            || _language.SelectedItem is not ComboBoxItem item
-            || item.Tag is not string language)
-        {
-            return;
-        }
-        await _context.ChangeLanguageAsync(language);
-    }
-
-    private async Task SaveDeviceAsync()
-    {
-        if (_refreshing
-            || _device.SelectedItem is not ComboBoxItem item
-            || item.Tag is not ExecutionDevice device)
-        {
-            return;
-        }
-        await _context.ChangeDeviceAsync(device);
-    }
-
-    private async Task SaveWorkModeAsync()
-    {
-        if (_refreshing
-            || _workMode.SelectedItem is not ComboBoxItem item
-            || item.Tag is not ApplicationMode mode)
-        {
-            return;
-        }
-        await _context.SaveOptionsAsync(_context.Options with { WorkMode = mode });
-    }
-
-    private async Task SaveHotkeyAsync()
-    {
-        if (_refreshing
-            || _confirmingHotkey
-            || _hotkey.SelectedItem is not ComboBoxItem item
-            || item.Tag is not string hotkey
-            || string.Equals(hotkey, _context.Options.ToggleHotkey, StringComparison.Ordinal))
-        {
-            return;
-        }
-
+        if (_confirmingHotkey) return;
         _confirmingHotkey = true;
         try
         {
-            var dialog = new ContentDialog
+            var begin = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = UiStrings.Get("BeginHotkeyChangeTitle"),
+                Content = UiStrings.Get("BeginHotkeyChangeMessage"),
+                PrimaryButtonText = UiStrings.Get("Continue"),
+                CloseButtonText = UiStrings.Get("Cancel"),
+                DefaultButton = ContentDialogButton.Close
+            };
+            if (await begin.ShowAsync() != ContentDialogResult.Primary) return;
+
+            string? candidate = null;
+            var captured = new TextBlock
+            {
+                Text = UiStrings.Get("CaptureHotkeyWaiting"),
+                FontSize = 24,
+                FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 14, 0, 4)
+            };
+            var capture = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = UiStrings.Get("CaptureHotkeyTitle"),
+                Content = new StackPanel
+                {
+                    Spacing = 8,
+                    Children =
+                    {
+                        new TextBlock
+                        {
+                            Text = UiStrings.Get("CaptureHotkeyMessage"),
+                            TextWrapping = TextWrapping.Wrap
+                        },
+                        captured
+                    }
+                },
+                PrimaryButtonText = UiStrings.Get("Continue"),
+                CloseButtonText = UiStrings.Get("Cancel"),
+                IsPrimaryButtonEnabled = false,
+                DefaultButton = ContentDialogButton.None
+            };
+            capture.PreviewKeyDown += (_, args) => CaptureKey(args, capture, captured, ref candidate);
+            if (await capture.ShowAsync() != ContentDialogResult.Primary || candidate is null) return;
+
+            var confirm = new ContentDialog
             {
                 XamlRoot = XamlRoot,
                 Title = UiStrings.Get("ConfirmHotkeyTitle"),
-                Content = UiStrings.Format(
-                    "ConfirmHotkeyMessage",
-                    _context.Options.ToggleHotkey,
-                    hotkey),
+                Content = UiStrings.Format("ConfirmHotkeyMessage", _context.Options.ToggleHotkey, candidate),
                 PrimaryButtonText = UiStrings.Get("ConfirmChange"),
                 CloseButtonText = UiStrings.Get("Cancel"),
                 DefaultButton = ContentDialogButton.Close
             };
-            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
-            {
-                SelectHotkey(_context.Options.ToggleHotkey);
-                return;
-            }
+            if (await confirm.ShowAsync() != ContentDialogResult.Primary) return;
 
             try
             {
-                await _context.ChangeHotkeyAsync(hotkey);
+                await _context.ChangeHotkeyAsync(candidate);
+                _hotkeyValue.Text = candidate;
+                var success = new ContentDialog
+                {
+                    XamlRoot = XamlRoot,
+                    Title = UiStrings.Get("HotkeyChangedTitle"),
+                    Content = UiStrings.Format("HotkeyChangedMessage", candidate),
+                    CloseButtonText = UiStrings.Get("Close")
+                };
+                await success.ShowAsync();
             }
             catch (Exception error)
             {
-                SelectHotkey(_context.Options.ToggleHotkey);
                 var failure = new ContentDialog
                 {
                     XamlRoot = XamlRoot,
                     Title = UiStrings.Get("HotkeyChangeFailedTitle"),
-                    Content = UiStrings.Format("HotkeyChangeFailed", hotkey, error.Message),
+                    Content = UiStrings.Format("HotkeyChangeFailed", candidate, error.Message),
                     CloseButtonText = UiStrings.Get("Close")
                 };
                 await failure.ShowAsync();
@@ -255,14 +266,54 @@ internal sealed class SettingsPage : Page
         }
     }
 
+    private static void CaptureKey(
+        KeyRoutedEventArgs args,
+        ContentDialog dialog,
+        TextBlock captured,
+        ref string? candidate)
+    {
+        args.Handled = true;
+        if (args.Key == VirtualKey.Escape)
+        {
+            dialog.Hide();
+            return;
+        }
+        try
+        {
+            candidate = RuntimeToggleHotkey.CaptureGesture((uint)args.Key);
+            captured.Text = candidate;
+            dialog.IsPrimaryButtonEnabled = true;
+        }
+        catch (ArgumentException)
+        {
+            candidate = null;
+            captured.Text = UiStrings.Get("HotkeyCaptureInvalid");
+            dialog.IsPrimaryButtonEnabled = false;
+        }
+    }
+
+    private async Task SaveLanguageAsync()
+    {
+        if (_refreshing || _language.SelectedItem is not ComboBoxItem { Tag: string language }) return;
+        await _context.ChangeLanguageAsync(language);
+    }
+
+    private async Task SaveDeviceAsync()
+    {
+        if (_refreshing || _device.SelectedItem is not ComboBoxItem { Tag: ExecutionDevice device }) return;
+        await _context.ChangeDeviceAsync(device);
+    }
+
+    private async Task SaveWorkModeAsync()
+    {
+        if (_refreshing || _workMode.SelectedItem is not ComboBoxItem { Tag: ApplicationMode mode }) return;
+        await _context.SaveOptionsAsync(_context.Options with { WorkMode = mode });
+    }
+
     private void AddDevice(ExecutionDevice device, string resourceKey) =>
         _device.Items.Add(new ComboBoxItem { Content = UiStrings.Get(resourceKey), Tag = device });
 
-    private void AddWorkMode(
-        ApplicationMode mode,
-        IconElement icon,
-        string labelKey,
-        string descriptionKey)
+    private void AddWorkMode(ApplicationMode mode, IconElement icon, string labelKey, string descriptionKey)
     {
         var content = new StackPanel
         {
@@ -271,11 +322,7 @@ internal sealed class SettingsPage : Page
             Children =
             {
                 icon,
-                new TextBlock
-                {
-                    Text = UiStrings.Get(labelKey),
-                    VerticalAlignment = VerticalAlignment.Center
-                }
+                new TextBlock { Text = UiStrings.Get(labelKey), VerticalAlignment = VerticalAlignment.Center }
             }
         };
         var item = new ComboBoxItem { Content = content, Tag = mode };
@@ -285,58 +332,23 @@ internal sealed class SettingsPage : Page
 
     private void SelectLanguage(string language)
     {
-        foreach (var item in _language.Items.OfType<ComboBoxItem>())
-        {
-            if (string.Equals(item.Tag as string, language, StringComparison.Ordinal))
-            {
-                _language.SelectedItem = item;
-                return;
-            }
-        }
-        _language.SelectedIndex = 0;
+        _language.SelectedItem = _language.Items.OfType<ComboBoxItem>()
+            .FirstOrDefault(item => string.Equals(item.Tag as string, language, StringComparison.Ordinal));
+        _language.SelectedIndex = Math.Max(0, _language.SelectedIndex);
     }
 
     private void SelectDevice(ExecutionDevice device)
     {
-        foreach (var item in _device.Items.OfType<ComboBoxItem>())
-        {
-            if (item.Tag is ExecutionDevice candidate && candidate == device)
-            {
-                _device.SelectedItem = item;
-                return;
-            }
-        }
-        _device.SelectedIndex = 0;
+        _device.SelectedItem = _device.Items.OfType<ComboBoxItem>()
+            .FirstOrDefault(item => item.Tag is ExecutionDevice candidate && candidate == device);
+        _device.SelectedIndex = Math.Max(0, _device.SelectedIndex);
     }
 
     private void SelectWorkMode(ApplicationMode mode)
     {
-        foreach (var item in _workMode.Items.OfType<ComboBoxItem>())
-        {
-            if (item.Tag is ApplicationMode candidate && candidate == mode)
-            {
-                _workMode.SelectedItem = item;
-                return;
-            }
-        }
-        _workMode.SelectedIndex = 0;
-    }
-
-    private void SelectHotkey(string hotkey)
-    {
-        var wasRefreshing = _refreshing;
-        _refreshing = true;
-        foreach (var item in _hotkey.Items.OfType<ComboBoxItem>())
-        {
-            if (string.Equals(item.Tag as string, hotkey, StringComparison.Ordinal))
-            {
-                _hotkey.SelectedItem = item;
-                _refreshing = wasRefreshing;
-                return;
-            }
-        }
-        _hotkey.SelectedIndex = 2;
-        _refreshing = wasRefreshing;
+        _workMode.SelectedItem = _workMode.Items.OfType<ComboBoxItem>()
+            .FirstOrDefault(item => item.Tag is ApplicationMode candidate && candidate == mode);
+        _workMode.SelectedIndex = Math.Max(0, _workMode.SelectedIndex);
     }
 
     private static string FormatBiteFallback(double seconds) =>

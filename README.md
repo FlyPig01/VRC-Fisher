@@ -2,7 +2,7 @@
 
 VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序只查找并捕获 `VRChat.exe` 的主窗口，识别咬钩感叹号和小游戏 UI，并通过鼠标控制让移动目标保持在捕获区域内。
 
-> 当前仍是开发中的 MVP。C#/.NET 10/WinUI 3 软件已接入 VRChat 进程限定捕获、四类双 ONNX 推理、状态机、CPU/DirectML、模型管理、自动调频和屏外感叹号兜底设置。当前 round3 `best.pt` 已固化为 `models/v0.1.0/` 的可发布模型，并导出为静态 FP32 ONNX；模型清单已允许自动输入，完整实机自动钓鱼成功率仍需人工验收。
+> 当前仍是开发中的 MVP。C#/.NET 10/WinUI 3 软件已接入事务启动、VRChat 进程限定捕获、四类双 ONNX 推理、CPU/DirectML、模型管理、自动调频、局内热键、调试覆盖层和 20 种语言。round3 `best.pt` 已固化为 `models/v0.1.0/` 并导出为静态 FP32 ONNX；完整实机自动钓鱼成功率仍需人工验收。
 
 ## 从这里开始
 
@@ -14,17 +14,17 @@ VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序�
 
 ## 发布版安装
 
-正式 Release 发布后，只需下载一个 `VRC-Fisher-Setup-x64.exe`。安装器按 Windows 界面语言从 20 种内置语言中预选；没有匹配语言时使用 English，用户仍可手动改选。安装器最终选定的语言也是软件首次启动的界面语言。同一个安装向导中继续选择安装目录、CPU-only 或 DirectML，以及是否立即下载模型。软件和全部运行数据位于所选安装目录；不要求用户预装 Python、.NET 或 CUDA。
+正式 Release 发布后，只需下载一个 `VRC-Fisher-Setup-x64.exe`。安装器按 Windows 界面语言从 20 种内置语言中预选；没有匹配语言时使用 English，用户仍可手动改选。安装向导只选择语言、安装目录、快捷方式和是否立即下载模型，不再选择运行组件。DirectML 安装包同时支持 `Auto / GPU / CPU`，软件和全部运行数据位于所选安装目录；不要求用户预装 Python、.NET 或 CUDA。
 
 ## 快速使用
 
-1. 启动 VRChat 并进入受支持的钓鱼世界。
+1. 在软件“使用指南”页点击本地封面，进入当前支持的 [Fins Fishing](https://vrchat.com/home/world/wrld_ae001ea3-ed05-42f0-adf2-3d47efd10a77/info)。
 2. 打开 VRC-Fisher，确认两个模型已安装并通过校验。
 3. 软件找到 VRChat 主窗口后选择运行设备和工作模式；识别频率始终自动调节。运行模式不显示识别框，调试模式显示经过防抖的识别框和置信度数字。
 4. 目标世界的感叹号可能在画面外时，启用“屏外感叹号兜底”并设置 `5–30` 秒等待时间；该功能默认禁用，等待时间默认 `15` 秒。
-5. 在 VRChat 中按启动/停止热键开始自动钓鱼，再按一次停止并释放左键。默认热键为 `F8`，可在设置中确认更改；运行期间 VRChat 右上角始终显示当前停止热键。
+5. 在 VRChat 前台按启动/停止热键开始自动钓鱼，再按一次停止并释放左键。默认热键为 `F8`，可通过两次确认自由修改；切出 VRChat 会完整停止，返回后不会自动恢复。
 
-当前尚未上传 GitHub Release；本地 `releases/app-v0.1.0/` 与 `releases/models-v0.1.0/` 是供维护者审核的发行物。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
+当前尚未上传 GitHub Release；本地 `releases/app-v0.1.1/` 与 `releases/models-v0.1.0/` 是供维护者审核的发行物。`app-v0.1.1` Setup 实测为 `57.47 MiB`，非 C 盘无模型安装实测为 `215.75 MiB`。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
 
 ## ONNX 性能快照
 
@@ -32,7 +32,7 @@ VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序�
 
 | 运行模式 | locator | 缓存 minigame | locator + minigame |
 |---|---:|---:|---:|
-| CPU-only / CPU | 58.80 ms | 23.68 ms | 108.81 ms |
+| 历史 CPU-only / CPU | 58.80 ms | 23.68 ms | 108.81 ms |
 | DirectML 包 / CPU | 68.81 ms | 28.40 ms | 103.54 ms |
 | DirectML / GPU | 11.11 ms | 5.42 ms | 16.17 ms |
 | DirectML / Auto | 10.99 ms | 4.95 ms | 15.83 ms |
@@ -45,7 +45,7 @@ xychart-beta
     bar [58.80, 68.81, 11.11, 10.99]
 ```
 
-本机 `Auto` 实际选择 DirectML GPU。保持 FP32 模型、`960/640` 输入和原阈值的 C# 优化后，CPU-only 的 locator、双模型和缓存 minigame P95 分别为 `65.21/119.79/24.79 ms`。运行时会分别统计三类负载并在固定边界内调节四个间隔；本机 CPU 初始值为 `100/150/40/500 ms`，DirectML 初始值为 `80/80/33/250 ms`。统计不增加模型调用。完整算法、开销和测量边界见 [性能与存储预算](docs/performance-budget.md) 与 [ONNX Runtime 单帧性能实测](docs/onnx-runtime-benchmark.md)。
+本机 `Auto` 实际选择 DirectML GPU。表中的独立 CPU-only 构建仅保留为历史基准，当前产品只发布 DirectML 包；其中的 CPU 模式仍使用同一 FP32 ONNX。运行时会分别统计三类负载并在固定边界内调节四个间隔；统计不增加模型调用。完整算法、开销和测量边界见 [性能与存储预算](docs/performance-budget.md) 与 [ONNX Runtime 单帧性能实测](docs/onnx-runtime-benchmark.md)。
 
 ## 开发者快速验证
 
@@ -83,7 +83,7 @@ uv run --offline vrc-preflight --task all
 | `releases/` | 本地发布产物，不提交 Git |
 | `docs/` | 全部开发者设计文档 |
 
-正式产品从第一版开始使用 C#、.NET 10、WinUI 3 和 ONNX Runtime。Python 与 CUDA 只用于离线数据处理和开发机训练，不进入用户安装包。20 种界面语言资源来自仓库中的 `.resw`，构建为 `VrcFisher.pri` 后随本体安装，不从 GitHub 单独下载语言包。每个已验收模型版本的 `.pt` 和 ONNX 都提交到 `models/vX.Y.Z/`，与源代码一起公开；GitHub Releases 只是软件按需下载经过校验的 ONNX 的渠道。用户端当前只发布 CPU-only 与 DirectML，不发布 CUDA 组件。
+正式产品使用 C#、.NET 10、WinUI 3 和 ONNX Runtime DirectML；同一安装包内可切换 CPU。Python 与 CUDA 只用于离线数据处理和开发机训练，不进入用户安装包。20 种界面语言资源构建为 `VrcFisher.pri` 后随本体安装，不从 GitHub 单独下载语言包。每个已验收模型版本的 `.pt` 和 ONNX 都提交到 `models/vX.Y.Z/`；GitHub Releases 只是软件按需下载经过校验的 ONNX 的渠道。用户端不发布独立 CPU-only 或 CUDA 组件。
 
 ## 许可证
 

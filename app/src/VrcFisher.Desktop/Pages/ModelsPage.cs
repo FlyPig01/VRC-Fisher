@@ -2,6 +2,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using VrcFisher.Application;
 using VrcFisher.Core;
 using VrcFisher.Desktop.Contracts;
 using VrcFisher.Desktop.Localization;
@@ -247,7 +248,7 @@ internal sealed class ModelsPage : Page
             var progress = new Progress<ModelDownloadProgress>(value =>
             {
                 _progress.Value = value.BytesTotal <= 0 ? 0 : (double)value.BytesDownloaded / value.BytesTotal;
-                _message.Text = UiStrings.Format("DownloadProgress", value.CurrentFile, value.BytesDownloaded, value.BytesTotal);
+                _message.Text = $"{value.CurrentFile}: {DataSizeFormatter.FormatProgress(value.BytesDownloaded, value.BytesTotal)}";
             });
             await _context.Models.DownloadLatestAsync(progress, _downloadCancellation.Token);
             _message.Text = UiStrings.Get("DownloadComplete");
@@ -357,12 +358,7 @@ internal sealed class ModelsPage : Page
     }
 
     private static string FormatSize(long bytes)
-    {
-        if (bytes <= 0) return "0 MB";
-        return bytes >= 1048576
-            ? $"{bytes / 1048576d:N1} MB"
-            : $"{bytes / 1024d:N0} KB";
-    }
+        => DataSizeFormatter.Format(bytes);
 
     private enum ModelAction
     {
