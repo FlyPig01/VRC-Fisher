@@ -4,74 +4,95 @@
   <data name="Run" xml:space="preserve"><value>Run</value></data>
   <data name="Models" xml:space="preserve"><value>Models</value></data>
   <data name="Settings" xml:space="preserve"><value>Settings</value></data>
-  <data name="Diagnostics" xml:space="preserve"><value>Diagnostics</value></data>
-  <data name="Observe" xml:space="preserve"><value>Observe only</value></data>
-  <data name="Automatic" xml:space="preserve"><value>Automatic</value></data>
-  <data name="Stop" xml:space="preserve"><value>Stop and release mouse</value></data>
+  <data name="CurrentStatus" xml:space="preserve"><value>Current status</value></data>
+  <data name="Readiness" xml:space="preserve"><value>Readiness</value></data>
+  <data name="CaptureSource" xml:space="preserve"><value>VRChat process</value></data>
+  <data name="ModelFiles" xml:space="preserve"><value>Model files</value></data>
+  <data name="ExecutionProvider" xml:space="preserve"><value>Execution provider</value></data>
+  <data name="PreparationRequiredTitle" xml:space="preserve"><value>Not ready to run</value></data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve"><value>Install the models and start VRChat.</value></data>
+  <data name="PreparationModels" xml:space="preserve"><value>Install and verify both models on the Models page.</value></data>
+  <data name="PreparationCapture" xml:space="preserve"><value>Start VRChat; the app will connect to its main window automatically.</value></data>
+  <data name="StartFishing" xml:space="preserve"><value>Start auto fishing</value></data>
+  <data name="StopFishing" xml:space="preserve"><value>Stop auto fishing</value></data>
   <data name="ModelsNotReady" xml:space="preserve"><value>Models not ready</value></data>
-  <data name="StatusLoading" xml:space="preserve"><value>Loading status...</value></data>
-  <data name="ProviderUnavailable" xml:space="preserve"><value>Provider: Unavailable</value></data>
   <data name="Unavailable" xml:space="preserve"><value>Unavailable</value></data>
-  <data name="SelectCapture" xml:space="preserve"><value>Select display or window</value></data>
+  <data name="VrChatProcessNotFound" xml:space="preserve"><value>VRChat not found</value></data>
   <data name="Refresh" xml:space="preserve"><value>Refresh</value></data>
-  <data name="DownloadModels" xml:space="preserve"><value>Download or update models</value></data>
+  <data name="DownloadModels" xml:space="preserve"><value>Download</value></data>
+  <data name="UpdateModels" xml:space="preserve"><value>Update</value></data>
   <data name="CancelDownload" xml:space="preserve"><value>Cancel download</value></data>
-  <data name="DeleteModels" xml:space="preserve"><value>Delete models</value></data>
+  <data name="DeleteModels" xml:space="preserve"><value>Delete</value></data>
   <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve"><value>Download the model package?</value></data>
+  <data name="ConfirmDownloadModels" xml:space="preserve"><value>The latest compatible model pair and license files will be downloaded from FlyPig01/VRC-Fisher.</value></data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve"><value>Update the model package?</value></data>
+  <data name="ConfirmUpdateModels" xml:space="preserve"><value>The latest version will replace both installed models. Application settings will not change.</value></data>
   <data name="ConfirmDeleteTitle" xml:space="preserve"><value>Delete installed models?</value></data>
   <data name="ConfirmDeleteModels" xml:space="preserve"><value>This deletes locator.onnx, minigame.onnx, and the installation record. The application and settings are kept.</value></data>
   <data name="ModelMissing" xml:space="preserve"><value>{0}: not installed</value></data>
   <data name="ModelValid" xml:space="preserve"><value>{0}: version {1}, {2:N1} MB, verified</value></data>
   <data name="ModelInvalid" xml:space="preserve"><value>{0}: {1:N1} MB, manifest verification failed</value></data>
-  <data name="ModelsDescription" xml:space="preserve"><value>Both models must pass integrity verification before observation can start.</value></data>
+  <data name="ModelsDescription" xml:space="preserve"><value>Both models are required.</value></data>
+  <data name="LocatorModelName" xml:space="preserve"><value>Bite and UI locator</value></data>
+  <data name="MinigameModelName" xml:space="preserve"><value>Minigame component detector</value></data>
+  <data name="LocatorModelDescription" xml:space="preserve"><value>Finds the bite indicator and minigame</value></data>
+  <data name="MinigameModelDescription" xml:space="preserve"><value>Finds the control zone and moving target</value></data>
+  <data name="LocatorModelTooltip" xml:space="preserve"><value>Scans the full VRChat frame.</value></data>
+  <data name="MinigameModelTooltip" xml:space="preserve"><value>Analyzes the located fishing minigame.</value></data>
+  <data name="SelectedModelPurpose" xml:space="preserve"><value>Purpose</value></data>
+  <data name="SelectedModelStatus" xml:space="preserve"><value>Installation status</value></data>
+  <data name="ModelLocalPath" xml:space="preserve"><value>Local path</value></data>
+  <data name="ModelSource" xml:space="preserve"><value>Publisher / source</value></data>
+  <data name="ModelSourceName" xml:space="preserve"><value>{0} · GitHub Releases</value></data>
+  <data name="ModelStatusMissing" xml:space="preserve"><value>Not installed</value></data>
+  <data name="ModelRowReady" xml:space="preserve"><value>{0} · Ready</value></data>
+  <data name="ModelRowInvalid" xml:space="preserve"><value>{0} · Verification failed</value></data>
+  <data name="ModelsFolder" xml:space="preserve"><value>Models folder</value></data>
+  <data name="TotalModelSize" xml:space="preserve"><value>Total size</value></data>
+  <data name="GitHubReleases" xml:space="preserve"><value>GitHub Releases</value></data>
+  <data name="OpenFolder" xml:space="preserve"><value>Open</value></data>
+  <data name="ModelStatusReady" xml:space="preserve"><value>Version {0}, {1:N1} MB, verified</value></data>
+  <data name="ModelStatusInvalid" xml:space="preserve"><value>{0:N1} MB, integrity check failed</value></data>
+  <data name="ModelsDeleted" xml:space="preserve"><value>The model package was deleted.</value></data>
   <data name="Language" xml:space="preserve"><value>Interface language</value></data>
   <data name="LanguageChinese" xml:space="preserve"><value>简体中文</value></data>
   <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
   <data name="Device" xml:space="preserve"><value>Execution device</value></data>
-  <data name="AdaptiveInference" xml:space="preserve"><value>Adaptive inference frequency</value></data>
-  <data name="AdaptiveInferenceDescription" xml:space="preserve"><value>Adjusts frequency within fixed safety limits using measured ONNX P95 latency. Changes apply the next time detection starts.</value></data>
-  <data name="ManualFrequencyDescription" xml:space="preserve"><value>Manual intervals in milliseconds. Minigame control is never reduced below about 15 Hz.</value></data>
-  <data name="LocatorInterval" xml:space="preserve"><value>Wait-for-bite interval (80–250 ms)</value></data>
-  <data name="HookingInterval" xml:space="preserve"><value>Wait-for-minigame interval (80–250 ms)</value></data>
-  <data name="MinigameInterval" xml:space="preserve"><value>Minigame control interval (33–67 ms)</value></data>
-  <data name="PanelRecheckInterval" xml:space="preserve"><value>Minigame panel recheck (250–1000 ms)</value></data>
-  <data name="Enabled" xml:space="preserve"><value>On</value></data>
-  <data name="Disabled" xml:space="preserve"><value>Off</value></data>
-  <data name="BiteFallback" xml:space="preserve"><value>Minimum wait when the bite indicator is not visible</value></data>
-  <data name="BiteFallbackDisabled" xml:space="preserve"><value>Disabled</value></data>
-  <data name="BiteFallbackSeconds" xml:space="preserve"><value>{0:N1} seconds</value></data>
-  <data name="SoftwareRoot" xml:space="preserve"><value>Software root:</value></data>
-  <data name="DiagnosticsDescription" xml:space="preserve"><value>Diagnostics preview is off by default. No recognition result is shown without a verified model and capture target.</value></data>
-  <data name="RuntimeStatus" xml:space="preserve"><value>Phase: {0}
-Status: {1}</value></data>
-  <data name="RuntimeProvider" xml:space="preserve"><value>Provider: {0}
-Models: {1}</value></data>
+  <data name="DeviceAuto" xml:space="preserve"><value>Automatic</value></data>
+  <data name="DeviceCpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="DeviceGpu" xml:space="preserve"><value>GPU (DirectML)</value></data>
+  <data name="DeviceDescription" xml:space="preserve"><value>Auto is recommended. Try CPU if the game stutters.</value></data>
+  <data name="ToggleHotkey" xml:space="preserve"><value>Start / stop hotkey</value></data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve"><value>Press this global hotkey to start or stop auto fishing while VRChat is in front or this application is in the background.</value></data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve"><value>Change the start / stop hotkey?</value></data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve"><value>Change the hotkey from {0} to {1}? The change takes effect immediately.</value></data>
+  <data name="ConfirmChange" xml:space="preserve"><value>Confirm change</value></data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve"><value>This hotkey cannot be used</value></data>
+  <data name="HotkeyChangeFailed" xml:space="preserve"><value>{0} may already be used by another application. The previous hotkey is unchanged.&#xA;&#xA;{1}</value></data>
+  <data name="GeneralSettings" xml:space="preserve"><value>General</value></data>
+  <data name="AutomationSettings" xml:space="preserve"><value>Automation</value></data>
+  <data name="StorageSettings" xml:space="preserve"><value>Local storage</value></data>
+  <data name="BiteFallback" xml:space="preserve"><value>Off-screen indicator fallback</value></data>
+  <data name="BiteFallbackDelay" xml:space="preserve"><value>Minimum wait</value></data>
+  <data name="BiteFallbackDescription" xml:space="preserve"><value>The bite indicator can appear outside the captured frame. When enabled, the application tries to enter the minigame after the configured wait if no indicator was detected. Disabled by default.</value></data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve"><value>Measured after casting. Choose 5–30 seconds; the default is 15 seconds.</value></data>
+  <data name="Enabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Disabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="BiteFallbackSeconds" xml:space="preserve"><value>{0:N0} seconds</value></data>
+  <data name="SoftwareRoot" xml:space="preserve"><value>Software directory</value></data>
   <data name="Ready" xml:space="preserve"><value>Ready</value></data>
   <data name="CheckingModels" xml:space="preserve"><value>Checking compatible model releases...</value></data>
+  <data name="CheckingUpdates" xml:space="preserve"><value>Checking for model updates...</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>Model updates cannot be checked right now. Installed models remain available.</value></data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve"><value>The model publisher cannot be reached right now. Downloads and updates are unavailable.</value></data>
   <data name="DownloadProgress" xml:space="preserve"><value>{0}: {1:N0}/{2:N0} bytes</value></data>
   <data name="DownloadComplete" xml:space="preserve"><value>Models downloaded and verified.</value></data>
   <data name="DownloadCancelled" xml:space="preserve"><value>Download cancelled; installed models were not changed.</value></data>
   <data name="DownloadFailed" xml:space="preserve"><value>Model download failed: {0}</value></data>
-  <data name="CaptureTarget" xml:space="preserve"><value>Capture target: {0}</value></data>
-  <data name="CaptureNotSelected" xml:space="preserve"><value>No capture target selected</value></data>
-  <data name="DiagnosticsStatus" xml:space="preserve"><value>Provider: {0}
-Captured frames: {1}
-Dropped frames: {2}
-Status: {3}
-
-{4}</value></data>
-  <data name="FrequencyModeManual" xml:space="preserve"><value>Manual</value></data>
-  <data name="FrequencyModeCalibrating" xml:space="preserve"><value>Adaptive (sampling)</value></data>
-  <data name="FrequencyModeProfile" xml:space="preserve"><value>Adaptive (saved profile loaded)</value></data>
-  <data name="FrequencyModeAdaptive" xml:space="preserve"><value>Adaptive</value></data>
-  <data name="P95Unavailable" xml:space="preserve"><value>not enough samples</value></data>
-  <data name="P95Value" xml:space="preserve"><value>{0:N2} ms</value></data>
-  <data name="PerformanceStatus" xml:space="preserve"><value>Inference frequency: {0}
-Intervals: locator {1} ms / Hooking {2} ms / minigame {3} ms / panel recheck {4} ms
-P95: locator {5} / both models {6} / cached minigame {7}
-Latest frame age: {8:N1} ms; inference overruns: {9}; frames dropped in the latest 5 seconds: {10}</value></data>
   <data name="PerformanceInsufficientTitle" xml:space="preserve"><value>Device performance is insufficient</value></data>
-  <data name="PerformanceInsufficientMessage" xml:space="preserve"><value>Minigame inference exceeds the 65% performance budget even at the 67 ms limit. The app will not reduce frequency further; observation remains available, but automatic input may be unstable.</value></data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve"><value>Minigame inference exceeds the 65% performance budget even at the 67 ms limit, so automatic input may be unstable.</value></data>
   <data name="PhaseIdle" xml:space="preserve"><value>Idle</value></data>
   <data name="PhaseCasting" xml:space="preserve"><value>Casting</value></data>
   <data name="PhaseWaitingForBite" xml:space="preserve"><value>Waiting for bite</value></data>
@@ -81,20 +102,47 @@ Latest frame age: {8:N1} ms; inference overruns: {9}; frames dropped in the late
   <data name="PhaseLoot" xml:space="preserve"><value>Collecting</value></data>
   <data name="PhaseRecovery" xml:space="preserve"><value>Recovery</value></data>
   <data name="PhaseStopped" xml:space="preserve"><value>Stopped</value></data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve"><value>VRChat is not running or its main window is unavailable</value></data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve"><value>Start was blocked because VRChat is not in the foreground</value></data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve"><value>The {0} hotkey could not be registered</value></data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve"><value>Unexpected startup failure: {0}</value></data>
   <data name="RuntimeModelsUnavailable" xml:space="preserve"><value>Models are not installed; recognition and automatic input are disabled</value></data>
-  <data name="RuntimeModelsRequired" xml:space="preserve"><value>Both verified ONNX models are required before observation can start</value></data>
-  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve"><value>The installed models are not approved for automatic input; use observe-only mode</value></data>
+  <data name="RuntimeModelsRequired" xml:space="preserve"><value>Both verified ONNX models are required before auto fishing can start</value></data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve"><value>The installed models are not approved for automatic input</value></data>
   <data name="RuntimeAutomaticStarted" xml:space="preserve"><value>Automatic mode started</value></data>
-  <data name="RuntimeObservationStarted" xml:space="preserve"><value>Observe-only mode started</value></data>
   <data name="RuntimeDetectionStopped" xml:space="preserve"><value>Detection stopped: {0}</value></data>
-  <data name="RuntimeStopped" xml:space="preserve"><value>Stopped and released mouse input</value></data>
+  <data name="RuntimeStopped" xml:space="preserve"><value>Auto fishing stopped</value></data>
   <data name="RuntimeCaptureStopped" xml:space="preserve"><value>Capture stopped; input was released</value></data>
   <data name="RuntimeFrameStale" xml:space="preserve"><value>Capture frame is stale; input was released</value></data>
-  <data name="RuntimeTargetNotForeground" xml:space="preserve"><value>VRChat is not in the foreground; automatic input was paused and released</value></data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve"><value>VRChat is not in the foreground; auto fishing resumes when you return</value></data>
   <data name="RuntimeOutputContractUnverified" xml:space="preserve"><value>Models are loaded, but the output contract is unverified; only the Provider can be checked</value></data>
   <data name="RuntimeInferenceFailed" xml:space="preserve"><value>Inference failed: {0}</value></data>
   <data name="UnknownError" xml:space="preserve"><value>unknown error</value></data>
   <data name="UnknownStatus" xml:space="preserve"><value>Unknown status</value></data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve"><value>VRChat was not found</value></data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve"><value>Start VRChat and enter the target world, then press the start hotkey again.</value></data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve"><value>VRChat must be in the foreground</value></data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve"><value>Switch to the VRChat window first, then press the start hotkey again. No mouse input was sent.</value></data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve"><value>The start / stop hotkey is unavailable</value></data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve"><value>{0} is already used by another application or Windows refused its registration. Choose another hotkey in Settings.</value></data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve"><value>Auto fishing could not start</value></data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve"><value>An unexpected error occurred and all mouse input was released. Details: {0}</value></data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve"><value>Required models are missing or damaged</value></data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve"><value>Open Models and download or update the complete model package, then try again.</value></data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve"><value>This model package cannot control input</value></data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve"><value>Install a model release that is marked as compatible with automatic input.</value></data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve"><value>Recognition stopped</value></data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve"><value>Mouse input was released. Check the models and execution device before restarting. Details: {0}</value></data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve"><value>VRChat capture stopped</value></data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve"><value>No new VRChat frames were received. Mouse input was released; check that the game window is still available.</value></data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve"><value>The captured frame is too old</value></data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve"><value>Automatic input was paused and released. Check whether VRChat or the computer is frozen or overloaded.</value></data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve"><value>Automatic input is paused</value></data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve"><value>VRChat is no longer in the foreground. No input will be sent until you return to the game.</value></data>
+  <data name="AlertModelContractTitle" xml:space="preserve"><value>The models are incompatible with this software</value></data>
+  <data name="AlertModelContractMessage" xml:space="preserve"><value>The model output format could not be verified. Install the complete compatible model package.</value></data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve"><value>Recognition failed</value></data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve"><value>Mouse input was released for safety. Try another execution device or reinstall the models. Details: {0}</value></data>
   <data name="DecisionCast" xml:space="preserve"><value>Cast</value></data>
   <data name="DecisionBiteConfirmed" xml:space="preserve"><value>Bite confirmed</value></data>
   <data name="DecisionBiteFallback" xml:space="preserve"><value>Off-screen bite fallback delay reached</value></data>
@@ -112,4 +160,14 @@ Latest frame age: {8:N1} ms; inference overruns: {9}; frames dropped in the late
   <data name="DecisionFailureDetected" xml:space="preserve"><value>Failure detected</value></data>
   <data name="DecisionStopRequested" xml:space="preserve"><value>Stop requested</value></data>
   <data name="DecisionWaiting" xml:space="preserve"><value>Waiting</value></data>
+  <data name="WorkMode" xml:space="preserve"><value>Work mode</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Run mode keeps the game view clean. Debug mode adds recognition boxes and confidence values.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Run mode</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Run auto fishing without recognition boxes.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Debug mode</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Show stabilized recognition boxes and confidence values over VRChat.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Press {0} to stop auto fishing</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>The screen overlay is unavailable; auto fishing was not started</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>The VRChat overlay is unavailable</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Auto fishing was stopped and mouse input was released. Restart VRC-Fisher, then try again.</value></data>
 </root>

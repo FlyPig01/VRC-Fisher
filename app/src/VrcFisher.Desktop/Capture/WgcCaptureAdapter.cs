@@ -1,4 +1,5 @@
 using VrcFisher.Core;
+using VrcFisher.Desktop.Contracts;
 using VrcFisher.Infrastructure.Capture;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
@@ -8,13 +9,13 @@ using Windows.Foundation;
 using System.Runtime.InteropServices;
 using WinRT;
 
-namespace VrcFisher.Desktop;
+namespace VrcFisher.Desktop.Capture;
 
 /// <summary>
 /// Desktop-only Windows Graphics Capture adapter. It owns WinRT objects and
 /// publishes CPU-readable BGRA frames to the Infrastructure source boundary.
 /// </summary>
-public sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : IFrameSource, IAsyncDisposable
+internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : IFrameSource, IAsyncDisposable, ICaptureTargetState
 {
     private readonly SemaphoreSlim _frameGate = new(1, 1);
     private readonly object _sync = new();
@@ -22,6 +23,7 @@ public sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : IFr
     private IDirect3DDevice? _device;
     private Direct3D11CaptureFramePool? _pool;
     private GraphicsCaptureSession? _session;
+    private IntPtr _targetWindow;
     private bool _running;
 
     public event EventHandler<CapturedFrameEventArgs>? FrameArrived
@@ -30,27 +32,76 @@ public sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : IFr
         remove => source.FrameArrived -= value;
     }
 
-    public bool IsConfigured => _item is not null;
-    public string TargetName => source.TargetName;
-    public bool IsSupported => GraphicsCaptureSession.IsSupported();
+    public event EventHandler? TargetChanged;
 
-    public void Configure(GraphicsCaptureItem item)
+    public bool IsConfigured
     {
-        ArgumentNullException.ThrowIfNull(item);
+        get { lock (_sync) return _item is not null; }
+    }
+
+    public string TargetName => TargetApplication.ProcessName;
+    public bool IsSupported => GraphicsCaptureSession.IsSupported();
+    internal IntPtr TargetWindow
+    {
+        get { lock (_sync) return _targetWindow; }
+    }
+
+    public bool RefreshVrChatTarget()
+    {
         lock (_sync)
         {
-            if (_running) throw new InvalidOperationException("捕获运行时不能更换目标");
-            _item = item;
-            source.Configure(string.IsNullOrWhiteSpace(item.DisplayName) ? "已选择捕获目标" : item.DisplayName);
+            if (_running) return _item is not null;
         }
+
+        var window = IsSupported ? VrChatWindowLocator.FindMainWindow() : IntPtr.Zero;
+        if (window == IntPtr.Zero)
+        {
+            ClearTarget();
+            return false;
+        }
+
+        lock (_sync)
+        {
+            if (_item is not null && _targetWindow == window) return true;
+        }
+
+        GraphicsCaptureItem item;
+        try
+        {
+            item = GraphicsCaptureItemFactory.CreateForWindow(window);
+        }
+        catch (Exception error) when (error is COMException or InvalidCastException)
+        {
+            ClearTarget();
+            return false;
+        }
+
+        GraphicsCaptureItem? previous;
+        lock (_sync)
+        {
+            if (_running)
+            {
+                return _item is not null;
+            }
+            previous = _item;
+            if (previous is not null) previous.Closed -= OnTargetClosed;
+            _item = item;
+            _targetWindow = window;
+            _item.Closed += OnTargetClosed;
+            source.Configure(TargetApplication.ProcessName);
+        }
+        TargetChanged?.Invoke(this, EventArgs.Empty);
+        return true;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        if (!RefreshVrChatTarget())
+            throw new InvalidOperationException("VRChat is not running or its main window is unavailable.");
         lock (_sync)
         {
             if (_running) return Task.CompletedTask;
-            if (_item is null) throw new InvalidOperationException("请先选择显示器或窗口");
+            if (_item is null) throw new InvalidOperationException("VRChat is not running or its main window is unavailable.");
             if (!IsSupported) throw new PlatformNotSupportedException("当前系统不支持 Windows Graphics Capture");
             _device = Direct3DDeviceFactory.Create();
             _pool = Direct3D11CaptureFramePool.CreateFreeThreaded(
@@ -95,8 +146,35 @@ public sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : IFr
     public async ValueTask DisposeAsync()
     {
         await StopAsync(CancellationToken.None);
+        ClearTarget();
         _frameGate.Dispose();
         await source.DisposeAsync();
+    }
+
+    private void ClearTarget()
+    {
+        GraphicsCaptureItem? previous;
+        lock (_sync)
+        {
+            if (_item is null && _targetWindow == IntPtr.Zero) return;
+            previous = _item;
+            if (previous is not null) previous.Closed -= OnTargetClosed;
+            _item = null;
+            _targetWindow = IntPtr.Zero;
+        }
+        TargetChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnTargetClosed(GraphicsCaptureItem sender, object args)
+    {
+        lock (_sync)
+        {
+            if (!ReferenceEquals(_item, sender)) return;
+            sender.Closed -= OnTargetClosed;
+            _item = null;
+            _targetWindow = IntPtr.Zero;
+        }
+        TargetChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private async void OnFrameArrived(Direct3D11CaptureFramePool sender, object args)

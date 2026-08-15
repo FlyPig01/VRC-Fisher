@@ -13,17 +13,25 @@
     <EnableMsixTooling>false</EnableMsixTooling>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\..\assets\branding\VRC-Fisher.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\VrcFisher.Core\VrcFisher.Core.csproj" />
     <ProjectReference Include="..\VrcFisher.Application\VrcFisher.Application.csproj" />
     <ProjectReference Include="..\VrcFisher.Infrastructure\VrcFisher.Infrastructure.csproj" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260710003" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\**\*.resw" />
+    <Content Include="..\..\..\assets\branding\VRC-Fisher.ico"
+             Link="Assets\VRC-Fisher.ico"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\..\assets\branding\VRC-Fisher.svg"
+             Link="Assets\VRC-Fisher.svg"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <Target Name="RemoveWinUiDirectMlPublishConflict"
           AfterTargets="ComputeFilesToPublish"

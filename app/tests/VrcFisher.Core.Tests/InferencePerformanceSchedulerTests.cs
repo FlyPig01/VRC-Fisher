@@ -81,25 +81,6 @@ public sealed class InferencePerformanceSchedulerTests
     }
 
     [Fact]
-    public void Manual_scheduler_keeps_normalized_user_intervals()
-    {
-        var options = new AppOptions(
-            AdaptiveInference: false,
-            LocatorIntervalMs: 120,
-            HookingIntervalMs: 140,
-            MinigameIntervalMs: 45,
-            PanelRecheckIntervalMs: 600).Normalize();
-        var scheduler = new InferencePerformanceScheduler(options, "CPUExecutionProvider");
-
-        Assert.Equal(120, scheduler.Snapshot.LocatorIntervalMs);
-        Assert.Equal(140, scheduler.Snapshot.HookingIntervalMs);
-        Assert.Equal(45, scheduler.Snapshot.MinigameIntervalMs);
-        Assert.Equal(600, scheduler.Snapshot.PanelRecheckIntervalMs);
-        Assert.False(scheduler.Snapshot.Adaptive);
-        Assert.False(scheduler.Snapshot.IsCalibrating);
-    }
-
-    [Fact]
     public void Recording_hot_path_does_not_allocate_managed_memory()
     {
         var scheduler = new InferencePerformanceScheduler(AppOptions.Default, "DmlExecutionProvider");

@@ -1,6 +1,6 @@
 # 安装与发布设计
 
-> 当前状态：`dotnet publish -> Inno Setup` 已实际生成单一 Setup，并完成 CPU-only、DirectML、简体中文和 English 的安装启动验证；正式 ONNX、真实 VRChat 验收、代码签名和已上传的 GitHub Release 仍未完成。语言资源不是下载项。
+> 当前状态：`dotnet publish -> Inno Setup` 已实际生成单一 Setup，并完成 CPU-only、DirectML、简体中文和 English 的安装启动验证；20 种软件与安装器语言资源已经接入，完整多语言安装验收仍待执行。正式 ONNX、真实 VRChat 验收、代码签名和已上传的 GitHub Release 仍未完成。语言资源不是下载项。
 
 ## 1. 发布物
 
@@ -45,13 +45,15 @@ models-vX.Y.Z/
 语言资源的来源是仓库中的以下文件，而不是 GitHub 下载：
 
 ```text
-app/src/VrcFisher.Desktop/Strings/zh-CN/Resources.resw
-app/src/VrcFisher.Desktop/Strings/en-US/Resources.resw
+app/src/VrcFisher.Desktop/Strings/<language-code>/Resources.resw
+packaging/languages/*.isl
 ```
 
-WinUI 构建把 `.resw` 编译为应用的 `VrcFisher.pri`，`dotnet publish` 将该资源和程序一起放入发布目录，Inno Setup 再把发布目录复制到用户选择的安装目录。因此首次安装不需要网络就能取得中英文资源；模型下载是唯一的运行时大文件下载。
+WinUI 工程为 `en-US`、`zh-CN`、`zh-TW`、`ja-JP`、`ko-KR`、`es-ES`、`fr-FR`、`de-DE`、`pt-BR`、`ru-RU`、`it-IT`、`pl-PL`、`tr-TR`、`nl-NL`、`cs-CZ`、`hu-HU`、`uk-UA`、`th-TH`、`sv-SE` 和 `fi-FI` 提供 `.resw`。构建把它们编译为应用的 `VrcFisher.pri`，`dotnet publish` 将资源和程序一起放入发布目录，Inno Setup 再复制到用户选择的安装目录。因此首次安装不需要网络即可取得全部界面语言；模型下载是唯一的运行时大文件下载。
 
-Setup 的英文来自 Inno Setup 6 自带 `Default.isl`；简体中文安装器翻译来自 Inno Setup 官方 `jrsoftware/issrc` 仓库，已固定保存在 `packaging/languages/ChineseSimplified.isl`，因为 Inno Setup 安装程序默认不安装该文件。两者在构建时进入 Setup。Setup 的语言页同时写入 `<安装目录>\\config\\installer-language.ini`；应用启动时读取这个文件，选择对应的内置 `.pri` 资源。这些语言资源都不在最终用户电脑上联网下载。变更语言后重启应用生效；新增语言需要重新发布软件，首版不提供独立语言包。
+Setup 的英文来自 Inno Setup 6 自带 `Default.isl`；其余 19 种安装器翻译来自 Inno Setup 官方 `jrsoftware/issrc` 仓库并固定在 `packaging/languages/`。全部资源在构建时进入同一个 Setup。首次安装使用 `LanguageDetectionMethod=uilanguage` 按 Windows UI 语言预选；无法匹配时因 English 位于语言列表首位而回退 English，用户仍可在语言对话框改选，后续向导立即使用选定语言。覆盖安装优先保留先前的安装器语言。
+
+Setup 的最终语言同时写入 `<安装目录>\\config\\installer-language.ini`。应用仅在尚无 `config/user.json` 时读取该文件，因此首次启动与安装器最终语言一致；记录缺失或无效时回退 English。软件设置只列出 20 种实际语言，不提供“跟随系统”。软件内切换语言会立即刷新界面并保存到 `config/user.json`，后续覆盖安装不会覆盖用户已经选择的语言。整个过程不联网下载语言包；新增翻译需要重新发布软件。
 
 ## 3. 构建链
 
@@ -90,7 +92,7 @@ CPU-only 和 DirectML 必须输出到不同目录，不能混装两个 ONNX Runt
 同一个 Setup 按以下顺序执行：
 
 ```text
-选择简体中文或 English
+按 Windows UI 语言从 20 种语言中预选；无匹配时为 English，可手动改选
   -> 选择安装目录
   -> 选择 CPU-only 或 DirectML
   -> 选择是否立即下载必需模型
@@ -109,7 +111,7 @@ CPU-only 和 DirectML 必须输出到不同目录，不能混装两个 ONNX Runt
 - 不能把一个包含无关文件的既有目录当作软件根目录；
 - 覆盖安装时沿用原目录并保留用户数据。
 
-安装器语言同时作为软件首次启动语言。简体中文和 English `.resw` 已随 Desktop 工程编译进应用；当前版本在安装器选择语言，修改后重启应用生效，不下载单独语言包。
+安装器最终语言同时作为软件首次启动语言。20 种 `.resw` 已随 Desktop 工程编译进应用；软件内只列出实际语言，不提供“跟随系统”，修改后立即生效且不下载单独语言包。覆盖安装保留之前的安装器语言和 `user.json`，不会因系统语言变化覆盖用户手动选择。
 
 ## 5. 运行组件选择
 
@@ -120,7 +122,7 @@ CPU-only 和 DirectML 必须输出到不同目录，不能混装两个 ONNX Runt
 
 Setup 默认推荐 DirectML，但保留 CPU-only。CPU-only 依赖更少，在没有可用 DirectX 12 GPU、GPU 争用严重或 DirectML 不稳定时可能表现更好。
 
-重新运行 Setup 可以切换组件。安装器必须先停止 VRC-Fisher，清理旧的程序文件和原生运行库，再安装所选组件；`models/`、`config/user.json`、`config/performance-profiles.json`、`logs/` 和 `artifacts/` 不受影响。Provider 变化后旧性能画像不会匹配，软件会自动重新采样。
+重新运行 Setup 可以切换组件。安装器必须先停止 VRC-Fisher，清理旧的程序文件和原生运行库，再安装所选组件；`models/`、`config/user.json`、`config/performance-profiles.json` 和 `logs/` 不受影响。Provider 变化后旧性能画像不会匹配，软件会自动重新采样。
 
 两个组件使用相同 ONNX。切换组件不重新训练、不转换也不重复下载模型。当前不提供 CUDA 组件。
 
@@ -150,12 +152,9 @@ Setup 默认推荐 DirectML，但保留 CPU-only。CPU-only 依赖更少，在�
   downloads/
   logs/
     vrc-fisher.log
-  artifacts/
-    runtime-metrics.json
-    failures/
 ```
 
-应用通过 `program\\VrcFisher.exe` 的父目录识别安装根目录。程序文件放在 `program/`，模型、配置、日志、指标、截图或下载暂存仍全部位于用户选定的安装目录；禁止写入 `%LOCALAPPDATA%`、`ProgramData`、用户主目录或其他隐藏位置。
+应用通过 `program\\VrcFisher.exe` 的父目录识别安装根目录。程序文件放在 `program/`，模型、配置、日志和下载暂存仍全部位于用户选定的安装目录；禁止写入 `%LOCALAPPDATA%`、`ProgramData`、用户主目录或其他隐藏位置。
 
 `USER_GUIDE.md` 从仓库根目录原样包含进安装包，保证 GitHub 与软件目录中的手册一致。Setup 同时携带原创代码 MIT、第三方声明、AGPL-3.0 和实际发布依赖包要求的许可证/NOTICE；构建脚本找不到这些法律文件时必须停止。
 
@@ -191,7 +190,7 @@ program\\VrcFisher.exe --download-models --non-interactive
 - 删除两个 ONNX、模型卡、模型许可证与模型记录，但保留软件；
 - 模型缺失时重新下载。
 
-两个模型及其模型卡、模型许可证构成一个不可分割的模型版本。首版不允许只更新其中一个文件，以免类别、输入尺寸、后处理契约或许可证记录不匹配。任一文件缺失或校验失败时软件可以打开，但“仅观察”和“自动运行”保持禁用。
+两个模型及其模型卡、模型许可证构成一个不可分割的模型版本。首版不允许只更新其中一个文件，以免类别、输入尺寸、后处理契约或许可证记录不匹配。任一文件缺失或校验失败时软件可以打开，但自动钓鱼保持禁用。
 
 清单至少包含：
 
@@ -230,9 +229,9 @@ program\\VrcFisher.exe --download-models --non-interactive
 
 ## 8. GitHub Releases 协议
 
-应用版本和模型版本独立。应用只选择满足 `runtime_api` 的最新非草稿、非预发布 `models-v*` Release。GitHub Releases API 是首版软件内唯一下载源，不设计 CDN 或镜像自动切换；源码使用者可以直接从相同标签的 `models/vX.Y.Z/` 取得 `.pt` 和 ONNX。发布模型 Release 前必须确认仓库目录已提交并推送，且 Release 中两个 ONNX 的 SHA-256 与 `source-manifest.json` 一致。
+应用版本和模型版本独立。打开模型页时，应用检查满足 `runtime_api` 的最新非草稿、非预发布 `models-v*` Release，并与已安装版本比较；缺失时显示下载、有新版时显示更新、已是最新版时显示删除。GitHub Releases API 是首版软件内唯一下载源，不设计 CDN 或镜像自动切换；源码使用者可以直接从相同标签的 `models/vX.Y.Z/` 取得 `.pt` 和 ONNX。发布模型 Release 前必须确认仓库目录已提交并推送，且 Release 中两个 ONNX 的 SHA-256 与 `source-manifest.json` 一致。
 
-构建时生成 `release.json`，记录仓库 `owner/name`、应用版本和 `runtime_api`。模型清单中的 `automatic_allowed` 必须由人工验收后才可设为 `true`；缺少该字段或为 `false` 时，软件仍可仅观察，但拒绝自动输入。当前 C# 下载器使用 10 分钟 HTTP 请求超时、最多三次瞬时故障尝试、取消令牌、独立暂存目录以及大小和 SHA-256 校验。
+构建时生成 `release.json`，记录仓库 `owner/name`、应用版本和 `runtime_api`；界面同时显示此 `owner/name`，避免只写“GitHub Releases”而无法判断发布者。模型清单中的 `automatic_allowed` 必须由人工验收后才可设为 `true`；缺少该字段或为 `false` 时拒绝自动输入。当前 C# 下载器使用 10 分钟 HTTP 请求超时、最多三次瞬时故障尝试、取消令牌、独立暂存目录以及大小和 SHA-256 校验。
 
 模型构建脚本要求显式传入已填写的模型卡。模型卡中仍有 `TBD`，没有上游标注的 `AGPL-3.0`，或缺少发布版本、两个 `.pt` 与两个 ONNX 的实际大小和 SHA-256 时，脚本必须停止。模型 Release 还必须提供与 `training/LICENSE` 一致的 `MODEL_LICENSE.txt`，并在同一项目中提供对应版本完整源码。构建脚本将模型卡与许可证的大小和 SHA-256 写入 schema v2 清单；当前应用拒绝缺少这两个侧车文件的旧清单。
 
@@ -240,27 +239,27 @@ program\\VrcFisher.exe --download-models --non-interactive
 
 ## 9. 应用升级
 
-首版不实现自动更新器、版本自动检查、增量补丁或后台静默更新。用户从项目的 `app-v*` Release 页面下载并运行新版 Setup：
+首版不实现软件自动更新器、软件版本自动检查、增量补丁或后台静默更新。用户从项目的 `app-v*` Release 页面下载并运行新版 Setup；模型版本检查由模型页独立完成：
 
 ```text
 运行新版 Setup
   -> 识别现有 AppId 与安装目录
   -> 停止正在运行的软件
   -> 替换程序、.NET、WinUI 和 ONNX Runtime 文件
-  -> 保留 models、user.json、logs 和 artifacts
+  -> 保留 models、user.json 和 logs
 ```
 
 只更新少量文件需要单独的差分打包、版本清单、回滚和签名系统，明显增加首版复杂度，因此暂不实现。模型已经独立发布，不会因软件更新重复下载。
 
 ## 10. 卸载
 
-正常卸载删除安装器登记的软件文件，以及安装目录内由 VRC-Fisher 创建的模型、配置、日志、下载暂存和诊断文件。安装器不递归删除安装目录中的其他文件。卸载前应明确提示这些数据也会被删除。
+正常卸载删除安装器登记的软件文件，以及安装目录内由 VRC-Fisher 创建的模型、配置、日志和下载暂存。安装器不递归删除安装目录中的其他文件。卸载前应明确提示这些数据也会被删除。
 
 安装器只允许空目录或已识别的软件目录，因此卸载不会递归删除用户无关文件。只想释放模型空间时，用户应在软件“模型”页面删除模型，而不是卸载软件。
 
 ## 11. 发布验收
 
-1. 只生成一个 Setup，并提供简体中文和 English。
+1. 只生成一个 Setup，并提供约定的 20 种语言；首次安装按 Windows UI 语言预选，无匹配时默认 English，切换语言后向导立即更新，覆盖安装保留先前选择。
 2. 用户能选择任意可写安装目录，全部运行数据只写入该目录。
 3. CPU-only 与 DirectML 互斥安装，切换后没有旧原生 DLL 残留。
 4. 干净 Windows x64 环境无需预装 .NET、Python 或 CUDA 即可启动。

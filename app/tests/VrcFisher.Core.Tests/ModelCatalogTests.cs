@@ -106,6 +106,47 @@ public sealed class ModelCatalogTests
     }
 
     [Fact]
+    public async Task Update_check_compares_installed_and_latest_model_versions()
+    {
+        using var temporary = new TemporaryDirectory();
+        var layout = new DirectoryLayout(temporary.Path);
+        layout.Ensure();
+        var locator = Encoding.UTF8.GetBytes("locator");
+        var minigame = Encoding.UTF8.GetBytes("minigame");
+        await File.WriteAllBytesAsync(Path.Combine(layout.Models, "locator.onnx"), locator);
+        await File.WriteAllBytesAsync(Path.Combine(layout.Models, "minigame.onnx"), minigame);
+        await File.WriteAllBytesAsync(Path.Combine(layout.Models, "MODEL_CARD.md"), ModelCard);
+        await File.WriteAllBytesAsync(Path.Combine(layout.Models, "MODEL_LICENSE.txt"), ModelLicense);
+        await File.WriteAllTextAsync(
+            Path.Combine(layout.Models, "installed-models.json"),
+            Manifest("1.0.0", locator, minigame));
+
+        var latestManifest = Manifest("1.1.0", locator, minigame);
+        var handler = new StaticHttpHandler(new Dictionary<string, byte[]>
+        {
+            ["https://api.test/repos/example/project/releases?per_page=100"] = Encoding.UTF8.GetBytes("""
+            [{"tag_name":"models-v1.1.0","draft":false,"prerelease":false,"assets":[
+              {"name":"model-manifest.json","browser_download_url":"https://cdn.test/model-manifest.json"}
+            ]}]
+            """),
+            ["https://cdn.test/model-manifest.json"] = Encoding.UTF8.GetBytes(latestManifest)
+        });
+        var catalog = new ModelCatalog(
+            layout,
+            new HttpClient(handler),
+            "example/project",
+            new Uri("https://api.test/"));
+
+        await catalog.RefreshAsync(CancellationToken.None);
+        await catalog.CheckForUpdatesAsync(CancellationToken.None);
+
+        Assert.Equal("1.0.0", catalog.InstalledVersion);
+        Assert.Equal("1.1.0", catalog.LatestVersion);
+        Assert.True(catalog.UpdateAvailable);
+        Assert.True(catalog.UpdateCheckSucceeded);
+    }
+
+    [Fact]
     public async Task Transient_model_download_is_retried()
     {
         using var temporary = new TemporaryDirectory();

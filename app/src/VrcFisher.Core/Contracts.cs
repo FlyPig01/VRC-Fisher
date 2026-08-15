@@ -30,6 +30,12 @@ public enum ExecutionDevice
     Gpu
 }
 
+public enum ApplicationMode
+{
+    Run,
+    Debug
+}
+
 public enum InferenceWorkload
 {
     Locator,
@@ -39,11 +45,15 @@ public enum InferenceWorkload
 
 public enum RuntimeMessageCode
 {
+    VrChatNotRunning,
+    StartTargetNotForeground,
+    HotkeyRegistrationFailed,
+    OverlayUnavailable,
+    UnexpectedFailure,
     ModelsUnavailable,
     ModelsRequired,
     AutomaticNotAllowed,
     AutomaticStarted,
-    ObservationStarted,
     DetectionStopped,
     Stopped,
     CaptureStopped,
@@ -151,12 +161,26 @@ public interface IDetector
     DetectionResult Detect(
         CapturedFrameEventArgs frame,
         FishingPhase phase,
-        TimeSpan minigamePanelRecheckInterval);
+        TimeSpan minigamePanelRecheckInterval,
+        bool includeVisualization = false);
 }
+
+public sealed record DetectionVisual(
+    string ClassName,
+    float Confidence,
+    BoundingBox Box);
+
+public sealed record DetectionVisualizationFrame(
+    long FrameNumber,
+    DateTimeOffset CapturedAt,
+    int Width,
+    int Height,
+    IReadOnlyList<DetectionVisual> Detections);
 
 public readonly record struct DetectionResult(
     DetectionObservation Observation,
-    InferenceWorkload Workload);
+    InferenceWorkload Workload,
+    DetectionVisualizationFrame? Visualization);
 
 public sealed record ModelFileInfo(
     [property: JsonPropertyName("filename")] string FileName,
@@ -239,6 +263,6 @@ public interface IRuntimeController
 {
     RuntimeSnapshot Snapshot { get; }
     event EventHandler<RuntimeSnapshot>? SnapshotChanged;
-    Task StartObservationAsync(bool automatic, CancellationToken cancellationToken);
+    Task StartAsync(CancellationToken cancellationToken);
     Task StopAsync(CancellationToken cancellationToken);
 }

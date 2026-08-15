@@ -4,19 +4,20 @@ using VrcFisher.Core;
 namespace VrcFisher.Application;
 
 public sealed record AppOptions(
-    string Language = "zh-CN",
+    string Language = UiLanguage.English,
     ExecutionDevice Device = ExecutionDevice.Auto,
-    bool AutomaticMode = false,
+    ApplicationMode WorkMode = ApplicationMode.Run,
     double ConfidenceThreshold = 0.35,
     double IoUThreshold = 0.45,
-    double BiteFallbackSeconds = 0,
-    bool AdaptiveInference = true,
-    int LocatorIntervalMs = 80,
-    int HookingIntervalMs = 80,
-    int MinigameIntervalMs = 33,
-    int PanelRecheckIntervalMs = 250,
-    string? CaptureDisplay = null)
+    bool BiteFallbackEnabled = false,
+    double BiteFallbackSeconds = 15,
+    string ToggleHotkey = "F8",
+    int SettingsVersion = 3)
 {
+    public const int CurrentSettingsVersion = 3;
+    public static readonly IReadOnlyList<string> SupportedToggleHotkeys =
+        ["F6", "F7", "F8", "F9", "F10", "F11", "F12"];
+
     public static AppOptions Default => new();
 
     public AppOptions Normalize()
@@ -27,19 +28,22 @@ public sealed record AppOptions(
         var iou = double.IsFinite(IoUThreshold)
             ? Math.Clamp(IoUThreshold, 0.01, 0.99)
             : Default.IoUThreshold;
-        var fallback = double.IsFinite(BiteFallbackSeconds)
-            ? Math.Clamp(BiteFallbackSeconds, 0, 20)
+        var fallback = double.IsFinite(BiteFallbackSeconds) && BiteFallbackSeconds >= 5
+            ? Math.Clamp(BiteFallbackSeconds, 5, 30)
             : Default.BiteFallbackSeconds;
         return this with
         {
-            Language = Language is "zh-CN" or "en-US" ? Language : Default.Language,
+            Language = UiLanguage.Preferences.Contains(Language, StringComparer.Ordinal)
+                ? Language
+                : Default.Language,
+            WorkMode = Enum.IsDefined(WorkMode) ? WorkMode : Default.WorkMode,
             ConfidenceThreshold = confidence,
             IoUThreshold = iou,
             BiteFallbackSeconds = fallback,
-            LocatorIntervalMs = Math.Clamp(LocatorIntervalMs, 80, 250),
-            HookingIntervalMs = Math.Clamp(HookingIntervalMs, 80, 250),
-            MinigameIntervalMs = Math.Clamp(MinigameIntervalMs, 33, 67),
-            PanelRecheckIntervalMs = Math.Clamp(PanelRecheckIntervalMs, 250, 1000)
+            ToggleHotkey = SupportedToggleHotkeys.Contains(ToggleHotkey, StringComparer.Ordinal)
+                ? ToggleHotkey
+                : Default.ToggleHotkey,
+            SettingsVersion = CurrentSettingsVersion
         };
     }
 }
@@ -53,8 +57,16 @@ public sealed class OptionsStore(string rootDirectory)
         if (!File.Exists(_path)) return AppOptions.Default;
         try
         {
-            var value = JsonSerializer.Deserialize<AppOptions>(File.ReadAllText(_path), JsonOptions.Default);
-            return (value ?? AppOptions.Default).Normalize();
+            var json = File.ReadAllText(_path);
+            var value = JsonSerializer.Deserialize<AppOptions>(json, JsonOptions.Default)
+                ?? AppOptions.Default;
+            using var document = JsonDocument.Parse(json);
+            var isLegacy = !document.RootElement.TryGetProperty("settingsVersion", out var version)
+                || !version.TryGetInt32(out var settingsVersion)
+                || settingsVersion < AppOptions.CurrentSettingsVersion;
+            if (isLegacy && value.BiteFallbackSeconds <= 5)
+                value = value with { BiteFallbackSeconds = AppOptions.Default.BiteFallbackSeconds };
+            return value.Normalize();
         }
         catch (JsonException)
         {
@@ -89,7 +101,6 @@ public sealed class DirectoryLayout(string rootDirectory)
     public string Models => Path.Combine(Root, "models");
     public string Downloads => Path.Combine(Root, "downloads");
     public string Logs => Path.Combine(Root, "logs");
-    public string Artifacts => Path.Combine(Root, "artifacts");
 
     public void Ensure()
     {
@@ -97,7 +108,6 @@ public sealed class DirectoryLayout(string rootDirectory)
         Directory.CreateDirectory(Models);
         Directory.CreateDirectory(Downloads);
         Directory.CreateDirectory(Logs);
-        Directory.CreateDirectory(Artifacts);
     }
 
     public static DirectoryLayout FromApplicationBase()
@@ -117,7 +127,15 @@ public interface IModelCatalog
     IReadOnlyList<ModelStatus> GetStatus();
     bool IsReady { get; }
     bool AutomaticAllowed { get; }
+    long InstalledSize { get; }
+    string Repository { get; }
+    string? InstalledVersion { get; }
+    string? LatestVersion { get; }
+    bool UpdateAvailable { get; }
+    bool UpdateCheckSucceeded { get; }
+    Uri SourceUri { get; }
     Task RefreshAsync(CancellationToken cancellationToken);
+    Task CheckForUpdatesAsync(CancellationToken cancellationToken);
     Task<ModelManifest> DownloadLatestAsync(
         IProgress<ModelDownloadProgress>? progress,
         CancellationToken cancellationToken);
@@ -129,6 +147,7 @@ public interface IDetectionRuntime
     string Provider { get; }
     bool IsReady { get; }
     event EventHandler<DetectionRuntimeMetrics>? MetricsChanged;
-    Task StartAsync(bool automatic, CancellationToken cancellationToken);
+    event EventHandler<DetectionVisualizationFrame>? VisualizationChanged;
+    Task StartAsync(CancellationToken cancellationToken);
     Task StopAsync(CancellationToken cancellationToken);
 }

@@ -13,17 +13,24 @@ namespace VrcFisher.Infrastructure.Models;
 /// </summary>
 public sealed class ModelCatalog : IModelCatalog
 {
+    private const string DefaultRepository = "FlyPig01/VRC-Fisher";
     private static readonly string[] RequiredModels = ["locator.onnx", "minigame.onnx"];
     private static readonly string[] RequiredDocumentation = ["MODEL_CARD.md", "MODEL_LICENSE.txt"];
     private const int MaximumDownloadAttempts = 3;
     private readonly DirectoryLayout _layout;
     private readonly HttpClient _httpClient;
-    private readonly string? _repository;
+    private readonly string _repository;
     private readonly Uri _githubApiBase;
     private readonly SemaphoreSlim _operation = new(1, 1);
     private readonly object _sync = new();
     private IReadOnlyList<ModelStatus> _status = [];
     private bool _automaticAllowed;
+    private long _installedSize;
+    private string? _installedVersion;
+    private string? _latestVersion;
+    private bool _updateAvailable;
+    private bool _updateCheckSucceeded;
+    private ResolvedModelRelease? _latestRelease;
 
     public ModelCatalog(
         DirectoryLayout layout,
@@ -33,15 +40,37 @@ public sealed class ModelCatalog : IModelCatalog
     {
         _layout = layout;
         _httpClient = httpClient;
-        _repository = repository ?? ReadRepository(layout.Root);
+        _repository = repository ?? ReadRepository(layout.Root) ?? DefaultRepository;
         _githubApiBase = (githubApiBase ?? new Uri("https://api.github.com/")).EnsureTrailingSlash();
     }
 
     public bool IsReady => GetStatus().Count == RequiredModels.Length
         && GetStatus().All(item => item.Installed && item.Valid);
+    public string Repository => _repository;
+    public Uri SourceUri => new($"https://github.com/{_repository}/releases", UriKind.Absolute);
+    public long InstalledSize
+    {
+        get { lock (_sync) return _installedSize; }
+    }
     public bool AutomaticAllowed
     {
         get { lock (_sync) return _automaticAllowed && IsReady; }
+    }
+    public string? InstalledVersion
+    {
+        get { lock (_sync) return _installedVersion; }
+    }
+    public string? LatestVersion
+    {
+        get { lock (_sync) return _latestVersion; }
+    }
+    public bool UpdateAvailable
+    {
+        get { lock (_sync) return _updateAvailable; }
+    }
+    public bool UpdateCheckSucceeded
+    {
+        get { lock (_sync) return _updateCheckSucceeded; }
     }
 
     public IReadOnlyList<ModelStatus> GetStatus()
@@ -90,8 +119,39 @@ public sealed class ModelCatalog : IModelCatalog
         lock (_sync)
         {
             _status = statuses;
+            _installedVersion = manifest?.Version;
+            _updateAvailable = IsNewerVersion(_latestVersion, _installedVersion);
             _automaticAllowed = manifest?.AutomaticAllowed == true
                 && statuses.All(item => item.Installed && item.Valid);
+            _installedSize = Directory.Exists(_layout.Models)
+                ? Directory.EnumerateFiles(_layout.Models, "*", SearchOption.AllDirectories)
+                    .Sum(path => new FileInfo(path).Length)
+                : 0;
+        }
+    }
+
+    public async Task CheckForUpdatesAsync(CancellationToken cancellationToken)
+    {
+        await _operation.WaitAsync(cancellationToken);
+        try
+        {
+            var release = await ResolveLatestManifestAsync(cancellationToken);
+            lock (_sync)
+            {
+                _latestRelease = release;
+                _latestVersion = release.Manifest.Version;
+                _updateAvailable = IsNewerVersion(_latestVersion, _installedVersion);
+                _updateCheckSucceeded = true;
+            }
+        }
+        catch
+        {
+            lock (_sync) _updateCheckSucceeded = false;
+            throw;
+        }
+        finally
+        {
+            _operation.Release();
         }
     }
 
@@ -99,13 +159,12 @@ public sealed class ModelCatalog : IModelCatalog
         IProgress<ModelDownloadProgress>? progress,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(_repository))
-            throw new InvalidOperationException("release.json 未配置模型仓库（owner/name）");
-
         await _operation.WaitAsync(cancellationToken);
         try
         {
-            var source = await ResolveLatestManifestAsync(cancellationToken);
+            ResolvedModelRelease? source;
+            lock (_sync) source = _latestRelease;
+            source ??= await ResolveLatestManifestAsync(cancellationToken);
             return await DownloadManifestAsync(source.Manifest, source.ManifestUri, progress, cancellationToken);
         }
         finally
@@ -155,7 +214,7 @@ public sealed class ModelCatalog : IModelCatalog
         }
     }
 
-    private async Task<(ModelManifest Manifest, Uri ManifestUri)> ResolveLatestManifestAsync(
+    private async Task<ResolvedModelRelease> ResolveLatestManifestAsync(
         CancellationToken cancellationToken)
     {
         var releasesUri = new Uri(
@@ -186,7 +245,7 @@ public sealed class ModelCatalog : IModelCatalog
             catch (InvalidDataException) { continue; }
             if (!Version.TryParse(manifest.Version, out var manifestVersion)) continue;
             if (!candidate.Version!.Equals(manifestVersion)) continue;
-            return (manifest, manifestUri);
+            return new(manifest, manifestUri);
         }
 
         throw new InvalidDataException("没有找到与当前 runtime_api 兼容的 models-v* Release");
@@ -240,6 +299,12 @@ public sealed class ModelCatalog : IModelCatalog
 
             ReplaceModelDirectory(staging, backup, cancellationToken);
             await RefreshAsync(CancellationToken.None);
+            lock (_sync)
+            {
+                _latestVersion = manifest.Version;
+                _updateAvailable = false;
+                _updateCheckSucceeded = true;
+            }
             return manifest;
         }
         finally
@@ -470,6 +535,15 @@ public sealed class ModelCatalog : IModelCatalog
         return Version.TryParse(tag["models-v".Length..], out var version) ? version : null;
     }
 
+    private static bool IsNewerVersion(string? latest, string? installed)
+    {
+        if (latest is null || installed is null) return false;
+        if (Version.TryParse(latest, out var latestVersion)
+            && Version.TryParse(installed, out var installedVersion))
+            return latestVersion > installedVersion;
+        return !string.Equals(latest, installed, StringComparison.Ordinal);
+    }
+
     private static string? ReadRepository(string root)
     {
         var path = Path.Combine(root, "release.json");
@@ -508,6 +582,8 @@ public sealed class ModelCatalog : IModelCatalog
     private sealed record GitHubAsset(
         [property: JsonPropertyName("name")] string Name,
         [property: JsonPropertyName("browser_download_url")] string? BrowserDownloadUrl);
+
+    private sealed record ResolvedModelRelease(ModelManifest Manifest, Uri ManifestUri);
 }
 
 internal static class UriExtensions

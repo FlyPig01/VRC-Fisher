@@ -4,74 +4,95 @@
   <data name="Run" xml:space="preserve"><value>运行</value></data>
   <data name="Models" xml:space="preserve"><value>模型</value></data>
   <data name="Settings" xml:space="preserve"><value>设置</value></data>
-  <data name="Diagnostics" xml:space="preserve"><value>诊断</value></data>
-  <data name="Observe" xml:space="preserve"><value>仅观察</value></data>
-  <data name="Automatic" xml:space="preserve"><value>自动运行</value></data>
-  <data name="Stop" xml:space="preserve"><value>停止并释放鼠标</value></data>
+  <data name="CurrentStatus" xml:space="preserve"><value>当前状态</value></data>
+  <data name="Readiness" xml:space="preserve"><value>运行准备</value></data>
+  <data name="CaptureSource" xml:space="preserve"><value>VRChat 进程</value></data>
+  <data name="ModelFiles" xml:space="preserve"><value>模型文件</value></data>
+  <data name="ExecutionProvider" xml:space="preserve"><value>运行设备</value></data>
+  <data name="PreparationRequiredTitle" xml:space="preserve"><value>还不能开始运行</value></data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve"><value>请先安装模型并启动 VRChat。</value></data>
+  <data name="PreparationModels" xml:space="preserve"><value>请先在模型页安装并校验两个模型。</value></data>
+  <data name="PreparationCapture" xml:space="preserve"><value>请启动 VRChat，软件会自动连接其主窗口。</value></data>
+  <data name="StartFishing" xml:space="preserve"><value>开始自动钓鱼</value></data>
+  <data name="StopFishing" xml:space="preserve"><value>停止自动钓鱼</value></data>
   <data name="ModelsNotReady" xml:space="preserve"><value>模型未就绪</value></data>
-  <data name="StatusLoading" xml:space="preserve"><value>正在加载状态...</value></data>
-  <data name="ProviderUnavailable" xml:space="preserve"><value>Provider：不可用</value></data>
   <data name="Unavailable" xml:space="preserve"><value>不可用</value></data>
-  <data name="SelectCapture" xml:space="preserve"><value>选择显示器或窗口</value></data>
+  <data name="VrChatProcessNotFound" xml:space="preserve"><value>未找到 VRChat</value></data>
   <data name="Refresh" xml:space="preserve"><value>刷新状态</value></data>
-  <data name="DownloadModels" xml:space="preserve"><value>下载或更新模型</value></data>
+  <data name="DownloadModels" xml:space="preserve"><value>下载</value></data>
+  <data name="UpdateModels" xml:space="preserve"><value>更新</value></data>
   <data name="CancelDownload" xml:space="preserve"><value>取消下载</value></data>
-  <data name="DeleteModels" xml:space="preserve"><value>删除模型</value></data>
+  <data name="DeleteModels" xml:space="preserve"><value>删除</value></data>
   <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve"><value>下载模型包？</value></data>
+  <data name="ConfirmDownloadModels" xml:space="preserve"><value>将从 FlyPig01/VRC-Fisher 下载最新的两个兼容模型及其许可证文件。</value></data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve"><value>更新模型包？</value></data>
+  <data name="ConfirmUpdateModels" xml:space="preserve"><value>将下载最新版本并替换当前的两个模型。软件设置不会改变。</value></data>
   <data name="ConfirmDeleteTitle" xml:space="preserve"><value>删除已安装模型？</value></data>
   <data name="ConfirmDeleteModels" xml:space="preserve"><value>将删除 locator.onnx、minigame.onnx 和安装记录。软件本体与设置不会被删除。</value></data>
   <data name="ModelMissing" xml:space="preserve"><value>{0}：未安装</value></data>
   <data name="ModelValid" xml:space="preserve"><value>{0}：版本 {1}，{2:N1} MB，校验通过</value></data>
   <data name="ModelInvalid" xml:space="preserve"><value>{0}：{1:N1} MB，未通过清单校验</value></data>
-  <data name="ModelsDescription" xml:space="preserve"><value>两个模型都必须通过完整性校验，才能开始观察。</value></data>
+  <data name="ModelsDescription" xml:space="preserve"><value>两个模型都需要安装。</value></data>
+  <data name="LocatorModelName" xml:space="preserve"><value>感叹号与界面定位模型</value></data>
+  <data name="MinigameModelName" xml:space="preserve"><value>小游戏组件模型</value></data>
+  <data name="LocatorModelDescription" xml:space="preserve"><value>识别咬钩感叹号和小游戏位置</value></data>
+  <data name="MinigameModelDescription" xml:space="preserve"><value>识别控制区域和移动目标</value></data>
+  <data name="LocatorModelTooltip" xml:space="preserve"><value>扫描整个 VRChat 画面。</value></data>
+  <data name="MinigameModelTooltip" xml:space="preserve"><value>分析已经找到的钓鱼小游戏区域。</value></data>
+  <data name="SelectedModelPurpose" xml:space="preserve"><value>用途</value></data>
+  <data name="SelectedModelStatus" xml:space="preserve"><value>安装状态</value></data>
+  <data name="ModelLocalPath" xml:space="preserve"><value>本地地址</value></data>
+  <data name="ModelSource" xml:space="preserve"><value>发布者 / 下载源</value></data>
+  <data name="ModelSourceName" xml:space="preserve"><value>{0} · GitHub Releases</value></data>
+  <data name="ModelStatusMissing" xml:space="preserve"><value>未安装</value></data>
+  <data name="ModelRowReady" xml:space="preserve"><value>{0} · 已就绪</value></data>
+  <data name="ModelRowInvalid" xml:space="preserve"><value>{0} · 校验失败</value></data>
+  <data name="ModelsFolder" xml:space="preserve"><value>模型文件夹</value></data>
+  <data name="TotalModelSize" xml:space="preserve"><value>总占用</value></data>
+  <data name="GitHubReleases" xml:space="preserve"><value>GitHub Releases</value></data>
+  <data name="OpenFolder" xml:space="preserve"><value>打开</value></data>
+  <data name="ModelStatusReady" xml:space="preserve"><value>版本 {0}，{1:N1} MB，校验通过</value></data>
+  <data name="ModelStatusInvalid" xml:space="preserve"><value>{0:N1} MB，未通过完整性校验</value></data>
+  <data name="ModelsDeleted" xml:space="preserve"><value>模型包已删除。</value></data>
   <data name="Language" xml:space="preserve"><value>界面语言</value></data>
   <data name="LanguageChinese" xml:space="preserve"><value>简体中文</value></data>
   <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
   <data name="Device" xml:space="preserve"><value>运行设备</value></data>
-  <data name="AdaptiveInference" xml:space="preserve"><value>自动调节识别频率</value></data>
-  <data name="AdaptiveInferenceDescription" xml:space="preserve"><value>根据实际 ONNX 推理 P95 在安全范围内调节；设置在下次启动识别时生效。</value></data>
-  <data name="ManualFrequencyDescription" xml:space="preserve"><value>手动间隔（毫秒）。小游戏控制不会允许低于约 15 Hz。</value></data>
-  <data name="LocatorInterval" xml:space="preserve"><value>等待感叹号间隔（80–250 ms）</value></data>
-  <data name="HookingInterval" xml:space="preserve"><value>等待小游戏间隔（80–250 ms）</value></data>
-  <data name="MinigameInterval" xml:space="preserve"><value>小游戏控制间隔（33–67 ms）</value></data>
-  <data name="PanelRecheckInterval" xml:space="preserve"><value>小游戏面板复查间隔（250–1000 ms）</value></data>
-  <data name="Enabled" xml:space="preserve"><value>开启</value></data>
-  <data name="Disabled" xml:space="preserve"><value>关闭</value></data>
-  <data name="BiteFallback" xml:space="preserve"><value>感叹号不可见时的最短等待时间</value></data>
-  <data name="BiteFallbackDisabled" xml:space="preserve"><value>已禁用</value></data>
-  <data name="BiteFallbackSeconds" xml:space="preserve"><value>{0:N1} 秒</value></data>
-  <data name="SoftwareRoot" xml:space="preserve"><value>软件根目录：</value></data>
-  <data name="DiagnosticsDescription" xml:space="preserve"><value>诊断预览默认关闭。没有正式模型和显示器捕获时，不显示识别结果。</value></data>
-  <data name="RuntimeStatus" xml:space="preserve"><value>阶段：{0}
-状态：{1}</value></data>
-  <data name="RuntimeProvider" xml:space="preserve"><value>Provider：{0}
-模型：{1}</value></data>
+  <data name="DeviceAuto" xml:space="preserve"><value>自动选择</value></data>
+  <data name="DeviceCpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="DeviceGpu" xml:space="preserve"><value>GPU（DirectML）</value></data>
+  <data name="DeviceDescription" xml:space="preserve"><value>推荐自动选择；游戏卡顿时可尝试 CPU。</value></data>
+  <data name="ToggleHotkey" xml:space="preserve"><value>启动 / 停止热键</value></data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve"><value>在 VRChat 前台或软件位于后台时，按此全局热键启动或停止自动钓鱼。</value></data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve"><value>更改启动 / 停止热键？</value></data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve"><value>确认将热键从 {0} 更改为 {1}？更改会立即生效。</value></data>
+  <data name="ConfirmChange" xml:space="preserve"><value>确认更改</value></data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve"><value>无法使用此热键</value></data>
+  <data name="HotkeyChangeFailed" xml:space="preserve"><value>{0} 可能已被其他程序占用。原热键保持不变。&#xA;&#xA;{1}</value></data>
+  <data name="GeneralSettings" xml:space="preserve"><value>常规</value></data>
+  <data name="AutomationSettings" xml:space="preserve"><value>自动化</value></data>
+  <data name="StorageSettings" xml:space="preserve"><value>本地存储</value></data>
+  <data name="BiteFallback" xml:space="preserve"><value>屏外感叹号兜底</value></data>
+  <data name="BiteFallbackDelay" xml:space="preserve"><value>最低等待时间</value></data>
+  <data name="BiteFallbackDescription" xml:space="preserve"><value>感叹号可能出现在画面外。启用后，等待达到设定时间仍未识别到感叹号时，软件会尝试进入小游戏。默认禁用。</value></data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve"><value>从抛竿后开始计时，可设置 5–30 秒；默认 15 秒。</value></data>
+  <data name="Enabled" xml:space="preserve"><value>启用</value></data>
+  <data name="Disabled" xml:space="preserve"><value>禁用</value></data>
+  <data name="BiteFallbackSeconds" xml:space="preserve"><value>{0:N0} 秒</value></data>
+  <data name="SoftwareRoot" xml:space="preserve"><value>软件目录</value></data>
   <data name="Ready" xml:space="preserve"><value>已就绪</value></data>
   <data name="CheckingModels" xml:space="preserve"><value>正在查询兼容的模型 Release...</value></data>
+  <data name="CheckingUpdates" xml:space="preserve"><value>正在检查模型更新...</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>暂时无法检查模型更新；仍可使用本地模型。</value></data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve"><value>暂时无法连接模型发布源；下载和更新当前不可用。</value></data>
   <data name="DownloadProgress" xml:space="preserve"><value>{0}：{1:N0}/{2:N0} 字节</value></data>
   <data name="DownloadComplete" xml:space="preserve"><value>模型下载完成并通过校验。</value></data>
   <data name="DownloadCancelled" xml:space="preserve"><value>模型下载已取消；已安装模型未改变。</value></data>
   <data name="DownloadFailed" xml:space="preserve"><value>模型下载失败：{0}</value></data>
-  <data name="CaptureTarget" xml:space="preserve"><value>捕获目标：{0}</value></data>
-  <data name="CaptureNotSelected" xml:space="preserve"><value>尚未选择捕获目标</value></data>
-  <data name="DiagnosticsStatus" xml:space="preserve"><value>Provider：{0}
-捕获帧：{1}
-丢弃帧：{2}
-状态：{3}
-
-{4}</value></data>
-  <data name="FrequencyModeManual" xml:space="preserve"><value>手动</value></data>
-  <data name="FrequencyModeCalibrating" xml:space="preserve"><value>自动（采样中）</value></data>
-  <data name="FrequencyModeProfile" xml:space="preserve"><value>自动（已加载本机画像）</value></data>
-  <data name="FrequencyModeAdaptive" xml:space="preserve"><value>自动</value></data>
-  <data name="P95Unavailable" xml:space="preserve"><value>样本不足</value></data>
-  <data name="P95Value" xml:space="preserve"><value>{0:N2} ms</value></data>
-  <data name="PerformanceStatus" xml:space="preserve"><value>识别频率：{0}
-间隔：locator {1} ms / Hooking {2} ms / 小游戏 {3} ms / 面板复查 {4} ms
-P95：locator {5} / 双模型 {6} / 缓存小游戏 {7}
-最近帧龄：{8:N1} ms；推理超时：{9}；最近 5 秒丢帧：{10}</value></data>
   <data name="PerformanceInsufficientTitle" xml:space="preserve"><value>设备性能不足</value></data>
-  <data name="PerformanceInsufficientMessage" xml:space="preserve"><value>小游戏推理即使使用 67 ms 上限也超出 65% 性能预算。软件不会继续降频；仅观察仍可使用，自动操作可能不稳定。</value></data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve"><value>小游戏推理即使使用 67 ms 上限也超出 65% 性能预算，自动操作可能不稳定。</value></data>
   <data name="PhaseIdle" xml:space="preserve"><value>空闲</value></data>
   <data name="PhaseCasting" xml:space="preserve"><value>抛竿</value></data>
   <data name="PhaseWaitingForBite" xml:space="preserve"><value>等待咬钩</value></data>
@@ -81,20 +102,47 @@ P95：locator {5} / 双模型 {6} / 缓存小游戏 {7}
   <data name="PhaseLoot" xml:space="preserve"><value>拾取</value></data>
   <data name="PhaseRecovery" xml:space="preserve"><value>恢复</value></data>
   <data name="PhaseStopped" xml:space="preserve"><value>已停止</value></data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve"><value>VRChat 未运行或主窗口不可用</value></data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve"><value>VRChat 不在前台，已拒绝启动</value></data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve"><value>无法注册 {0} 热键</value></data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve"><value>启动时发生意外错误：{0}</value></data>
   <data name="RuntimeModelsUnavailable" xml:space="preserve"><value>模型未安装，识别与自动输入已禁用</value></data>
-  <data name="RuntimeModelsRequired" xml:space="preserve"><value>两个有效 ONNX 模型都安装后才能开始观察</value></data>
-  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve"><value>当前模型尚未通过自动输入验收，只能使用仅观察模式</value></data>
+  <data name="RuntimeModelsRequired" xml:space="preserve"><value>两个有效 ONNX 模型都安装后才能启动自动钓鱼</value></data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve"><value>当前模型尚未通过自动输入验收</value></data>
   <data name="RuntimeAutomaticStarted" xml:space="preserve"><value>自动运行已启动</value></data>
-  <data name="RuntimeObservationStarted" xml:space="preserve"><value>仅观察已启动</value></data>
   <data name="RuntimeDetectionStopped" xml:space="preserve"><value>识别已停止：{0}</value></data>
-  <data name="RuntimeStopped" xml:space="preserve"><value>已停止并释放鼠标</value></data>
+  <data name="RuntimeStopped" xml:space="preserve"><value>自动钓鱼已停止</value></data>
   <data name="RuntimeCaptureStopped" xml:space="preserve"><value>捕获画面已停止，输入已释放</value></data>
   <data name="RuntimeFrameStale" xml:space="preserve"><value>捕获帧过旧，输入已释放</value></data>
-  <data name="RuntimeTargetNotForeground" xml:space="preserve"><value>VRChat 不在前台，自动输入已暂停并释放鼠标</value></data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve"><value>VRChat 不在前台；返回游戏后自动继续</value></data>
   <data name="RuntimeOutputContractUnverified" xml:space="preserve"><value>模型已加载，但输出契约未验证；仅可检查 Provider</value></data>
   <data name="RuntimeInferenceFailed" xml:space="preserve"><value>识别失败：{0}</value></data>
   <data name="UnknownError" xml:space="preserve"><value>未知错误</value></data>
   <data name="UnknownStatus" xml:space="preserve"><value>未知状态</value></data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve"><value>未找到 VRChat</value></data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve"><value>请先启动 VRChat 并进入目标世界，然后再次按启动热键。</value></data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve"><value>VRChat 必须位于前台</value></data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve"><value>请先切换到 VRChat 窗口，再次按启动热键。本次没有发送任何鼠标输入。</value></data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve"><value>启动 / 停止热键不可用</value></data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve"><value>{0} 已被其他程序占用或被 Windows 拒绝注册。请在设置中选择其他热键。</value></data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve"><value>无法启动自动钓鱼</value></data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve"><value>发生意外错误，所有鼠标输入均已释放。详细信息：{0}</value></data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve"><value>必需模型缺失或损坏</value></data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve"><value>请打开模型页，下载或更新完整模型包，然后重试。</value></data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve"><value>此模型包不能控制输入</value></data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve"><value>请安装已标记为允许自动输入的兼容模型版本。</value></data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve"><value>识别已停止</value></data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve"><value>鼠标输入已释放。请检查模型和运行设备后再启动。详细信息：{0}</value></data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve"><value>VRChat 画面捕获已停止</value></data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve"><value>软件没有收到新的 VRChat 画面，鼠标输入已释放。请检查游戏窗口是否仍然可用。</value></data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve"><value>捕获画面已过期</value></data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve"><value>自动输入已暂停并释放。请检查 VRChat 或电脑是否卡死、负载过高。</value></data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve"><value>自动输入已暂停</value></data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve"><value>VRChat 已不在前台；返回游戏前，软件不会发送任何输入。</value></data>
+  <data name="AlertModelContractTitle" xml:space="preserve"><value>模型与当前软件不兼容</value></data>
+  <data name="AlertModelContractMessage" xml:space="preserve"><value>无法验证模型输出格式。请安装完整且兼容的模型包。</value></data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve"><value>识别失败</value></data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve"><value>为保证安全，鼠标输入已释放。请尝试其他运行设备或重新安装模型。详细信息：{0}</value></data>
   <data name="DecisionCast" xml:space="preserve"><value>抛竿</value></data>
   <data name="DecisionBiteConfirmed" xml:space="preserve"><value>确认咬钩</value></data>
   <data name="DecisionBiteFallback" xml:space="preserve"><value>达到屏外感叹号兜底等待时间</value></data>
@@ -112,4 +160,14 @@ P95：locator {5} / 双模型 {6} / 缓存小游戏 {7}
   <data name="DecisionFailureDetected" xml:space="preserve"><value>检测到失败</value></data>
   <data name="DecisionStopRequested" xml:space="preserve"><value>已请求停止</value></data>
   <data name="DecisionWaiting" xml:space="preserve"><value>等待中</value></data>
+  <data name="WorkMode" xml:space="preserve"><value>工作模式</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>运行模式保持游戏画面简洁；调试模式额外显示识别框和置信度。</value></data>
+  <data name="RunMode" xml:space="preserve"><value>运行模式</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>正常自动钓鱼，不显示识别框。</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>调试模式</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>在 VRChat 画面上显示经过防抖的识别框和置信度。</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>按 {0} 停止自动钓鱼</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>屏幕覆盖层不可用，自动钓鱼未启动</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat 屏幕覆盖层不可用</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自动钓鱼已停止，鼠标输入已释放。请重启 VRC-Fisher 后重试。</value></data>
 </root>

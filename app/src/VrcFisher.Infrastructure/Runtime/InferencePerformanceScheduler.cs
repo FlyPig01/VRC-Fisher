@@ -10,7 +10,6 @@ public sealed class InferencePerformanceScheduler
     public static readonly TimeSpan EvaluationInterval = TimeSpan.FromSeconds(5);
     public static readonly TimeSpan StableBeforeSpeedup = TimeSpan.FromSeconds(30);
 
-    private readonly bool _adaptive;
     private readonly LatencyWindow _locator = new();
     private readonly LatencyWindow _locatorAndMinigame = new();
     private readonly LatencyWindow _cachedMinigame = new();
@@ -34,18 +33,8 @@ public sealed class InferencePerformanceScheduler
     private long _droppedSinceEvaluation;
     private long _recentFramesDropped;
 
-    public InferencePerformanceScheduler(AppOptions options, string provider)
+    public InferencePerformanceScheduler(AppOptions _, string provider)
     {
-        _adaptive = options.AdaptiveInference;
-        if (!_adaptive)
-        {
-            _locatorIntervalMs = options.LocatorIntervalMs;
-            _hookingIntervalMs = options.HookingIntervalMs;
-            _minigameIntervalMs = options.MinigameIntervalMs;
-            _panelRecheckIntervalMs = options.PanelRecheckIntervalMs;
-            return;
-        }
-
         var isCpu = provider.Contains("CPU", StringComparison.OrdinalIgnoreCase);
         _locatorIntervalMs = isCpu ? 100 : 80;
         _hookingIntervalMs = isCpu ? 150 : 80;
@@ -53,7 +42,7 @@ public sealed class InferencePerformanceScheduler
         _panelRecheckIntervalMs = isCpu ? 500 : 250;
     }
 
-    public bool Adaptive => _adaptive;
+    public bool Adaptive => true;
     public TimeSpan PanelRecheckInterval => TimeSpan.FromMilliseconds(_panelRecheckIntervalMs);
 
     public TimeSpan GetInferenceInterval(FishingPhase phase) => phase switch
@@ -65,7 +54,6 @@ public sealed class InferencePerformanceScheduler
 
     public void ApplyProfile(InferencePerformanceProfile profile)
     {
-        if (!_adaptive) return;
         _locatorIntervalMs = Math.Clamp(profile.LocatorIntervalMs, 80, 250);
         _hookingIntervalMs = Math.Clamp(profile.HookingIntervalMs, 80, 250);
         _minigameIntervalMs = Math.Clamp(profile.MinigameIntervalMs, 33, 67);
@@ -113,12 +101,11 @@ public sealed class InferencePerformanceScheduler
     }
 
     public InferencePerformanceSnapshot Snapshot => new(
-        Adaptive: _adaptive,
+        Adaptive: true,
         ProfileLoaded: _profileLoaded,
-        IsCalibrating: _adaptive &&
-            (_locatorP95Ms is null
+        IsCalibrating: _locatorP95Ms is null
              || _locatorAndMinigameP95Ms is null
-             || _cachedMinigameP95Ms is null),
+             || _cachedMinigameP95Ms is null,
         PerformanceInsufficient: _performanceInsufficient,
         LocatorIntervalMs: _locatorIntervalMs,
         HookingIntervalMs: _hookingIntervalMs,
@@ -159,8 +146,6 @@ public sealed class InferencePerformanceScheduler
         UpdateP95(_locator, ref _locatorP95Ms);
         UpdateP95(_locatorAndMinigame, ref _locatorAndMinigameP95Ms);
         UpdateP95(_cachedMinigame, ref _cachedMinigameP95Ms);
-        if (!_adaptive) return;
-
         if (_locator.SampleCount >= MinimumSamples && _locatorP95Ms is { } locatorP95)
         {
             var target = SnapAndClamp(locatorP95 / 0.65, 80, 250, 10);

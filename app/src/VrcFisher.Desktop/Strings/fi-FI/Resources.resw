@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Suorita</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Mallit</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Asetukset</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Nykyinen tila</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Valmius</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>VRChat-prosessi</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>Mallitiedostot</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Suoritusprovider</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Ei valmis käynnistykseen</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Asenna mallit ja käynnistä VRChat.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Asenna ja vahvista molemmat mallit Mallit-sivulla.</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>Käynnistä VRChat; sovellus yhdistää sen pääikkunaan automaattisesti.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Aloita autokalastus</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Lopeta autokalastus</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>Mallit eivät ole valmiita</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Ei käytettävissä</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChatia ei löytynyt</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Päivitä</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>Lataa</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Päivitä</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Peruuta lataus</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Poista</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Peruuta</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Sulje</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Ladataanko mallipaketti?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>Uusin yhteensopiva mallipari ja lisenssitiedostot ladataan FlyPig01/VRC-Fisher -säilöstä.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Päivitetäänkö mallipaketti?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>Uusin versio korvaa molemmat asennetut mallit. Sovellusasetukset eivät muutu.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Poistetaanko asennetut mallit?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Tämä poistaa locator.onnx-, minigame.onnx- ja asennustietueen. Sovellus ja asetukset säilyvät.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: ei asennettu</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: versio {1}, {2:N1} MB, vahvistettu</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, manifestin vahvistus epäonnistui</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Molemmat mallit vaaditaan.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Purenta- ja käyttöliittymän paikannin</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Minipelin osien tunnistin</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Löytää purentailmaisimen ja minipelin</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Löytää ohjausalueen ja liikkuvan kohteen</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>Skannaa koko VRChat-kuvan.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Analysoi löydetyn kalastuspelin.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Käyttötarkoitus</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Asennustila</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Paikallinen polku</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Julkaisija / lähde</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Ei asennettu</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Valmis</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Vahvistus epäonnistui</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Mallikansio</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Koko yhteensä</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Avaa</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>Versio {0}, {1:N1} MB, vahvistettu</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, eheystarkistus epäonnistui</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>Mallipaketti poistettiin.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Käyttöliittymän kieli</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Suorituslaite</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Automaattinen</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Automaattinen on suositeltava. Kokeile CPU:ta, jos peli pätkii.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Aloitus-/pysäytyspikanäppäin</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>Paina tätä järjestelmänlaajuista pikanäppäintä aloittaaksesi tai lopettaaksesi autokalastuksen, kun VRChat on etualalla tai tämä sovellus on taustalla.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Vaihdetaanko aloitus-/pysäytyspikanäppäintä?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>Vaihdetaanko pikanäppäin arvosta {0} arvoon {1}? Muutos tulee voimaan välittömästi.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Vahvista muutos</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Tätä pikanäppäintä ei voi käyttää</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} voi olla jo toisen sovelluksen käytössä. Edellinen pikanäppäin on ennallaan.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Yleistä</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Automaatio</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Paikallinen tallennus</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Näytön ulkopuolisen ilmaisimen varatoiminto</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Vähimmäisodotusaika</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>Purentailmaisin voi ilmestyä siepatun kuvan ulkopuolelle. Kun käytössä, sovellus yrittää siirtyä minipeliin määritetyn odotuksen jälkeen, jos ilmaisinta ei havaittu. Pois käytöstä oletuksena.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>Mitataan heiton jälkeen. Valitse 5–30 sekuntia; oletus on 15 sekuntia.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Käytössä</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Pois käytöstä</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} sekuntia</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Ohjelmistohakemisto</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Valmis</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Tarkistetaan yhteensopivia mallijulkaisuja...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Tarkistetaan mallipäivityksiä...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Mallipäivityksiä ei voi tarkistaa juuri nyt. Asennetut mallit ovat edelleen käytettävissä.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>Mallin julkaisijaan ei saada yhteyttä juuri nyt. Lataukset ja päivitykset eivät ole käytettävissä.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} tavua</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Mallit ladattu ja vahvistettu.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>Lataus peruutettu; asennettuja malleja ei muutettu.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Mallin lataus epäonnistui: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Laitteen suorituskyky on riittämätön</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>Minipelin päättely ylittää 65 %:n suorituskykybudjetin jopa 67 ms:n rajalla, joten automaattinen syöte voi olla epävakaata.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Vapaa</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Heitto</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Odotetaan purentaa</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Koukkaus</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Minipeli</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Kelaus</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Kerätään</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Palautuminen</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Pysäytetty</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat ei ole käynnissä tai sen pääikkuna ei ole käytettävissä</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>Aloitus estettiin, koska VRChat ei ole etualalla</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>Pikanäppäintä {0} ei voitu rekisteröidä</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Odottamaton käynnistysvirhe: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>Malleja ei ole asennettu; tunnistus ja automaattinen syöte on poistettu käytöstä</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Molemmat vahvistetut ONNX-mallit vaaditaan ennen autokalastuksen aloittamista</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>Asennetut mallit eivät ole hyväksyttyjä automaattiseen syötteeseen</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Automaattinen tila käynnistettiin</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Tunnistus pysäytetty: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Autokalastus pysäytetty</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>Sieppaus pysäytetty; syöte vapautettiin</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>Sieppauskuva on vanhentunut; syöte vapautettiin</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat ei ole etualalla; autokalastus jatkuu, kun palaat</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>Mallit on ladattu, mutta tulosopimusta ei ole vahvistettu; vain Provider voidaan tarkistaa</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Päättely epäonnistui: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>tuntematon virhe</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Tuntematon tila</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChatia ei löytynyt</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>Käynnistä VRChat ja siirry kohdemaailmaan, paina sitten aloituspikanäppäintä uudelleen.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChatin on oltava etualalla</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Vaihda ensin VRChat-ikkunaan ja paina sitten aloituspikanäppäintä uudelleen. Hiirisyötettä ei lähetetty.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>Aloitus-/pysäytyspikanäppäin ei ole käytettävissä</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} on jo toisen sovelluksen käytössä tai Windows kieltäytyi rekisteröimästä sitä. Valitse toinen pikanäppäin Asetuksista.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Autokalastusta ei voitu käynnistää</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Tapahtui odottamaton virhe ja kaikki hiirisyöte vapautettiin. Tiedot: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>Vaaditut mallit puuttuvat tai ovat vaurioituneet</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Avaa Mallit ja lataa tai päivitä täydellinen mallipaketti, yritä sitten uudelleen.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Tämä mallipaketti ei voi ohjata syötettä</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Asenna mallijulkaisu, joka on merkitty yhteensopivaksi automaattisen syötteen kanssa.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>Tunnistus pysäytetty</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>Hiirisyöte vapautettiin. Tarkista mallit ja suorituslaite ennen uudelleenkäynnistystä. Tiedot: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>VRChat-sieppaus pysäytetty</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Uusia VRChat-kuvia ei vastaanotettu. Hiirisyöte vapautettiin; tarkista, että peli-ikkuna on edelleen käytettävissä.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>Sieppauskuva on liian vanha</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>Automaattinen syöte keskeytettiin ja vapautettiin. Tarkista, onko VRChat tai tietokone jäätynyt tai ylikuormittunut.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Automaattinen syöte on keskeytetty</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat ei ole enää etualalla. Syötettä ei lähetetä, ennen kuin palaat peliin.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>Mallit ovat yhteensopimattomia tämän sovelluksen kanssa</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>Mallin tulostusmuotoa ei voitu vahvistaa. Asenna täydellinen yhteensopiva mallipaketti.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>Tunnistus epäonnistui</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>Hiirisyöte vapautettiin turvallisuuden vuoksi. Kokeile toista suorituslaitetta tai asenna mallit uudelleen. Tiedot: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Heitto</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Purenta vahvistettu</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>Näytön ulkopuolisen purennan varatoiminnon viive saavutettu</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>Purennan aikakatkaisu</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Minipeli vahvistettu</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>Minipeli ei käynnistynyt</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Onnistuminen vahvistettu</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>Minipeli päättyi</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>Minipelin aikakatkaisu</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Seurataan kohdetta</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Kelaa ja kerää</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Aloitetaan seuraava sykli</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>Keräämisen aikakatkaisu</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Palautuminen valmis</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Virhe havaittu</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Pysäytys pyydetty</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>Odotetaan</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Työtila</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Suoritustila pitää pelinäkymän siistinä. Virheenetsintätila lisää tunnistuslaatikot ja luottamusarvot.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Suoritustila</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Suorita automaattinen kalastus ilman tunnistuslaatikoita.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Virheenetsintätila</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Näytä vakautetut tunnistuslaatikot ja luottamusarvot VRChatin päällä.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Paina {0} lopettaaksesi automaattisen kalastuksen</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Näyttöpeitto ei ole käytettävissä; automaattista kalastusta ei käynnistetty</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat-peitto ei ole käytettävissä</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automaattinen kalastus pysäytettiin ja hiiren syöte vapautettiin. Käynnistä VRC-Fisher uudelleen ja yritä uudelleen.</value></data>
+</root>

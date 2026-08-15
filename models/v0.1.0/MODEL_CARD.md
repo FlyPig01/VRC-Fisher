@@ -13,9 +13,9 @@
 | License | AGPL-3.0 (upstream-designated for the Ultralytics-derived training chain and model artifacts) |
 
 This is the current best pair selected by the project maintainer for the
-`0.1.0` model release. The release is usable for development and observation;
-the runtime manifest deliberately keeps `automatic_allowed=false` until a
-separate live input-safety acceptance is completed.
+`0.1.0` model release. The runtime manifest enables automatic input for live
+validation. Dataset and independent-video box review are complete, but the
+automatic fishing success rate still requires in-game verification.
 
 ## Classes
 

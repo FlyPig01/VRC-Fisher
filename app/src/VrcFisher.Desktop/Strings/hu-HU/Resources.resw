@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Futtatás</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Modellek</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Aktuális állapot</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Készültség</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>VRChat folyamat</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>Modellfájlok</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Végrehajtási szolgáltató</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Még nem áll készen a futtatásra</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Telepítse a modelleket és indítsa el a VRChat-et.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Telepítse és ellenőrizze mindkét modellt a Modellek oldalon.</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>Indítsa el a VRChat-et; az alkalmazás automatikusan csatlakozik a főablakához.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Automatikus horgászat indítása</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Automatikus horgászat leállítása</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>A modellek nincsenek készen</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Nem érhető el</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>A VRChat nem található</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Újratöltés</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>Letöltés</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Frissítés</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Letöltés megszakítása</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Mégse</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Bezárás</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Letölti a modellcsomagot?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>A legújabb kompatibilis modellpárt és licencfájlokat a FlyPig01/VRC-Fisher letölti.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Frissíti a modellcsomagot?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>A legújabb verzió mindkét telepített modellt lecseréli. Az alkalmazásbeállítások nem változnak.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Törli a telepített modelleket?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Ez törli a locator.onnx, minigame.onnx fájlokat és a telepítési nyilvántartást. Az alkalmazás és a beállítások megmaradnak.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: nincs telepítve</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: {1}. verzió, {2:N1} MB, ellenőrizve</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, a manifest ellenőrzése sikertelen</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Mindkét modellre szükség van.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Kapás- és UI-kereső</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Minijáték-komponens detektor</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Megkeresi a kapásjelzőt és a minijátékot</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Megkeresi a vezérlési zónát és a mozgó célt</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>A teljes VRChat-képkockát vizsgálja.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Elemzi a megtalált horgász minijátékot.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Rendeltetés</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Telepítési állapot</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Helyi elérési út</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Kiadó / forrás</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Nincs telepítve</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Kész</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Az ellenőrzés sikertelen</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Modellek mappája</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Teljes méret</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Megnyitás</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>{0}. verzió, {1:N1} MB, ellenőrizve</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, az integritásellenőrzés sikertelen</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>A modellcsomag törlésre került.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Felület nyelve</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Végrehajtási eszköz</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Automatikus</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Az Automatikus ajánlott. Próbálja ki a CPU-t, ha a játék akadozik.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Indítás / leállítás gyorsbillentyű</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>Nyomja meg ezt a globális gyorsbillentyűt az automatikus horgászat indításához vagy leállításához, amikor a VRChat az előtérben van, vagy ez az alkalmazás a háttérben fut.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Módosítja az indítás / leállítás gyorsbillentyűt?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>A gyorsbillentyűt {0}-ról {1}-re módosítja? A változás azonnal érvényes lesz.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Módosítás megerősítése</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Ez a gyorsbillentyű nem használható</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} lehet, hogy már egy másik alkalmazás használja. Az előző gyorsbillentyű változatlan.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Általános</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Automatizálás</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Helyi tárolás</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Képernyőn kívüli jelző tartalék</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Minimális várakozás</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>A kapásjelző megjelenhet a rögzített képkockán kívül. Ha engedélyezve van, az alkalmazás a beállított várakozás után megpróbál belépni a minijátékba, ha nem észlelt jelzőt. Alapértelmezés szerint letiltva.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>A dobás után mérve. Válasszon 5–30 másodpercet; az alapértelmezés 15 másodperc.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Engedélyezve</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Letiltva</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} másodperc</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Szoftverkönyvtár</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Kompatibilis modell-kiadások ellenőrzése...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Modellfrissítések ellenőrzése...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>A modellfrissítések jelenleg nem ellenőrizhetők. A telepített modellek továbbra is elérhetők.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>A modellkiadó jelenleg nem érhető el. A letöltések és frissítések nem elérhetők.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} bájt</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>A modellek letöltve és ellenőrizve.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>A letöltés megszakítva; a telepített modellek nem változtak.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>A modell letöltése sikertelen: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Az eszköz teljesítménye elégtelen</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>A minijáték-következtetés meghaladja a 65%-os teljesítménykeretet még a 67 ms-os korlát mellett is, így az automatikus bemenet instabil lehet.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Tétlen</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Dobás</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Várakozás kapásra</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Akasztás</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Minijáték</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Orsózás</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Gyűjtés</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Helyreállítás</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Leállítva</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>A VRChat nem fut, vagy a főablaka nem érhető el</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>Az indítás le volt tiltva, mert a VRChat nincs az előtérben</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>A(z) {0} gyorsbillentyű regisztrálása nem sikerült</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Váratlan indítási hiba: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>A modellek nincsenek telepítve; a felismerés és az automatikus bemenet le van tiltva</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Mindkét ellenőrzött ONNX modellre szükség van az automatikus horgászat indítása előtt</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>A telepített modellek nem engedélyezettek automatikus bemenethez</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Automatikus mód elindítva</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Felismerés leállítva: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Az automatikus horgászat leállt</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>A rögzítés leállt; a bemenet elengedve</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>A rögzített képkocka elavult; a bemenet elengedve</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>A VRChat nincs az előtérben; az automatikus horgászat folytatódik, amikor visszatér</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>A modellek betöltve, de a kimeneti szerződés nincs ellenőrizve; csak a Provider ellenőrizhető</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Következtetés sikertelen: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>ismeretlen hiba</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Ismeretlen állapot</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>A VRChat nem található</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>Indítsa el a VRChat-et és lépjen be a célvilágba, majd nyomja meg újra az indító gyorsbillentyűt.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>A VRChat-nek az előtérben kell lennie</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Először váltson a VRChat ablakára, majd nyomja meg újra az indító gyorsbillentyűt. Nem lett egérbemenet küldve.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>Az indítás / leállítás gyorsbillentyű nem érhető el</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} már egy másik alkalmazás használja, vagy a Windows megtagadta a regisztrációját. Válasszon másik gyorsbillentyűt a Beállításokban.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Az automatikus horgászat nem tudott elindulni</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Váratlan hiba történt, és minden egérbemenet elengedésre került. Részletek: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>A szükséges modellek hiányoznak vagy sérültek</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Nyissa meg a Modellek oldalt, és töltse le vagy frissítse a teljes modellcsomagot, majd próbálja újra.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Ez a modellcsomag nem tudja vezérelni a bemenetet</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Telepítsen egy olyan modell-kiadást, amely automatikus bemenettel kompatibilisként van megjelölve.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>A felismerés leállt</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>Az egérbemenet elengedésre került. Ellenőrizze a modelleket és a végrehajtási eszközt az újraindítás előtt. Részletek: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>A VRChat-rögzítés leállt</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Nem érkeztek új VRChat-képkockák. Az egérbemenet elengedésre került; ellenőrizze, hogy a játékablak továbbra is elérhető-e.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>A rögzített képkocka túl régi</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>Az automatikus bemenet szüneteltetve és elengedve. Ellenőrizze, hogy a VRChat vagy a számítógép lefagyott vagy túlterhelt-e.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Az automatikus bemenet szünetel</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>A VRChat már nincs az előtérben. Amíg nem tér vissza a játékba, nem kerül bemenet elküldésre.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>A modellek nem kompatibilisek ezzel a szoftverrel</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>A modell kimeneti formátumát nem sikerült ellenőrizni. Telepítse a teljes kompatibilis modellcsomagot.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>A felismerés sikertelen</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>Az egérbemenet biztonsági okokból elengedésre került. Próbáljon ki másik végrehajtási eszközt, vagy telepítse újra a modelleket. Részletek: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Dobás</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Kapás megerősítve</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>A képernyőn kívüli kapás tartalék ideje lejárt</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>A kapás időtúllépése</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Minijáték megerősítve</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>A minijáték nem indult el</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Siker megerősítve</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>A minijáték véget ért</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>A minijáték időtúllépése</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Cél követése</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Orsózás és gyűjtés</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Következő ciklus indítása</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>A gyűjtés időtúllépése</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Helyreállítás kész</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Hiba észlelve</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Leállítás kérve</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>Várakozás</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Munkamód</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>A futtatási mód tisztán tartja a játéknézetet. A hibakeresési mód felismerő kereteket és megbízhatósági értékeket ad hozzá.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Futtatási mód</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Automatikus horgászat futtatása felismerő keretek nélkül.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Hibakeresési mód</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Stabilizált felismerő keretek és megbízhatósági értékek megjelenítése a VRChat felett.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Nyomja meg a(z) {0} gombot az automatikus horgászat leállításához</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>A képernyő-átfedés nem érhető el; az automatikus horgászat nem indult el</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>A VRChat átfedése nem érhető el</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Az automatikus horgászat leállt, és az egérbemenet feloldásra került. Indítsa újra a VRC-Fisher programot, majd próbálja újra.</value></data>
+</root>

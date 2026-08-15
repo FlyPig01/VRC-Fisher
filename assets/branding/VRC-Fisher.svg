@@ -1,26 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
   <title id="title">VRC-Fisher icon concept</title>
-  <desc id="desc">A clean blue fish biting a golden hook, with a sensor-like eye.</desc>
-  <rect width="256" height="256" rx="52" fill="#F8FAFC"/>
+  <desc id="desc">An automatic recognition frame locks onto a fishing float above a rippling water surface and hook.</desc>
 
-  <!-- The hook is drawn first so the fish naturally bites over the line. -->
-  <path d="M210 29v66c0 13-4 22-14 30 7 17 10 34 3 49-8 17-27 25-43 16-13-7-16-21-8-32 5-7 13-10 22-8" fill="none" stroke="#F4B63E" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="m170 150-10-7 2 14" fill="none" stroke="#F4B63E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Two clean wave lines indicate the water surface without a filled panel. -->
+  <path d="M28 151c24 12 53 18 82 18 43 0 75-8 118-18" fill="none" stroke="#59E1F2" stroke-width="5" stroke-linecap="round"/>
+  <path d="M52 179c21 9 43 13 66 13 28 0 53-5 82-13" fill="none" stroke="#2A6079" stroke-width="4" stroke-linecap="round"/>
 
-  <!-- One custom silhouette combines rounded body, pointed snout, and forked tail. -->
-  <path d="M63 122c-13-7-24-20-31-36-2 14 2 27 13 36-11 10-15 23-12 39 8-15 19-26 31-33 20 30 54 46 90 39 26-5 47-20 60-42-12-23-34-39-60-44-37-7-72 9-91 41Z" fill="#2F80ED"/>
+  <!-- A classic fishing float: thin antenna, red cap, white band, blue body. -->
+  <path d="M128 27v34" fill="none" stroke="#F6C453" stroke-width="6" stroke-linecap="round"/>
+  <path d="M128 59c-9 0-15 7-14 16l4 42c1 9 5 14 10 14s9-5 10-14l4-42c1-9-5-16-14-16Z" fill="#F7FAFC"/>
+  <path d="M114 75c-1-9 5-16 14-16s15 7 14 16l-2 19h-24Z" fill="#FF5A5F"/>
+  <path d="M118 103h20l-2 14c-1 9-4 14-8 14s-7-5-8-14Z" fill="#30C4D8"/>
 
-  <!-- A soft belly cut gives the body motion without adding another outline. -->
-  <path d="M66 129c22 25 55 36 87 29 19-4 36-14 48-29-13 10-29 16-47 18-35 4-65-3-88-18Z" fill="#56B5F5" opacity=".9"/>
+  <!-- The line continues below the surface into a single simple hook. -->
+  <path d="M128 131v28a29 29 0 0 0 58 0v-18" fill="none" stroke="#F6C453" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m186 141-13 12" fill="none" stroke="#F6C453" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <!-- Sensor-like eye and minimal face details. -->
-  <circle cx="172" cy="103" r="13" fill="#F8FAFC"/>
-  <circle cx="172" cy="103" r="7" fill="#0F3D6E"/>
-  <circle cx="175" cy="100" r="2.5" fill="#FFFFFF"/>
-  <path d="M190 121c7 4 13 4 20 0" fill="none" stroke="#1559A6" stroke-width="5" stroke-linecap="round"/>
-
-  <!-- Three restrained pixels imply automated digital tracking. -->
-  <rect x="72" y="57" width="9" height="9" rx="2" fill="#2F80ED"/>
-  <rect x="88" y="48" width="7" height="7" rx="2" fill="#56B5F5"/>
-  <rect x="102" y="54" width="5" height="5" rx="1.5" fill="#9ED8FA"/>
+  <!-- Open recognition brackets stay on top of the scene and remain visible. -->
+  <path d="M43 77V51h27M186 51h27v26M43 180v26h27M186 206h27v-26" fill="none" stroke="#59E1F2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

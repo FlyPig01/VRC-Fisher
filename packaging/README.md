@@ -12,9 +12,9 @@
 .\packaging\build.ps1 -Version 0.1.0 -Repository owner/name
 ```
 
-本机需要 .NET SDK、Windows App SDK NuGet 依赖和 Inno Setup 6 `ISCC.exe`。简体中文安装器翻译已作为构建资源固定在 `languages/`，最终用户不下载语言包。脚本每次同时构建 CPU-only 与 DirectML 两套程序源，拒绝把 `.onnx` 放进 Setup，并在 `releases/app-vX.Y.Z/` 输出一个安装器和 SHA-256。安装器、模型 Release、更新与卸载契约见 [安装与发布设计](../docs/installation-and-release.md)。
+本机需要 .NET SDK、Windows App SDK NuGet 依赖和 Inno Setup 6 `ISCC.exe`。19 种非英语安装器翻译已作为构建资源固定在 `languages/`，最终用户不下载语言包。Setup 按 Windows UI 语言从 20 种语言中预选，无匹配时回退 English，并在覆盖安装时保留先前选择；最终安装器语言会写入安装目录，供软件首次启动使用。脚本每次同时构建 CPU-only 与 DirectML 两套程序源，拒绝把 `.onnx` 放进 Setup，并在 `releases/app-vX.Y.Z/` 输出一个安装器和 SHA-256。安装器、模型 Release、更新与卸载契约见 [安装与发布设计](../docs/installation-and-release.md)。
 
-Setup 构建会强制收集根目录 MIT、第三方声明、AGPL-3.0 以及已还原的 Windows App SDK、ONNX Runtime、.NET、CommunityToolkit、Logging 和 Inno Setup 法律文件；缺失任何必需文件时停止构建。
+Setup 构建会强制收集根目录 MIT、第三方声明、AGPL-3.0 以及已还原的 Windows App SDK、ONNX Runtime、.NET、Logging 和 Inno Setup 法律文件；缺失任何必需文件时停止构建。
 
 Inno Setup 当前许可允许用于商业应用。其 6.7.3 编译器会显示 `Non-commercial use only`，但官方 FAQ 说明商业许可证是请求购买而非严格要求；具体记录见根目录 `THIRD_PARTY_NOTICES.md`。更换编译器版本时必须重新审计并复制新版本随附的 `license.txt`。
 

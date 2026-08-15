@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Çalıştır</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Modeller</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Geçerli durum</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Hazırlık</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>VRChat işlemi</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>Model dosyaları</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Yürütme Provider</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Çalıştırmaya hazır değil</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Modelleri kurun ve VRChat'i başlatın.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Modeller sayfasında her iki modeli de kurun ve doğrulayın.</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>VRChat'i başlatın; uygulama ana penceresine otomatik olarak bağlanacaktır.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Otomatik balıkçılığı başlat</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Otomatik balıkçılığı durdur</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>Modeller hazır değil</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Kullanılamıyor</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChat bulunamadı</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Yenile</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>İndir</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Güncelle</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>İndirmeyi iptal et</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Model paketi indirilsin mi?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>En son uyumlu model çifti ve lisans dosyaları FlyPig01/VRC-Fisher adresinden indirilecek.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Model paketi güncellensin mi?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>En son sürüm, kurulu her iki modelin yerini alacak. Uygulama ayarları değişmeyecek.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Kurulu modeller silinsin mi?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Bu, locator.onnx, minigame.onnx ve kurulum kaydını siler. Uygulama ve ayarlar korunur.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: kurulu değil</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: sürüm {1}, {2:N1} MB, doğrulandı</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, manifest doğrulaması başarısız</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Her iki model de gereklidir.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Isırık ve arayüz bulucu</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Minigame bileşen algılayıcısı</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Isırık göstergesini ve minigame'i bulur</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Kontrol bölgesini ve hareketli hedefi bulur</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>VRChat çerçevesinin tamamını tarar.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Bulunan balıkçılık minigame'ini analiz eder.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Amaç</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Kurulum durumu</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Yerel yol</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Yayıncı / kaynak</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Kurulu değil</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Hazır</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Doğrulama başarısız</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Modeller klasörü</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Toplam boyut</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Aç</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>Sürüm {0}, {1:N1} MB, doğrulandı</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, bütünlük denetimi başarısız</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>Model paketi silindi.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Arayüz dili</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Yürütme aygıtı</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Otomatik</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Otomatik önerilir. Oyun takılıyorsa CPU'yu deneyin.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Başlat / durdur kısayol tuşu</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>VRChat ön plandayken veya bu uygulama arka plandayken otomatik balıkçılığı başlatmak veya durdurmak için bu genel kısayol tuşuna basın.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Başlat / durdur kısayol tuşu değiştirilsin mi?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>Kısayol tuşu {0} yerine {1} olarak değiştirilsin mi? Değişiklik anında geçerli olur.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Değişikliği onayla</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Bu kısayol tuşu kullanılamıyor</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} zaten başka bir uygulama tarafından kullanılıyor olabilir. Önceki kısayol tuşu değiştirilmedi.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Otomasyon</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Yerel depolama</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Ekran dışı gösterge yedeklemesi</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Minimum bekleme</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>Isırık göstergesi yakalanan çerçevenin dışında görünebilir. Etkinleştirildiğinde, uygulama hiçbir gösterge algılanmazsa yapılandırılan bekleme süresinden sonra minigame'e girmeyi dener. Varsayılan olarak devre dışıdır.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>Atıştan sonra ölçülür. 5–30 saniye seçin; varsayılan 15 saniyedir.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Etkin</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Devre dışı</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} saniye</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Yazılım dizini</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Hazır</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Uyumlu model sürümleri kontrol ediliyor...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Model güncellemeleri kontrol ediliyor...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Model güncellemeleri şu anda kontrol edilemiyor. Kurulu modeller kullanılabilir durumda.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>Model yayıncısına şu anda ulaşılamıyor. İndirme ve güncellemeler kullanılamıyor.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} bayt</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Modeller indirildi ve doğrulandı.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>İndirme iptal edildi; kurulu modeller değiştirilmedi.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Model indirme başarısız: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Aygıt performansı yetersiz</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>Minigame çıkarımı, 67 ms sınırında bile %65 performans bütçesini aşıyor, bu nedenle otomatik giriş kararsız olabilir.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Boşta</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Atış yapılıyor</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Isırık bekleniyor</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Kancalama</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Minigame</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Sarma</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Toplama</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Toparlanma</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Durduruldu</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat çalışmıyor veya ana penceresi kullanılamıyor</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>VRChat ön planda olmadığı için başlatma engellendi</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>{0} kısayol tuşu kaydedilemedi</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Beklenmeyen başlatma hatası: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>Modeller kurulu değil; tanıma ve otomatik giriş devre dışı</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Otomatik balıkçılığın başlayabilmesi için doğrulanmış her iki ONNX modeli gereklidir</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>Kurulu modeller otomatik giriş için onaylı değil</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Otomatik mod başlatıldı</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Algılama durduruldu: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Otomatik balıkçılık durduruldu</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>Yakalama durduruldu; giriş serbest bırakıldı</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>Yakalanan çerçeve bayat; giriş serbest bırakıldı</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat ön planda değil; geri döndüğünüzde otomatik balıkçılık devam eder</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>Modeller yüklendi, ancak çıktı sözleşmesi doğrulanmadı; yalnızca Provider denetlenebilir</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Çıkarım başarısız: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>bilinmeyen hata</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Bilinmeyen durum</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChat bulunamadı</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>VRChat'i başlatın ve hedef dünyaya girin, ardından başlatma kısayol tuşuna tekrar basın.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat ön planda olmalı</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Önce VRChat penceresine geçin, ardından başlatma kısayol tuşuna tekrar basın. Hiçbir fare girişi gönderilmedi.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>Başlat / durdur kısayol tuşu kullanılamıyor</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} zaten başka bir uygulama tarafından kullanılıyor veya Windows kaydını reddetti. Ayarlar'dan başka bir kısayol tuşu seçin.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Otomatik balıkçılık başlatılamadı</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Beklenmeyen bir hata oluştu ve tüm fare girişi serbest bırakıldı. Ayrıntılar: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>Gerekli modeller eksik veya hasarlı</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Modeller'i açın ve eksiksiz model paketini indirin veya güncelleyin, ardından tekrar deneyin.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Bu model paketi girişi kontrol edemiyor</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Otomatik girişle uyumlu olarak işaretlenmiş bir model sürümü yükleyin.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>Algılama durduruldu</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>Fare girişi serbest bırakıldı. Yeniden başlatmadan önce modelleri ve yürütme aygıtını kontrol edin. Ayrıntılar: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>VRChat yakalaması durduruldu</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Yeni VRChat çerçevesi alınmadı. Fare girişi serbest bırakıldı; oyun penceresinin hâlâ kullanılabilir olduğunu kontrol edin.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>Yakalanan çerçeve çok eski</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>Otomatik giriş duraklatıldı ve serbest bırakıldı. VRChat'in veya bilgisayarın donup donmadığını kontrol edin.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Otomatik giriş duraklatıldı</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat artık ön planda değil. Oyuna dönene kadar hiçbir giriş gönderilmeyecek.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>Modeller bu yazılımla uyumsuz</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>Model çıktı biçimi doğrulanamadı. Eksiksiz uyumlu model paketini yükleyin.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>Algılama başarısız</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>Güvenlik için fare girişi serbest bırakıldı. Başka bir yürütme aygıtı deneyin veya modelleri yeniden yükleyin. Ayrıntılar: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Atış yap</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Isırık doğrulandı</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>Ekran dışı ısırık yedekleme süresi doldu</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>Isırık zaman aşımına uğradı</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Minigame doğrulandı</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>Minigame başlamadı</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Başarı doğrulandı</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>Minigame sona erdi</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>Minigame zaman aşımına uğradı</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Hedef takip ediliyor</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Sar ve topla</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Sonraki döngü başlatılıyor</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>Toplama zaman aşımına uğradı</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Toparlanma tamamlandı</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Hata algılandı</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Durdurma istendi</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>Bekleniyor</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Çalışma modu</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Çalıştırma modu oyun görünümünü temiz tutar. Hata ayıklama modu tanıma kutuları ve güven değerleri ekler.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Çalıştırma modu</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Tanıma kutuları olmadan otomatik balıkçılığı çalıştırır.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Hata ayıklama modu</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>VRChat üzerinde stabilize edilmiş tanıma kutularını ve güven değerlerini gösterir.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Otomatik balıkçılığı durdurmak için {0} tuşuna basın</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Ekran kaplaması kullanılamıyor; otomatik balıkçılık başlatılmadı</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat kaplaması kullanılamıyor</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Otomatik balıkçılık durduruldu ve fare girişi serbest bırakıldı. VRC-Fisher'ı yeniden başlatın ve tekrar deneyin.</value></data>
+</root>

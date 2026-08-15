@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Запуск</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Моделі</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Налаштування</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Поточний стан</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Готовність</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>Процес VRChat</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>Файли моделей</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Провайдер виконання</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Не готовий до запуску</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Встановіть моделі та запустіть VRChat.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Встановіть та перевірте обидві моделі на сторінці «Моделі».</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>Запустіть VRChat; застосунок автоматично підключиться до його головного вікна.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Почати авто-риболовлю</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Зупинити авто-риболовлю</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>Моделі не готові</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Недоступно</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChat не знайдено</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Оновити</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>Завантажити</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Оновити</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Скасувати завантаження</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Завантажити пакет моделей?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>Останню сумісну пару моделей і файли ліцензій буде завантажено з FlyPig01/VRC-Fisher.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Оновити пакет моделей?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>Остання версія замінить обидві встановлені моделі. Налаштування застосунку не зміняться.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Видалити встановлені моделі?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Це видалить locator.onnx, minigame.onnx та запис про встановлення. Застосунок і налаштування збережуться.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: не встановлено</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: версія {1}, {2:N1} МБ, перевірено</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} МБ, перевірка маніфесту не вдалася</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Потрібні обидві моделі.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Локатор укусу та інтерфейсу</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Детектор компонентів міні-гри</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Знаходить індикатор укусу та міні-гру</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Знаходить зону керування та ціль, що рухається</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>Сканує весь кадр VRChat.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Аналізує знайдену міні-гру риболовлі.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Призначення</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Стан встановлення</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Локальний шлях</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Видавець / джерело</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Не встановлено</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Готово</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Перевірка не вдалася</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Папка моделей</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Загальний розмір</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Відкрити</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>Версія {0}, {1:N1} МБ, перевірено</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} МБ, перевірка цілісності не вдалася</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>Пакет моделей видалено.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Мова інтерфейсу</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Пристрій виконання</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Автоматично</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Рекомендовано «Автоматично». Спробуйте CPU, якщо гра гальмує.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Гаряча клавіша запуску / зупинки</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>Натисніть цю глобальну гарячу клавішу, щоб запустити або зупинити авто-риболовлю, коли VRChat на передньому плані або застосунок працює у фоні.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Змінити гарячу клавішу запуску / зупинки?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>Змінити гарячу клавішу з {0} на {1}? Зміна набуде чинності негайно.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Підтвердити зміну</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Цю гарячу клавішу не можна використати</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} можливо вже використовується іншим застосунком. Попередня гаряча клавіша залишилася без змін.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Загальні</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Автоматизація</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Локальне сховище</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Запасний варіант для індикатора за межами екрана</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Мінімальне очікування</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>Індикатор укусу може з'являтися за межами захопленого кадру. Якщо ввімкнено, застосунок намагається увійти в міні-гру після заданого очікування, якщо індикатор не виявлено. Вимкнено за замовчуванням.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>Відраховується після закидання. Оберіть 5–30 секунд; за замовчуванням — 15 секунд.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Увімкнено</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Вимкнено</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} секунд</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Каталог програми</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Перевірка сумісних випусків моделей...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Перевірка оновлень моделей...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Зараз неможливо перевірити оновлення моделей. Встановлені моделі залишаються доступними.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>Зараз неможливо зв'язатися з видавцем моделей. Завантаження та оновлення недоступні.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} байт</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Моделі завантажено та перевірено.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>Завантаження скасовано; встановлені моделі не змінилися.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Не вдалося завантажити моделі: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Продуктивність пристрою недостатня</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>Інференс міні-гри перевищує 65% бюджету продуктивності навіть за ліміту 67 мс, тому автоматичне введення може бути нестабільним.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Очікування</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Закидання</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Очікування укусу</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Підсікання</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Міні-гра</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Витягування</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Збирання</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Відновлення</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Зупинено</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat не запущено або його головне вікно недоступне</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>Запуск заблоковано, оскільки VRChat не на передньому плані</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>Не вдалося зареєструвати гарячу клавішу {0}</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Неочікувана помилка запуску: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>Моделі не встановлено; розпізнавання та автоматичне введення вимкнено</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Для запуску авто-риболовлі потрібні обидві перевірені ONNX-моделі</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>Встановлені моделі не дозволені для автоматичного введення</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Автоматичний режим запущено</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Розпізнавання зупинено: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Авто-риболовлю зупинено</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>Захоплення зупинено; введення вивільнено</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>Кадр захоплення застарілий; введення вивільнено</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat не на передньому плані; авто-риболовля відновиться, коли ви повернетеся</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>Моделі завантажено, але контракт виводу не перевірено; можна перевірити лише постачальника</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Помилка інференсу: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>невідома помилка</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Невідомий стан</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChat не знайдено</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>Запустіть VRChat і увійдіть у потрібний світ, а потім знову натисніть гарячу клавішу запуску.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat має бути на передньому плані</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Спочатку перейдіть у вікно VRChat, а потім знову натисніть гарячу клавішу запуску. Жодні дії мишею не надсилалися.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>Гаряча клавіша запуску / зупинки недоступна</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} вже використовується іншим застосунком або Windows відмовила в реєстрації. Виберіть іншу гарячу клавішу в налаштуваннях.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Не вдалося запустити авто-риболовлю</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Сталася неочікувана помилка, і всі дії мишею було вивільнено. Деталі: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>Потрібні моделі відсутні або пошкоджені</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Відкрийте «Моделі» та завантажте або оновіть повний пакет моделей, а потім спробуйте знову.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Цей пакет моделей не може керувати введенням</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Встановіть випуск моделей, позначений як сумісний з автоматичним введенням.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>Розпізнавання зупинено</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>Дії мишею вивільнено. Перевірте моделі та пристрій виконання перед повторним запуском. Деталі: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>Захоплення VRChat зупинено</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Не отримано нових кадрів VRChat. Дії мишею вивільнено; перевірте, чи вікно гри все ще доступне.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>Захоплений кадр застарілий</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>Автоматичне введення призупинено та вивільнено. Перевірте, чи VRChat або комп'ютер не завис чи не перевантажений.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Автоматичне введення призупинено</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat більше не на передньому плані. Введення не надсилатиметься, доки ви не повернетеся до гри.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>Моделі несумісні з цим програмним забезпеченням</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>Не вдалося перевірити формат виводу моделей. Встановіть повний сумісний пакет моделей.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>Помилка розпізнавання</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>Дії мишею вивільнено для безпеки. Спробуйте інший пристрій виконання або перевстановіть моделі. Деталі: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Закинути</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Укус підтверджено</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>Досягнуто затримки запасного варіанта для укусу за межами екрана</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>Час очікування укусу минув</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Міні-гру підтверджено</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>Міні-гра не почалася</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Успіх підтверджено</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>Міні-гру завершено</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>Час міні-гри минув</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Слідкування за ціллю</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Витягнути та зібрати</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Початок наступного циклу</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>Час збирання минув</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Відновлення завершено</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Виявлено невдачу</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Запитано зупинку</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>Очікування</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Робочий режим</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Режим запуску підтримує чистоту ігрового вигляду. Режим налагодження додає рамки розпізнавання та значення впевненості.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Режим запуску</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Запускає автоматичну риболовлю без рамок розпізнавання.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Режим налагодження</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Показує стабілізовані рамки розпізнавання та значення впевненості поверх VRChat.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Натисніть {0}, щоб зупинити автоматичну риболовлю</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Екранне накладання недоступне; автоматичну риболовлю не запущено</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Накладання VRChat недоступне</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Автоматичну риболовлю зупинено, і введення миші звільнено. Перезапустіть VRC-Fisher і спробуйте ще раз.</value></data>
+</root>

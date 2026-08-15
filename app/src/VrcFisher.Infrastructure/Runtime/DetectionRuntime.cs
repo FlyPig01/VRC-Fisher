@@ -27,7 +27,6 @@ public sealed class DetectionRuntime(
     private CancellationTokenSource? _runCancellation;
     private Task? _runTask;
     private string _provider = "Unavailable";
-    private bool _automatic;
     private long _captured;
     private long _lastDroppedForSample;
     private DateTimeOffset _lastInferenceAt = DateTimeOffset.MinValue;
@@ -35,8 +34,9 @@ public sealed class DetectionRuntime(
     public string Provider => _provider;
     public bool IsReady => modelCatalog.IsReady;
     public event EventHandler<DetectionRuntimeMetrics>? MetricsChanged;
+    public event EventHandler<DetectionVisualizationFrame>? VisualizationChanged;
 
-    public async Task StartAsync(bool automatic, CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         if (!modelCatalog.IsReady)
             throw new InvalidOperationException("模型未安装或未通过校验");
@@ -47,7 +47,9 @@ public sealed class DetectionRuntime(
             if (_runTask is not null) return;
             _stateMachine = new FishingStateMachine(StateMachineOptions.Default with
             {
-                BiteFallback = TimeSpan.FromSeconds(options.BiteFallbackSeconds)
+                BiteFallback = options.BiteFallbackEnabled
+                    ? TimeSpan.FromSeconds(options.BiteFallbackSeconds)
+                    : TimeSpan.Zero
             });
             _stateMachine.Reset(DateTimeOffset.UtcNow);
             _detector = new OnnxRuntimeDetector(
@@ -55,7 +57,7 @@ public sealed class DetectionRuntime(
                 options.Device,
                 (float)options.ConfidenceThreshold,
                 (float)options.IoUThreshold);
-            if (automatic && (!modelCatalog.AutomaticAllowed || !_detector.CanProduceDecisions))
+            if (!modelCatalog.AutomaticAllowed || !_detector.CanProduceDecisions)
             {
                 _detector.Dispose();
                 _detector = null;
@@ -64,7 +66,6 @@ public sealed class DetectionRuntime(
             _provider = _detector.Provider;
             _performance = new InferencePerformanceScheduler(options, _provider);
             _profileIdentity = null;
-            _automatic = automatic;
             _captured = 0;
             _lastDroppedForSample = _frames.DroppedCount;
             _lastInferenceAt = DateTimeOffset.MinValue;
@@ -87,7 +88,7 @@ public sealed class DetectionRuntime(
             _provider = "Unavailable";
             throw;
         }
-        logger.LogInformation("detection runtime started automatic={Automatic} provider={Provider}", automatic, _provider);
+        logger.LogInformation("automatic detection runtime started provider={Provider}", _provider);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
@@ -107,7 +108,6 @@ public sealed class DetectionRuntime(
             detector = _detector;
             _detector = null;
             _provider = "Unavailable";
-            _automatic = false;
         }
         await capture.StopAsync(cancellationToken);
         if (task is not null)
@@ -178,7 +178,7 @@ public sealed class DetectionRuntime(
                     Publish(FishingPhase.Recovery, RuntimeMessageCode.FrameStale);
                     continue;
                 }
-                if (_automatic && !inputController.IsTargetForeground)
+                if (!inputController.IsTargetForeground)
                 {
                     inputController.ReleaseAll();
                     _stateMachine.Reset(DateTimeOffset.UtcNow);
@@ -197,8 +197,13 @@ public sealed class DetectionRuntime(
                 }
                 _lastInferenceAt = frame.CapturedAt;
                 var frameAge = DateTimeOffset.UtcNow - frame.CapturedAt;
+                var currentOptions = optionsProvider();
                 var inferenceStarted = Stopwatch.GetTimestamp();
-                var detection = detector.Detect(frame, phase, performance.PanelRecheckInterval);
+                var detection = detector.Detect(
+                    frame,
+                    phase,
+                    performance.PanelRecheckInterval,
+                    currentOptions.WorkMode == ApplicationMode.Debug);
                 var inferenceElapsed = Stopwatch.GetElapsedTime(inferenceStarted);
                 var dropped = _frames.DroppedCount;
                 performance.Record(
@@ -213,8 +218,13 @@ public sealed class DetectionRuntime(
                     Publish(FishingPhase.Stopped, RuntimeMessageCode.OutputContractUnverified);
                     continue;
                 }
+                if (detection.Visualization is not null)
+                    PublishVisualization(detection.Visualization);
+                _stateMachine.UpdateBiteFallback(currentOptions.BiteFallbackEnabled
+                    ? TimeSpan.FromSeconds(currentOptions.BiteFallbackSeconds)
+                    : TimeSpan.Zero);
                 var decision = _stateMachine.Step(detection.Observation, DateTimeOffset.UtcNow);
-                if (_automatic) Apply(decision.Action);
+                Apply(decision.Action);
                 Publish(decision.Phase, RuntimeMessageCode.StateMachineDecision, decision.Reason);
             }
             catch (Exception error)
@@ -269,5 +279,17 @@ public sealed class DetectionRuntime(
             _performance?.Snapshot ?? InferencePerformanceSnapshot.Default,
             new RuntimeStatus(code, detail),
             DateTimeOffset.UtcNow));
+    }
+
+    private void PublishVisualization(DetectionVisualizationFrame frame)
+    {
+        try
+        {
+            VisualizationChanged?.Invoke(this, frame);
+        }
+        catch (Exception error)
+        {
+            logger.LogWarning(error, "debug visualization subscriber failed");
+        }
     }
 }

@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Starten</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Modellen</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Huidige status</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Gereedheid</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>VRChat-proces</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>Modelbestanden</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Uitvoeringsprovider</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Niet klaar om te starten</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Installeer de modellen en start VRChat.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Installeer en verifieer beide modellen op de pagina Modellen.</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>Start VRChat; de app maakt automatisch verbinding met het hoofdvenster.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Automatisch vissen starten</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Automatisch vissen stoppen</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>Modellen niet gereed</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Niet beschikbaar</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChat niet gevonden</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Vernieuwen</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>Downloaden</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Bijwerken</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Download annuleren</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Sluiten</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Modelpakket downloaden?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>Het nieuwste compatibele modelpaar en licentiebestanden worden gedownload van FlyPig01/VRC-Fisher.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Modelpakket bijwerken?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>De nieuwste versie vervangt beide geïnstalleerde modellen. Applicatie-instellingen blijven ongewijzigd.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Geïnstalleerde modellen verwijderen?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Dit verwijdert locator.onnx, minigame.onnx en de installatieregistratie. De applicatie en instellingen blijven behouden.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: niet geïnstalleerd</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: versie {1}, {2:N1} MB, geverifieerd</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, manifestverificatie mislukt</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Beide modellen zijn vereist.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Bite- en UI-locator</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Minigame-componentdetector</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Vindt de beetindicator en het minigame</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Vindt de controlezone en het bewegende doel</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>Scant het volledige VRChat-frame.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Analyseert het gelokaliseerde visminigame.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Doel</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Installatiestatus</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Lokaal pad</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Uitgever / bron</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Niet geïnstalleerd</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Gereed</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Verificatie mislukt</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Modelmap</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Totale grootte</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Openen</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>Versie {0}, {1:N1} MB, geverifieerd</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, integriteitscontrole mislukt</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>Het modelpakket is verwijderd.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Interface taal</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Uitvoeringsapparaat</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Automatisch wordt aanbevolen. Probeer CPU als het spel hapert.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Sneltoets starten/stoppen</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>Druk op deze globale sneltoets om automatisch vissen te starten of stoppen terwijl VRChat op de voorgrond staat of deze applicatie op de achtergrond staat.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Sneltoets starten/stoppen wijzigen?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>Sneltoets wijzigen van {0} naar {1}? De wijziging is onmiddellijk van kracht.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Wijziging bevestigen</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Deze sneltoets kan niet worden gebruikt</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} is mogelijk al in gebruik door een andere applicatie. De vorige sneltoets blijft ongewijzigd.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Algemeen</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Automatisering</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Lokale opslag</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Vervanging indicator buiten beeld</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Minimale wachttijd</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>De beetindicator kan buiten het vastgelegde frame verschijnen. Als dit is ingeschakeld, probeert de applicatie na de geconfigureerde wachttijd het minigame te openen als er geen indicator is gedetecteerd. Standaard uitgeschakeld.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>Gemeten na het werpen. Kies 5–30 seconden; de standaard is 15 seconden.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Ingeschakeld</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Uitgeschakeld</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} seconden</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Softwaremap</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Gereed</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Compatibele modelreleases controleren...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Controleren op modelupdates...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Modelupdates kunnen nu niet worden gecontroleerd. Geïnstalleerde modellen blijven beschikbaar.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>De modeluitgever is nu niet bereikbaar. Downloads en updates zijn niet beschikbaar.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} bytes</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Modellen gedownload en geverifieerd.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>Download geannuleerd; geïnstalleerde modellen zijn niet gewijzigd.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Modeldownload mislukt: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Apparaatprestaties zijn onvoldoende</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>Minigame-inferentie overschrijdt het prestatielimiet van 65% zelfs bij de limiet van 67 ms, dus automatische invoer kan instabiel zijn.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Inactief</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Werpen</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Wachten op beet</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Haken</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Minigame</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Binnenhalen</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Verzamelen</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Herstel</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Gestopt</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat draait niet of het hoofdvenster is niet beschikbaar</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>Starten is geblokkeerd omdat VRChat niet op de voorgrond staat</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>De {0} sneltoets kon niet worden geregistreerd</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Onverwachte opstartfout: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>Modellen zijn niet geïnstalleerd; herkenning en automatische invoer zijn uitgeschakeld</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Beide geverifieerde ONNX-modellen zijn vereist voordat automatisch vissen kan starten</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>De geïnstalleerde modellen zijn niet goedgekeurd voor automatische invoer</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Automatische modus gestart</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Detectie gestopt: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Automatisch vissen gestopt</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>Capture gestopt; invoer is vrijgegeven</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>Captureframe is verouderd; invoer is vrijgegeven</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat staat niet op de voorgrond; automatisch vissen wordt hervat wanneer u terugkeert</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>Modellen zijn geladen, maar het uitvoercontract is niet geverifieerd; alleen de Provider kan worden gecontroleerd</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Inferentie mislukt: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>onbekende fout</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Onbekende status</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChat niet gevonden</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>Start VRChat en ga naar de doelwereld, druk daarna opnieuw op de startsneltoets.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat moet op de voorgrond staan</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Schakel eerst naar het VRChat-venster en druk daarna opnieuw op de startsneltoets. Er is geen muisinvoer verzonden.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>De sneltoets starten/stoppen is niet beschikbaar</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} is al in gebruik door een andere applicatie of Windows heeft de registratie geweigerd. Kies een andere sneltoets in Instellingen.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Automatisch vissen kon niet starten</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Er is een onverwachte fout opgetreden en alle muisinvoer is vrijgegeven. Details: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>Vereiste modellen ontbreken of zijn beschadigd</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Open Modellen en download of werk het volledige modelpakket bij, en probeer het opnieuw.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Dit modelpakket kan geen invoer aansturen</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Installeer een modelrelease die is gemarkeerd als compatibel met automatische invoer.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>Herkenning gestopt</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>Muisinvoer is vrijgegeven. Controleer de modellen en het uitvoeringsapparaat voordat u opnieuw start. Details: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>VRChat-capture gestopt</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Er zijn geen nieuwe VRChat-frames ontvangen. Muisinvoer is vrijgegeven; controleer of het gamevenster nog beschikbaar is.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>Het vastgelegde frame is te oud</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>Automatische invoer is gepauzeerd en vrijgegeven. Controleer of VRChat of de computer is vastgelopen of overbelast.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Automatische invoer is gepauzeerd</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat staat niet meer op de voorgrond. Er wordt geen invoer verzonden totdat u terugkeert naar het spel.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>De modellen zijn niet compatibel met deze software</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>Het uitvoerformaat van het model kon niet worden geverifieerd. Installeer het volledige compatibele modelpakket.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>Herkenning mislukt</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>Muisinvoer is om veiligheidsredenen vrijgegeven. Probeer een ander uitvoeringsapparaat of installeer de modellen opnieuw. Details: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Werpen</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Beet bevestigd</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>Vervangingstijd voor indicator buiten beeld bereikt</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>Beet time-out</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Minigame bevestigd</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>Minigame niet gestart</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Succes bevestigd</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>Minigame beëindigd</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>Minigame time-out</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Doel volgen</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Binnenhalen en verzamelen</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Volgende cyclus starten</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>Verzamelen time-out</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Herstel voltooid</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Fout gedetecteerd</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Stop aangevraagd</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>Wachten</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Werkmodus</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Uitvoermodus houdt het spelbeeld schoon. Foutopsporingsmodus voegt herkenningskaders en betrouwbaarheidswaarden toe.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Uitvoermodus</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Automatisch vissen zonder herkenningskaders.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Foutopsporingsmodus</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Toon gestabiliseerde herkenningskaders en betrouwbaarheidswaarden over VRChat.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Druk op {0} om automatisch vissen te stoppen</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>De schermoverlay is niet beschikbaar; automatisch vissen is niet gestart</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>De VRChat-overlay is niet beschikbaar</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automatisch vissen is gestopt en de muisinvoer is vrijgegeven. Start VRC-Fisher opnieuw en probeer het opnieuw.</value></data>
+</root>

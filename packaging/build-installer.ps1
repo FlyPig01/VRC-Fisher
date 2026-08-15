@@ -155,15 +155,12 @@ $NuGetPackages = if ($env:NUGET_PACKAGES) {
 }
 $LegalRoot = Join-Path $StageRoot "licenses\third-party"
 $WindowsAppSdkVersion = Get-PackageVersion $DesktopProject "Microsoft.WindowsAppSDK"
-$ToolkitVersion = Get-PackageVersion $DesktopProject "CommunityToolkit.Mvvm"
 $LoggingVersion = Get-PackageVersion $DesktopProject "Microsoft.Extensions.Logging"
 $OnnxRuntimeVersion = Get-PackageVersion $InfrastructureProject "Microsoft.ML.OnnxRuntime"
 $OnnxRuntimeDirectMlVersion = Get-PackageVersion $InfrastructureProject "Microsoft.ML.OnnxRuntime.DirectML"
 $LegalFiles = @(
     @("microsoft.windowsappsdk\$WindowsAppSdkVersion\license.txt", "WindowsAppSDK-LICENSE.txt"),
     @("microsoft.windowsappsdk\$WindowsAppSdkVersion\NOTICE.txt", "WindowsAppSDK-NOTICE.txt"),
-    @("communitytoolkit.mvvm\$ToolkitVersion\License.md", "CommunityToolkit.Mvvm-LICENSE.md"),
-    @("communitytoolkit.mvvm\$ToolkitVersion\ThirdPartyNotices.txt", "CommunityToolkit.Mvvm-NOTICES.txt"),
     @("microsoft.ml.onnxruntime\$OnnxRuntimeVersion\LICENSE", "ONNXRuntime-LICENSE.txt"),
     @("microsoft.ml.onnxruntime\$OnnxRuntimeVersion\ThirdPartyNotices.txt", "ONNXRuntime-NOTICES.txt"),
     @("microsoft.ml.onnxruntime.directml\$OnnxRuntimeDirectMlVersion\LICENSE", "ONNXRuntime.DirectML-LICENSE.txt"),

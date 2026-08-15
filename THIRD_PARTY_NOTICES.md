@@ -14,7 +14,6 @@ binary output again whenever a dependency is changed.
 | Component | Version | License | Source |
 |---|---:|---|---|
 | Microsoft Windows App SDK NuGet distribution | 1.8.260710003 | Microsoft Software License Terms plus bundled notices; upstream source repository is MIT | https://github.com/microsoft/WindowsAppSDK |
-| CommunityToolkit.Mvvm | 8.4.2 | MIT | https://github.com/CommunityToolkit/dotnet |
 | Microsoft.Extensions.Logging | 10.0.0 | MIT | https://github.com/dotnet/runtime |
 | Microsoft.ML.OnnxRuntime | 1.24.4 | MIT | https://github.com/microsoft/onnxruntime |
 | Microsoft.ML.OnnxRuntime.DirectML | 1.24.4 | MIT | https://github.com/microsoft/onnxruntime |

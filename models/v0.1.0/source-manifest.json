@@ -26,9 +26,9 @@
                       "kind":  "runtime"
                   },
                   {
-                      "sha256":  "afc2334dffa3515b73d684d9ad1a8d84ac7e4387da478823f42bfa21bc267878",
+                      "sha256":  "8ce1671e14c825c78b7f3cdd95ecc4ab101c7382c58e81b5d17ad5f5f99b3790",
                       "filename":  "MODEL_CARD.md",
-                      "size":  5115,
+                      "size":  5131,
                       "kind":  "documentation"
                   },
                   {
@@ -40,6 +40,6 @@
               ],
     "schema_version":  1,
     "runtime_api":  1,
-    "automatic_allowed":  false,
+    "automatic_allowed":  true,
     "license":  "AGPL-3.0"
 }

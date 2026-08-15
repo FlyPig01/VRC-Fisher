@@ -1,8 +1,8 @@
 # VRC-Fisher
 
-VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序捕获用户选择的完整显示器，识别咬钩感叹号和小游戏 UI，并通过鼠标控制让移动目标保持在捕获区域内。
+VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序只查找并捕获 `VRChat.exe` 的主窗口，识别咬钩感叹号和小游戏 UI，并通过鼠标控制让移动目标保持在捕获区域内。
 
-> 当前仍是开发中的 MVP。C#/.NET 10/WinUI 3 软件已接入完整显示器捕获、四类双 ONNX 推理、状态机、CPU/DirectML、模型管理、受限自动调频和屏外感叹号兜底设置。当前 round3 `best.pt` 已固化为 `models/v0.1.0/` 的可发布模型，并导出为静态 FP32 ONNX；完整审核视频、现场仅观察、实时性能和自动钓鱼仍需人工验收，模型清单暂不允许自动输入。
+> 当前仍是开发中的 MVP。C#/.NET 10/WinUI 3 软件已接入 VRChat 进程限定捕获、四类双 ONNX 推理、状态机、CPU/DirectML、模型管理、自动调频和屏外感叹号兜底设置。当前 round3 `best.pt` 已固化为 `models/v0.1.0/` 的可发布模型，并导出为静态 FP32 ONNX；模型清单已允许自动输入，完整实机自动钓鱼成功率仍需人工验收。
 
 ## 从这里开始
 
@@ -14,15 +14,15 @@ VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序�
 
 ## 发布版安装
 
-正式 Release 发布后，只需下载一个 `VRC-Fisher-Setup-x64.exe`。同一个安装向导中选择语言、安装目录、CPU-only 或 DirectML，以及是否立即下载模型。软件和全部运行数据位于所选安装目录；不要求用户预装 Python、.NET 或 CUDA。
+正式 Release 发布后，只需下载一个 `VRC-Fisher-Setup-x64.exe`。安装器按 Windows 界面语言从 20 种内置语言中预选；没有匹配语言时使用 English，用户仍可手动改选。安装器最终选定的语言也是软件首次启动的界面语言。同一个安装向导中继续选择安装目录、CPU-only 或 DirectML，以及是否立即下载模型。软件和全部运行数据位于所选安装目录；不要求用户预装 Python、.NET 或 CUDA。
 
 ## 快速使用
 
 1. 启动 VRChat 并进入受支持的钓鱼世界。
 2. 打开 VRC-Fisher，确认两个模型已安装并通过校验。
-3. 选择显示 VRChat 的完整显示器和运行设备；识别频率默认保持“自动”。
-4. 按目标世界设置“屏外感叹号兜底等待时间”，再运行“仅观察”确认状态识别正确。
-5. 再明确启动“自动运行”；任何异常立即按 `F8` 停止。
+3. 软件找到 VRChat 主窗口后选择运行设备和工作模式；识别频率始终自动调节。运行模式不显示识别框，调试模式显示经过防抖的识别框和置信度数字。
+4. 目标世界的感叹号可能在画面外时，启用“屏外感叹号兜底”并设置 `5–30` 秒等待时间；该功能默认禁用，等待时间默认 `15` 秒。
+5. 在 VRChat 中按启动/停止热键开始自动钓鱼，再按一次停止并释放左键。默认热键为 `F8`，可在设置中确认更改；运行期间 VRChat 右上角始终显示当前停止热键。
 
 当前尚未上传 GitHub Release；本地 `releases/app-v0.1.0/` 与 `releases/models-v0.1.0/` 是供维护者审核的发行物。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
 
@@ -83,7 +83,7 @@ uv run --offline vrc-preflight --task all
 | `releases/` | 本地发布产物，不提交 Git |
 | `docs/` | 全部开发者设计文档 |
 
-正式产品从第一版开始使用 C#、.NET 10、WinUI 3 和 ONNX Runtime。Python 与 CUDA 只用于离线数据处理和开发机训练，不进入用户安装包。简体中文与 English 资源来自仓库中的 `.resw`，构建为 `VrcFisher.pri` 后随本体安装，不从 GitHub 单独下载语言包。每个已验收模型版本的 `.pt` 和 ONNX 都提交到 `models/vX.Y.Z/`，与源代码一起公开；GitHub Releases 只是软件按需下载经过校验的 ONNX 的渠道。用户端当前只发布 CPU-only 与 DirectML，不发布 CUDA 组件。
+正式产品从第一版开始使用 C#、.NET 10、WinUI 3 和 ONNX Runtime。Python 与 CUDA 只用于离线数据处理和开发机训练，不进入用户安装包。20 种界面语言资源来自仓库中的 `.resw`，构建为 `VrcFisher.pri` 后随本体安装，不从 GitHub 单独下载语言包。每个已验收模型版本的 `.pt` 和 ONNX 都提交到 `models/vX.Y.Z/`，与源代码一起公开；GitHub Releases 只是软件按需下载经过校验的 ONNX 的渠道。用户端当前只发布 CPU-only 与 DirectML，不发布 CUDA 组件。
 
 ## 许可证
 
@@ -93,4 +93,4 @@ VRC-Fisher 是多许可证项目：原创应用、数据处理和通用工具代
 
 ## 当前阻塞
 
-`models/v0.1.0/` 已包含当前最好的 round3 `.pt` 和 ONNX，并由本地模型发布脚本生成对应清单。GitHub Release 仍需维护者审核本地发行物后再创建；即使发布模型，真实 VRChat 的“仅观察”、CPU/DirectML 实时性能和输入安全验收仍是独立门槛，当前清单不会自动启用输入。
+`models/v0.1.0/` 已包含当前最好的 round3 `.pt` 和 ONNX，并由本地模型发布脚本生成对应清单。GitHub Release 仍需维护者审核本地发行物后再创建；真实 VRChat 的 CPU/DirectML 资源占用、识别连续性和自动钓鱼成功率仍需实机验收。

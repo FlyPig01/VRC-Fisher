@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Esegui</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Modelli</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Stato attuale</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Prontezza</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>Processo VRChat</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>File dei modelli</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Provider di esecuzione</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Non pronto per l'esecuzione</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Installa i modelli e avvia VRChat.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Installa e verifica entrambi i modelli nella pagina Modelli.</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>Avvia VRChat; l'app si connetterà automaticamente alla sua finestra principale.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Avvia pesca automatica</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Ferma pesca automatica</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>Modelli non pronti</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Non disponibile</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChat non trovato</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Aggiorna</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>Scarica</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Aggiorna</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Annulla download</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Chiudi</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Scaricare il pacchetto modelli?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>L'ultima coppia di modelli compatibile e i file di licenza verranno scaricati da FlyPig01/VRC-Fisher.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Aggiornare il pacchetto modelli?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>L'ultima versione sostituirà entrambi i modelli installati. Le impostazioni dell'applicazione non cambieranno.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Eliminare i modelli installati?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Questa operazione elimina locator.onnx, minigame.onnx e il record di installazione. L'applicazione e le impostazioni vengono mantenute.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: non installato</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: versione {1}, {2:N1} MB, verificato</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, verifica del manifest non riuscita</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Sono richiesti entrambi i modelli.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Localizzatore di abboccata e UI</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Rilevatore componenti minigioco</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Trova l'indicatore di abboccata e il minigioco</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Trova la zona di controllo e il bersaglio mobile</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>Scansiona l'intero frame di VRChat.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Analizza il minigioco di pesca individuato.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Scopo</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Stato di installazione</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Percorso locale</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Editore / sorgente</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Non installato</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Pronto</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Verifica non riuscita</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Cartella modelli</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Dimensione totale</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Apri</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>Versione {0}, {1:N1} MB, verificato</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, controllo di integrità non riuscito</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>Il pacchetto modelli è stato eliminato.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Lingua dell'interfaccia</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Dispositivo di esecuzione</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Automatico</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Consigliato Automatico. Prova CPU se il gioco rallenta.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Tasto rapido avvia/ferma</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>Premi questo tasto rapido globale per avviare o fermare la pesca automatica mentre VRChat è in primo piano o questa applicazione è in background.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Cambiare il tasto rapido avvia/ferma?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>Cambiare il tasto rapido da {0} a {1}? La modifica ha effetto immediato.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Conferma modifica</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Questo tasto rapido non può essere utilizzato</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} potrebbe essere già utilizzato da un'altra applicazione. Il tasto rapido precedente rimane invariato.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Generale</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Automazione</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Archiviazione locale</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Fallback indicatore fuori schermo</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Attesa minima</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>L'indicatore di abboccata può apparire fuori dal frame catturato. Quando abilitato, l'applicazione tenta di entrare nel minigioco dopo l'attesa configurata se non viene rilevato alcun indicatore. Disabilitato per impostazione predefinita.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>Misurato dopo il lancio. Scegli 5-30 secondi; il default è 15 secondi.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Abilitato</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabilitato</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} secondi</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Directory software</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Pronto</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Controllo versioni modelli compatibili...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Controllo aggiornamenti modelli...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Impossibile controllare gli aggiornamenti dei modelli in questo momento. I modelli installati rimangono disponibili.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>Impossibile raggiungere l'editore dei modelli in questo momento. Download e aggiornamenti non disponibili.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} byte</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Modelli scaricati e verificati.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>Download annullato; i modelli installati non sono stati modificati.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Download modelli non riuscito: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Prestazioni del dispositivo insufficienti</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>L'inferenza del minigioco supera il budget di prestazioni del 65% anche con il limite di 67 ms, quindi l'input automatico potrebbe essere instabile.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Inattivo</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Lancio</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Attesa abboccata</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Aggancio</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Minigioco</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Avvolgimento</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Raccolta</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Recupero</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Fermato</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat non è in esecuzione o la sua finestra principale non è disponibile</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>L'avvio è stato bloccato perché VRChat non è in primo piano</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>Il tasto rapido {0} non può essere registrato</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Errore imprevisto all'avvio: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>I modelli non sono installati; riconoscimento e input automatico disabilitati</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Entrambi i modelli ONNX verificati sono richiesti prima di avviare la pesca automatica</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>I modelli installati non sono approvati per l'input automatico</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Modalità automatica avviata</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Rilevamento interrotto: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Pesca automatica fermata</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>Cattura interrotta; input rilasciato</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>Frame di cattura obsoleto; input rilasciato</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat non è in primo piano; la pesca automatica riprenderà al ritorno</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>Modelli caricati, ma il contratto di output non è verificato; è possibile controllare solo il Provider</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Inferenza non riuscita: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>errore sconosciuto</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Stato sconosciuto</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChat non trovato</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>Avvia VRChat e entra nel mondo desiderato, quindi premi di nuovo il tasto rapido di avvio.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat deve essere in primo piano</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Prima passa alla finestra di VRChat, quindi premi di nuovo il tasto rapido di avvio. Nessun input del mouse è stato inviato.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>Il tasto rapido avvia/ferma non è disponibile</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} è già utilizzato da un'altra applicazione o Windows ha rifiutato la registrazione. Scegli un altro tasto rapido in Impostazioni.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Impossibile avviare la pesca automatica</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Si è verificato un errore imprevisto e tutto l'input del mouse è stato rilasciato. Dettagli: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>Modelli richiesti mancanti o danneggiati</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Apri Modelli e scarica o aggiorna il pacchetto modelli completo, quindi riprova.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Questo pacchetto modelli non può controllare l'input</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Installa una versione del modello indicata come compatibile con l'input automatico.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>Rilevamento interrotto</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>L'input del mouse è stato rilasciato. Controlla i modelli e il dispositivo di esecuzione prima di riavviare. Dettagli: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>Cattura VRChat interrotta</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Non sono stati ricevuti nuovi frame da VRChat. L'input del mouse è stato rilasciato; controlla che la finestra del gioco sia ancora disponibile.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>Il frame catturato è troppo vecchio</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>L'input automatico è stato messo in pausa e rilasciato. Controlla se VRChat o il computer è bloccato o sovraccarico.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Input automatico in pausa</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat non è più in primo piano. Nessun input verrà inviato finché non torni al gioco.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>I modelli sono incompatibili con questo software</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>Impossibile verificare il formato di output dei modelli. Installa il pacchetto modelli compatibile completo.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>Riconoscimento non riuscito</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>L'input del mouse è stato rilasciato per sicurezza. Prova un altro dispositivo di esecuzione o reinstalla i modelli. Dettagli: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Lancia</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Abboccata confermata</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>Raggiunto il ritardo di fallback dell'abboccata fuori schermo</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>Tempo di attesa abboccata scaduto</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Minigioco confermato</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>Il minigioco non è iniziato</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Successo confermato</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>Minigioco terminato</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>Tempo del minigioco scaduto</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Segui bersaglio</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Recupera e raccogli</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Avvio ciclo successivo</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>Tempo di raccolta scaduto</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Recupero completato</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Rilevato errore</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Fermata richiesta</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>In attesa</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Modalità di lavoro</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>La modalità di esecuzione mantiene pulita la visuale di gioco. La modalità di debug aggiunge riquadri di riconoscimento e valori di confidenza.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Modalità di esecuzione</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Esegue la pesca automatica senza riquadri di riconoscimento.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Modalità di debug</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Mostra riquadri di riconoscimento stabilizzati e valori di confidenza sopra VRChat.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Premi {0} per fermare la pesca automatica</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>L'overlay dello schermo non è disponibile; la pesca automatica non è stata avviata</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>L'overlay di VRChat non è disponibile</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>La pesca automatica è stata interrotta e l'input del mouse è stato rilasciato. Riavvia VRC-Fisher e riprova.</value></data>
+</root>

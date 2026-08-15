@@ -2,7 +2,7 @@
 
 ## 1. 边界
 
-正式软件在 Windows 上捕获用户选择的完整显示器，识别以下流程并控制鼠标：
+正式软件在 Windows 上按进程名精确查找 `VRChat.exe`，并通过主窗口句柄创建 Windows Graphics Capture 捕获项。软件不提供显示器、任意窗口或其他进程选择，识别以下流程并控制鼠标：
 
 ```text
 左键抛竿
@@ -29,6 +29,11 @@ app/
     VrcFisher.Application/
     VrcFisher.Infrastructure/
     VrcFisher.Desktop/
+      Capture/
+      Contracts/
+      Localization/
+      Pages/
+      Ui/
   tests/
     VrcFisher.Core.Tests/
     VrcFisher.Application.Tests/
@@ -40,23 +45,25 @@ app/
 | `Core` | 状态机、检测结果、控制决策、时间与输入接口；不依赖 WinUI、ONNX 或 Win32 |
 | `Application` | 运行用例、生命周期、配置验证、状态快照和安全停机 |
 | `Infrastructure` | 屏幕捕获、ONNX、模型下载、文件存储、窗口检测与鼠标输入 |
-| `Desktop` | WinUI 3 页面、ViewModel、导航、本地化和依赖注入入口 |
+| `Desktop` | WinUI 3 页面、固定导航壳、本地化、Windows 捕获适配和依赖组装入口 |
 
 依赖方向固定为：
 
 ```text
-Desktop ---------> Application ---------> Core
-                         ^
-                         |
-Infrastructure ----------+
+Desktop -------------------------------> Infrastructure
+   |                                           |
+   +---------------> Application <------------+
+                          |
+                          v
+                         Core
 ```
 
-ViewModel 不直接调用 ONNX Runtime、GitHub API 或 Win32。后台服务只向 UI 发布不可变、低频的运行快照。
+`Desktop/Pages` 只依赖 `IDesktopPageContext`、Application/Core 契约和共享 UI，不反查窗口，也不直接调用 ONNX Runtime、GitHub API、Windows Graphics Capture 或 Win32。`MainWindow` 只负责固定导航、页面创建和授权上下文；`App` 是唯一依赖组装入口。后台服务只向 UI 发布不可变、低频的运行快照。
 
 ## 3. 实时管线
 
 ```text
-Windows Graphics Capture（完整显示器）
+Windows Graphics Capture（VRChat 主窗口）
   -> 只保留最新帧的有界缓冲
   -> locator.onnx（960 x 960）
      -> bite_indicator：确认咬钩
@@ -69,7 +76,7 @@ Windows Graphics Capture（完整显示器）
   -> WinUI 3（5-10 Hz）
 ```
 
-`locator.onnx` 在完整屏幕上解决 UI 移动和缩放，只识别 `bite_indicator` 与 `minigame_panel`。`minigame.onnx` 在局部原始细节上只识别 `catch_zone` 与 `moving_target`。鱼、齿轮或其他需要追踪的物件都归为 `moving_target`；不再识别成功、失败、轨道或进度条。
+`locator.onnx` 在完整 VRChat 捕获画面上解决 UI 移动和缩放，只识别 `bite_indicator` 与 `minigame_panel`。`minigame.onnx` 在局部原始细节上只识别 `catch_zone` 与 `moving_target`。鱼、齿轮或其他需要追踪的物件都归为 `moving_target`；不再识别成功、失败、轨道或进度条。
 
 调度基线：
 
@@ -77,12 +84,12 @@ Windows Graphics Capture（完整显示器）
 - 首次连续确认 `minigame_panel` 后锁定本轮裁剪框，不让 locator 框的逐帧抖动改变 minigame 输入；
 - 小游戏期间 minigame 对固定裁剪区域运行 20-30 Hz，locator 降为 2-5 Hz，只确认面板是否消失或位置是否明显异常；
 - `catch_zone` 或 `moving_target` 持续丢失时立即释放鼠标，提高 locator 频率并重新定位；
-- 小游戏缓存面板丢失时按 locator 间隔重新定位，不继续用小游戏高频率运行完整屏幕 locator；
+- 小游戏缓存面板丢失时按 locator 间隔重新定位，不继续用小游戏高频率运行完整捕获画面的 locator；
 - 每轮小游戏结束后丢弃锁定框，下一轮重新定位；
 - 缓冲只保留最新帧，推理落后时丢弃旧帧，不能排队累积延迟；
 - 帧缓冲与输入张量预分配并复用；
 - 捕获、推理、状态机和输入不得运行在 UI 线程；
-- UI 刷新 5-10 Hz，诊断预览默认关闭且最多 5 FPS。
+- UI 状态刷新 5 Hz，不显示持续画面预览或内部性能明细。
 
 当前 C# 调度已实现四类受限间隔：等待 locator `80-250 ms`、Hooking 双模型 `80-250 ms`、小游戏缓存裁剪 `33-67 ms`、面板复查 `250-1000 ms`。每轮首次定位后的面板框用于固定 minigame 裁剪，下一轮再重新定位；面板复查间隔由调度器传入检测器，不再硬编码。输入 Tensor、双线性缩放坐标和原始帧裁剪视图都已复用，ONNX 输出直接解析。
 
@@ -116,47 +123,50 @@ Windows Graphics Capture（完整显示器）
 - 识别到 `bite_indicator` 时立即收钩，不等待滑块计时结束；
 - 只有本轮始终没有识别到感叹号时才使用兜底计时；
 - 每轮最多触发一次兜底收钩，之后必须等待 `minigame_panel` 或进入恢复；
-- 调整滑块不能影响正在进行的一轮，下一轮才读取新值；
-- 滑块范围和默认值必须根据多段实际录屏的咬钩耗时确定，目前不能凭空写死。
+- 调整滑块后状态机立即读取新值；
+- 兜底使用独立开关，默认禁用；滑块范围固定为 `5-30` 秒，默认 `15` 秒；关闭时完全依赖感叹号识别。
 
 这一计时器只解决感叹号可能出现在捕获画面外的问题。它不是第二套识别方法，也不能保证在咬钩时间高度随机的世界中可靠工作。
 
 安全要求：
 
-- 默认进入“仅观察”，不得自动发送输入；
-- 自动运行前验证模型、捕获目标、实际 Provider 和模型清单的 `automatic_allowed=true`；发送每次自动输入前还要确认 VRChat 是前台进程；
+- 默认保持停止；用户通过全局启动/停止热键明确启动自动钓鱼，运行页不提供启停按钮；
+- 自动运行前验证模型、VRChat 主窗口、实际 Provider 和模型清单的 `automatic_allowed=true`；发送每次自动输入前还要确认 VRChat 是前台进程；
 - 关键目标缺失、帧过旧、捕获中断或推理异常时立即释放鼠标；
-- `F8` 全局紧急停止独立于 UI 线程，在任何状态都能释放鼠标；
+- 全局热键是独立于 UI 线程的二态开关：停止时启动，运行时停止并释放鼠标；默认 `F8`，可在 `F6-F12` 中选择，更改需确认并立即重新注册；
 - 停止和退出操作必须幂等，异常也不能留下按住状态。
 
 ## 5. WinUI 3 前端
 
-主窗口是紧凑的 Windows 工具界面，不持续播放完整屏幕：
+主窗口是紧凑的 Windows 工具界面，不持续播放捕获画面：
 
 | 页面 | 内容 |
 |---|---|
-| 运行 | VRChat 状态、仅观察、自动运行、停止、当前阶段、实际 Provider、当前间隔、P95 和性能不足提示 |
-| 模型 | 下载、更新、删除、版本、文件大小和完整性 |
-| 设置 | 已实现界面语言、捕获目标、设备选择、软件根目录、`0-20` 秒屏外感叹号兜底滑块，以及自动/手动频率与四个手动间隔；`0` 表示禁用兜底。阈值与其他超时编辑尚未接入 |
-| 诊断 | 已实现 Provider、捕获/丢弃帧数、状态、三类 P95、四个当前间隔、帧龄和推理超时；CPU/内存、日志入口和预览尚未接入 |
+| 运行 | 当前阶段和状态、VRChat 进程、模型与实际 Provider，以及必要的性能不足提示；不放置启停按钮 |
+| 模型 | 直接显示两个模型的用途和状态；打开页面时检查新版；按缺失、可更新或已是最新版显示蓝色下载、绿色更新或删除按钮；显示模型目录、总占用和 `owner/repository` 发布源 |
+| 设置 | 界面语言、带三角形/小虫子图标的运行/调试工作模式、设备选择、可确认更改的全局热键、可打开且超长时省略的软件目录，以及默认禁用的 `5-30` 秒屏外感叹号兜底；说明通过悬停提示展示 |
 
-界面使用 WinUI 3 原生 Fluent 控件、明暗主题、系统强调色与可选 Mica。布局不使用营销式大标题、堆叠卡片、大面积渐变或持续动画。“仅观察”和“自动运行”必须在文字、图标和状态色上明确区分。
+侧栏固定显示且不可收起，保留较大的品牌图标和名称以及运行、模型、设置三个入口；Windows 标题栏不重复显示小图标和小名称。界面使用 WinUI 3 原生 Fluent 控件、明暗主题和系统强调色；不使用营销式大标题、嵌套卡片、大面积渐变或持续动画。
 
-界面语言资源由随应用编译的 `.resw` 提供简体中文和 English。它们随 Setup 安装，不是 GitHub Release 资产；安装器语言用于首次启动，之后设置页的语言选择写入安装目录的 `config/user.json`，并立即重建当前页面，不需要单独下载语言包。部分底层动态错误仍可能直接显示原始错误文本。
+自动钓鱼运行时由 Desktop 层维护独立的 Win32 点击穿透覆盖层，只跟随前台 VRChat 客户区。运行和调试模式都在右上角显示当前停止热键；调试模式额外复用推理层已经产生的四类最终结果，以固定 `15 Hz` 绘制细边框和 `0.00-1.00` 置信度数字。覆盖层由若干无激活、无任务栏项的窄窗口组成，不遮挡框内画面，也不进入以 VRChat 窗口为目标的 WGC 捕获。
+
+显示防抖位于 Application 层：同类框坐标和置信度使用 `alpha=0.42` 的指数平滑，约对应 `90 ms` 视觉响应；连续两次推理未检出时暂时保留，第三次才隐藏，超过 `500 ms` 的整帧结果直接作废。大于画面宽或高 `15%` 的位置跳变直接吸附，避免 UI 真正移动后产生长距离滞后。该数据流只供覆盖层读取，`FishingStateMachine` 仍直接消费未平滑 `DetectionObservation`。
+
+界面语言资源由随应用编译的 `.resw` 提供 20 种实际语言。它们随 Setup 安装，不是 GitHub Release 资产；首次启动读取 Setup 最终语言，之后设置页只列出以母语名称显示的实际语言，不提供“跟随系统”。选择会写入安装目录的 `config/user.json` 并立即重建当前页面，不需要单独下载语言包。启动被拒绝和运行时致命故障通过全局醒目通知说明原因与处理方法；不可预判的底层故障仍会附带原始错误文本以便排查。
 
 ## 6. 配置与本地文件
 
-应用以 `<安装目录>\\program\\VrcFisher.exe` 的父目录作为软件根目录。模型、配置、日志、下载暂存与诊断产物只能写入用户选择的安装目录，具体结构见 [安装与发布](installation-and-release.md)。用户设置写入 `config/user.json`，性能画像写入 `config/performance-profiles.json`。
+应用以 `<安装目录>\\program\\VrcFisher.exe` 的父目录作为软件根目录。模型、配置、日志与下载暂存只能写入用户选择的安装目录，具体结构见 [安装与发布](installation-and-release.md)。用户设置写入 `config/user.json`，性能画像写入 `config/performance-profiles.json`。
 
 这一要求意味着安装目录必须对当前用户可写。应用不能把运行数据转移到 `%LOCALAPPDATA%`、`ProgramData`、用户主目录或注册表数据目录。
 
 ## 7. 实现顺序和完成条件
 
 1. 四类检测契约、状态机、屏外感叹号兜底、双模型预处理/后处理和动态调度（已实现并有自动化测试）。
-2. Windows Graphics Capture、系统显示器选择器、D3D11 surface readback、最新帧缓冲、真实鼠标与全局 `F8`（已实现；仍需真实 VRChat 现场验收）。
+2. 仅限 `VRChat.exe` 主窗口的 Windows Graphics Capture、D3D11 surface readback、最新帧缓冲、真实鼠标与默认 `F8`、可配置的全局热键启停，以及 15 Hz 调试覆盖层（已实现；仍需真实 VRChat 现场验收）。
 3. round3 最佳 PT 导出静态 FP32 ONNX，并在 CPU-only 与 DirectML 下验证模型加载、输出解码和真实全屏帧；模型已固化为 `models/v0.1.0/`（已完成）。
-4. 人工审核完整 ONNX 带框视频，完成观察模式的状态转换和故障释放验收。
+4. 人工审核完整 ONNX 带框视频，并在真实 VRChat 中完成状态转换、自动输入和故障释放验收。
 5. 在真实 VRChat 下复测自动调频的推理 P95、帧龄、资源占用和 VRChat 帧率影响；输入张量、缩放坐标与裁剪视图复用已经完成。
 6. 模型卡、许可文件、来源清单和 `models/v0.1.0/` 已完成；正式 Setup 已构建，GitHub Release 待维护者审核后创建。
 
-当前可以证明 `models/v0.1.0` 的两个 ONNX 已被 C# 的 CPU 和 DirectML 路径正确加载并在抽样帧上产生四类结果。仍不能报告现场识别准确率、实时性能或自动钓鱼成功率；`automatic_allowed=false` 正是为了保留这条边界。`app/models/` 只是该版本的本地开发副本。
+当前可以证明 `models/v0.1.0` 的两个 ONNX 已被 C# 的 CPU 和 DirectML 路径正确加载并在抽样帧上产生四类结果。清单已设置 `automatic_allowed=true` 以进行实机自动流程验证，但仍不能据此报告现场识别准确率、资源占用或自动钓鱼成功率。`app/models/` 只是该版本的本地开发副本。

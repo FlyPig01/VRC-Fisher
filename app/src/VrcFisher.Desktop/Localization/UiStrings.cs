@@ -2,7 +2,7 @@ using System.Globalization;
 using Microsoft.Windows.ApplicationModel.Resources;
 using VrcFisher.Core;
 
-namespace VrcFisher.Desktop;
+namespace VrcFisher.Desktop.Localization;
 
 internal static class UiStrings
 {
@@ -57,13 +57,24 @@ internal static class UiStrings
     public static string Provider(string provider) =>
         provider == "Unavailable" ? Get("Unavailable") : provider;
 
+    public static string Device(ExecutionDevice device) => device switch
+    {
+        ExecutionDevice.Cpu => Get("DeviceCpu"),
+        ExecutionDevice.Gpu => Get("DeviceGpu"),
+        _ => Get("DeviceAuto")
+    };
+
     public static string RuntimeStatus(RuntimeStatus status) => status.Code switch
     {
+        RuntimeMessageCode.VrChatNotRunning => Get("RuntimeVrChatNotRunning"),
+        RuntimeMessageCode.StartTargetNotForeground => Get("RuntimeStartTargetNotForeground"),
+        RuntimeMessageCode.HotkeyRegistrationFailed => Format("RuntimeHotkeyRegistrationFailed", status.Detail ?? "F8"),
+        RuntimeMessageCode.OverlayUnavailable => Get("RuntimeOverlayUnavailable"),
+        RuntimeMessageCode.UnexpectedFailure => Format("RuntimeUnexpectedFailure", status.Detail ?? Get("UnknownError")),
         RuntimeMessageCode.ModelsUnavailable => Get("RuntimeModelsUnavailable"),
         RuntimeMessageCode.ModelsRequired => Get("RuntimeModelsRequired"),
         RuntimeMessageCode.AutomaticNotAllowed => Get("RuntimeAutomaticNotAllowed"),
         RuntimeMessageCode.AutomaticStarted => Get("RuntimeAutomaticStarted"),
-        RuntimeMessageCode.ObservationStarted => Get("RuntimeObservationStarted"),
         RuntimeMessageCode.DetectionStopped => Format("RuntimeDetectionStopped", status.Detail ?? Get("UnknownError")),
         RuntimeMessageCode.Stopped => Get("RuntimeStopped"),
         RuntimeMessageCode.CaptureStopped => Get("RuntimeCaptureStopped"),
@@ -75,33 +86,45 @@ internal static class UiStrings
         _ => Get("UnknownStatus")
     };
 
-    public static string Performance(InferencePerformanceSnapshot performance)
+    public static UiRuntimeNotice? RuntimeNotice(RuntimeStatus status) => status.Code switch
     {
-        var mode = !performance.Adaptive
-            ? Get("FrequencyModeManual")
-            : performance.IsCalibrating
-                ? Get("FrequencyModeCalibrating")
-                : performance.ProfileLoaded
-                    ? Get("FrequencyModeProfile")
-                    : Get("FrequencyModeAdaptive");
-        return Format(
-            "PerformanceStatus",
-            mode,
-            performance.LocatorIntervalMs,
-            performance.HookingIntervalMs,
-            performance.MinigameIntervalMs,
-            performance.PanelRecheckIntervalMs,
-            P95(performance.LocatorP95Ms),
-            P95(performance.LocatorAndMinigameP95Ms),
-            P95(performance.CachedMinigameP95Ms),
-            performance.LastFrameAgeMs,
-            performance.InferenceOverruns,
-            performance.RecentFramesDropped);
-    }
+        RuntimeMessageCode.VrChatNotRunning => ErrorNotice("AlertVrChatNotRunningTitle", "AlertVrChatNotRunningMessage"),
+        RuntimeMessageCode.StartTargetNotForeground => ErrorNotice("AlertVrChatBackgroundTitle", "AlertVrChatBackgroundMessage"),
+        RuntimeMessageCode.HotkeyRegistrationFailed => new UiRuntimeNotice(
+            Get("AlertHotkeyFailedTitle"),
+            Format("AlertHotkeyFailedMessage", status.Detail ?? "F8"),
+            UiNoticeSeverity.Error),
+        RuntimeMessageCode.OverlayUnavailable =>
+            ErrorNotice("AlertOverlayFailedTitle", "AlertOverlayFailedMessage"),
+        RuntimeMessageCode.UnexpectedFailure => new UiRuntimeNotice(
+            Get("AlertUnexpectedFailureTitle"),
+            Format("AlertUnexpectedFailureMessage", status.Detail ?? Get("UnknownError")),
+            UiNoticeSeverity.Error),
+        RuntimeMessageCode.ModelsRequired or RuntimeMessageCode.ModelsUnavailable =>
+            ErrorNotice("AlertModelsMissingTitle", "AlertModelsMissingMessage"),
+        RuntimeMessageCode.AutomaticNotAllowed =>
+            ErrorNotice("AlertModelsUnapprovedTitle", "AlertModelsUnapprovedMessage"),
+        RuntimeMessageCode.DetectionStopped => new UiRuntimeNotice(
+            Get("AlertDetectionStoppedTitle"),
+            Format("AlertDetectionStoppedMessage", status.Detail ?? Get("UnknownError")),
+            UiNoticeSeverity.Error),
+        RuntimeMessageCode.CaptureStopped => ErrorNotice("AlertCaptureStoppedTitle", "AlertCaptureStoppedMessage"),
+        RuntimeMessageCode.FrameStale => ErrorNotice("AlertFrameStaleTitle", "AlertFrameStaleMessage"),
+        RuntimeMessageCode.TargetNotForeground => WarningNotice("AlertVrChatPausedTitle", "AlertVrChatPausedMessage"),
+        RuntimeMessageCode.OutputContractUnverified =>
+            ErrorNotice("AlertModelContractTitle", "AlertModelContractMessage"),
+        RuntimeMessageCode.InferenceFailed => new UiRuntimeNotice(
+            Get("AlertInferenceFailedTitle"),
+            Format("AlertInferenceFailedMessage", status.Detail ?? Get("UnknownError")),
+            UiNoticeSeverity.Error),
+        _ => null
+    };
 
-    private static string P95(double? value) => value is null
-        ? Get("P95Unavailable")
-        : Format("P95Value", value.Value);
+    private static UiRuntimeNotice ErrorNotice(string titleKey, string messageKey) =>
+        new(Get(titleKey), Get(messageKey), UiNoticeSeverity.Error);
+
+    private static UiRuntimeNotice WarningNotice(string titleKey, string messageKey) =>
+        new(Get(titleKey), Get(messageKey), UiNoticeSeverity.Warning);
 
     private static string StateDecision(string? reason) => reason switch
     {
@@ -125,3 +148,11 @@ internal static class UiStrings
         _ => Get("UnknownStatus")
     };
 }
+
+internal enum UiNoticeSeverity
+{
+    Warning,
+    Error
+}
+
+internal sealed record UiRuntimeNotice(string Title, string Message, UiNoticeSeverity Severity);

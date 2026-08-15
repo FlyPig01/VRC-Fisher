@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>執行</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>模型</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>目前狀態</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>就緒狀態</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>VRChat 處理程序</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>模型檔案</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>執行提供者</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>尚未就緒，無法執行</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>請安裝模型並啟動 VRChat。</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>請在「模型」頁面安裝並驗證兩個模型。</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>請啟動 VRChat；應用程式會自動連線至其主視窗。</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>開始自動釣魚</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>停止自動釣魚</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>模型尚未就緒</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>無法使用</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>找不到 VRChat</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>取消下載</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>下載模型套件？</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>將從 FlyPig01/VRC-Fisher 下載最新的相容模型組與授權檔案。</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>更新模型套件？</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>最新版本將取代目前已安裝的兩個模型。應用程式設定不會變更。</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>刪除已安裝的模型？</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>這會刪除 locator.onnx、minigame.onnx 與安裝記錄。應用程式與設定會保留。</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}：未安裝</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}：版本 {1}，{2:N1} MB，已驗證</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}：{1:N1} MB，資訊清單驗證失敗</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>需要兩個模型。</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>咬餌與介面定位器</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>小遊戲元件偵測器</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>偵測咬餌指示器與釣魚小遊戲</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>偵測控制區域與移動目標</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>掃描完整的 VRChat 畫面。</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>分析已定位的釣魚小遊戲。</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>用途</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>安裝狀態</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>本機路徑</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>發行者／來源</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>未安裝</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · 就緒</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · 驗證失敗</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>模型資料夾</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>總大小</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>開啟</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>版本 {0}，{1:N1} MB，已驗證</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB，完整性檢查失敗</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>模型套件已刪除。</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>介面語言</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>執行裝置</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>建議使用「自動」。如果遊戲卡頓，請嘗試使用 CPU。</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>開始／停止快速鍵</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>按下此全域快速鍵可在 VRChat 位於前景或本應用程式位於背景時開始或停止自動釣魚。</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>變更開始／停止快速鍵？</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>將快速鍵從 {0} 變更為 {1}？此變更會立即生效。</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>確認變更</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>此快速鍵無法使用</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} 可能已被其他應用程式使用。先前的快速鍵維持不變。
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>一般</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>自動化</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>本機儲存空間</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>畫面外指示器後備</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>最短等待時間</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>咬餌指示器可能出現在擷取畫面之外。啟用後，如果未偵測到指示器，應用程式會在設定的等待時間後嘗試進入小遊戲。預設為停用。</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>從拋竿後開始計算。請選擇 5–30 秒；預設為 15 秒。</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>已啟用</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>已停用</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} 秒</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>軟體目錄</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>就緒</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>正在檢查相容的模型版本…</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>正在檢查模型更新…</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>目前無法檢查模型更新。已安裝的模型仍可使用。</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>目前無法連絡到模型發行者。下載與更新無法使用。</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}：{1:N0}/{2:N0} 位元組</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>模型已下載並驗證。</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>已取消下載；已安裝的模型未變更。</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>模型下載失敗：{0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>裝置效能不足</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>即使以 67 毫秒為限制，小遊戲推論仍超出 65% 的效能預算，因此自動輸入可能不穩定。</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>閒置</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>拋竿</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>等待咬餌</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>揚竿</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>小遊戲</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>捲線</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>收集</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>恢復</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>已停止</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat 未執行或其主視窗無法使用</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>因為 VRChat 不在前景，已封鎖開始動作</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>無法註冊 {0} 快速鍵</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>未預期的啟動失敗：{0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>模型尚未安裝；辨識與自動輸入已停用</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>開始自動釣魚前，需要兩個已驗證的 ONNX 模型</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>已安裝的模型未獲准進行自動輸入</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>自動模式已啟動</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>偵測已停止：{0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>自動釣魚已停止</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>擷取已停止；輸入已釋放</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>擷取畫面已過期；輸入已釋放</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat 不在前景；當您返回時自動釣魚會繼續</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>模型已載入，但輸出合約未經驗證；只能檢查提供者</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>推論失敗：{0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>未知錯誤</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>未知狀態</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>找不到 VRChat</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>請啟動 VRChat 並進入目標世界，然後再次按下開始快速鍵。</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat 必須位於前景</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>請先切換至 VRChat 視窗，然後再次按下開始快速鍵。未傳送任何滑鼠輸入。</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>開始／停止快速鍵無法使用</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} 已被其他應用程式使用，或 Windows 拒絕註冊。請在「設定」中選擇其他快速鍵。</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>自動釣魚無法啟動</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>發生未預期的錯誤，所有滑鼠輸入已釋放。詳細資料：{0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>必要的模型遺失或損毀</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>請開啟「模型」並下載或更新完整的模型套件，然後再試一次。</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>此模型套件無法控制輸入</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>請安裝標記為與自動輸入相容的模型版本。</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>辨識已停止</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>滑鼠輸入已釋放。重新啟動前請檢查模型與執行裝置。詳細資料：{0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>VRChat 擷取已停止</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>未收到新的 VRChat 畫面。滑鼠輸入已釋放；請確認遊戲視窗仍可使用。</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>擷取的畫面過舊</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>自動輸入已暫停並釋放。請確認 VRChat 或電腦是否凍結或負載過重。</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>自動輸入已暫停</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat 不再位於前景。在您返回遊戲前不會傳送任何輸入。</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>模型與此軟體不相容</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>無法驗證模型輸出格式。請安裝完整的相容模型套件。</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>辨識失敗</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>為安全起見已釋放滑鼠輸入。請嘗試其他執行裝置或重新安裝模型。詳細資料：{0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>拋竿</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>已確認咬餌</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>已達到畫面外咬餌後備延遲</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>咬餌逾時</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>已確認小遊戲</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>小遊戲未開始</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>已確認成功</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>小遊戲已結束</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>小遊戲逾時</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>追蹤目標</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>捲線並收集</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>開始下一個循環</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>收集逾時</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>恢復完成</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>偵測到失敗</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>已要求停止</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>等待中</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>工作模式</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>執行模式可保持遊戲畫面乾淨。除錯模式會加入辨識框和信心值。</value></data>
+  <data name="RunMode" xml:space="preserve"><value>執行模式</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>以執行模式執行自動釣魚，不顯示辨識框。</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>除錯模式</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>在 VRChat 上顯示穩定後的辨識框和信心值。</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>按 {0} 停止自動釣魚</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>畫面覆蓋層無法使用，自動釣魚未啟動。</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat 覆蓋層無法使用</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自動釣魚已停止，且滑鼠輸入已釋放。請重新啟動 VRC-Fisher，然後再試一次。</value></data>
+</root>

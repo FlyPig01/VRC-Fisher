@@ -26,7 +26,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     private readonly IReadOnlyList<string> _minigameClasses = ["catch_zone", "moving_target"];
     private ResizeMap? _locatorResizeMap;
     private ResizeMap? _minigameResizeMap;
-    private BoundingBox? _cachedPanel;
+    private YoloDetection? _cachedPanel;
     private DateTimeOffset _lastLocatorAt = DateTimeOffset.MinValue;
 
     public OnnxRuntimeDetector(
@@ -83,7 +83,8 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     public DetectionResult Detect(
         CapturedFrameEventArgs frame,
         FishingPhase phase,
-        TimeSpan minigamePanelRecheckInterval)
+        TimeSpan minigamePanelRecheckInterval,
+        bool includeVisualization = false)
     {
         // The detector deliberately refuses to infer from an empty capture.
         if (frame.Width <= 0 || frame.Height <= 0 || frame.BgraPixels.IsEmpty)
@@ -96,9 +97,11 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             && _cachedPanel is not null
             && frame.CapturedAt - _lastLocatorAt < minigamePanelRecheckInterval)
         {
+            var minigame = DetectMinigame(frame, _cachedPanel, biteIndicator: null, includeVisualization);
             return new DetectionResult(
-                DetectMinigame(frame, _cachedPanel.Value, biteIndicator: null),
-                InferenceWorkload.CachedMinigame);
+                minigame.Observation,
+                InferenceWorkload.CachedMinigame,
+                includeVisualization ? CreateVisualization(frame, minigame.Visuals) : null);
         }
 
         var (biteIndicator, detectedPanel) = DetectLocator(frame);
@@ -107,19 +110,22 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         {
             _cachedPanel = null;
             return new DetectionResult(
-                new DetectionObservation(frame.FrameNumber, frame.CapturedAt, BiteIndicator: biteIndicator),
-                InferenceWorkload.Locator);
+                new DetectionObservation(frame.FrameNumber, frame.CapturedAt, BiteIndicator: biteIndicator?.Box),
+                InferenceWorkload.Locator,
+                includeVisualization ? CreateVisualization(frame, Compact(biteIndicator)) : null);
         }
 
         // The panel is stable for one minigame. Keep the first confirmed crop
         // so locator jitter does not move the control coordinate system.
         _cachedPanel ??= detectedPanel;
+        var detectedMinigame = DetectMinigame(frame, _cachedPanel, biteIndicator, includeVisualization);
         return new DetectionResult(
-            DetectMinigame(frame, _cachedPanel.Value, biteIndicator),
-            InferenceWorkload.LocatorAndMinigame);
+            detectedMinigame.Observation,
+            InferenceWorkload.LocatorAndMinigame,
+            includeVisualization ? CreateVisualization(frame, detectedMinigame.Visuals) : null);
     }
 
-    private (BoundingBox? BiteIndicator, BoundingBox? MinigamePanel) DetectLocator(
+    private (YoloDetection? BiteIndicator, YoloDetection? MinigamePanel) DetectLocator(
         CapturedFrameEventArgs frame)
     {
         var region = PixelRegion.Full(frame);
@@ -133,16 +139,17 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             out var locatorTransform);
         var detections = Decode(locator, _locatorClasses, _confidenceThreshold, _iouThreshold, locatorTransform);
         return (
-            BestBox(detections, "bite_indicator"),
-            BestBox(detections, "minigame_panel"));
+            BestDetection(detections, "bite_indicator"),
+            BestDetection(detections, "minigame_panel"));
     }
 
-    private DetectionObservation DetectMinigame(
+    private (DetectionObservation Observation, IReadOnlyList<YoloDetection> Visuals) DetectMinigame(
         CapturedFrameEventArgs frame,
-        BoundingBox minigamePanel,
-        BoundingBox? biteIndicator)
+        YoloDetection minigamePanel,
+        YoloDetection? biteIndicator,
+        bool includeVisualization)
     {
-        var crop = PixelRegion.Crop(frame, minigamePanel, 0.08f);
+        var crop = PixelRegion.Crop(frame, minigamePanel.Box, 0.08f);
         using var minigame = Run(
             _minigame,
             _minigameInputs,
@@ -152,21 +159,28 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             ref _minigameResizeMap,
             out var minigameTransform);
         var localDetections = Decode(minigame, _minigameClasses, _confidenceThreshold, _iouThreshold, minigameTransform);
-        var catchZone = BestBox(localDetections, "catch_zone");
-        var movingTarget = BestBox(localDetections, "moving_target");
-        var targetY = RelativeCenter(catchZone, movingTarget);
-        var controlTop = catchZone is null ? (float?)null : 0f;
-        var controlBottom = catchZone is null ? (float?)null : 1f;
-        return new DetectionObservation(
+        var localCatchZone = BestDetection(localDetections, "catch_zone");
+        var localMovingTarget = BestDetection(localDetections, "moving_target");
+        var targetY = RelativeCenter(localCatchZone?.Box, localMovingTarget?.Box);
+        var controlTop = localCatchZone is null ? (float?)null : 0f;
+        var controlBottom = localCatchZone is null ? (float?)null : 1f;
+        var catchZone = ToGlobal(localCatchZone, crop.OriginX, crop.OriginY);
+        var movingTarget = ToGlobal(localMovingTarget, crop.OriginX, crop.OriginY);
+        var observation = new DetectionObservation(
             frame.FrameNumber,
             frame.CapturedAt,
-            BiteIndicator: biteIndicator,
-            MinigamePanel: minigamePanel,
-            CatchZone: ToGlobal(catchZone, crop.OriginX, crop.OriginY),
-            MovingTarget: ToGlobal(movingTarget, crop.OriginX, crop.OriginY),
+            BiteIndicator: biteIndicator?.Box,
+            MinigamePanel: minigamePanel.Box,
+            CatchZone: catchZone?.Box,
+            MovingTarget: movingTarget?.Box,
             MovingTargetYNorm: targetY,
             CatchZoneTopNorm: controlTop,
             CatchZoneBottomNorm: controlBottom);
+        return (
+            observation,
+            includeVisualization
+                ? Compact(biteIndicator, minigamePanel, catchZone, movingTarget)
+                : []);
     }
 
     public void Dispose()
@@ -360,8 +374,8 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         return YoloPostprocessor.Decode(output.AsTensor<float>(), classes, confidenceThreshold, iouThreshold, transform);
     }
 
-    private static BoundingBox? BestBox(IReadOnlyList<YoloDetection> detections, string className) =>
-        detections.FirstOrDefault(item => string.Equals(item.ClassName, className, StringComparison.Ordinal))?.Box;
+    private static YoloDetection? BestDetection(IReadOnlyList<YoloDetection> detections, string className) =>
+        detections.FirstOrDefault(item => string.Equals(item.ClassName, className, StringComparison.Ordinal));
 
     private static float? RelativeCenter(BoundingBox? zone, BoundingBox? target)
     {
@@ -369,9 +383,32 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         return Math.Clamp((target.Value.CenterY - zone.Value.Top) / MathF.Max(1, zone.Value.Height), 0, 1);
     }
 
-    private static BoundingBox? ToGlobal(BoundingBox? box, int offsetX, int offsetY) =>
-        box is null ? null : new BoundingBox(box.Value.Left + offsetX, box.Value.Top + offsetY,
-            box.Value.Right + offsetX, box.Value.Bottom + offsetY);
+    private static YoloDetection? ToGlobal(YoloDetection? detection, int offsetX, int offsetY)
+    {
+        if (detection is null) return null;
+        var box = detection.Box;
+        return detection with
+        {
+            Box = new BoundingBox(
+                box.Left + offsetX,
+                box.Top + offsetY,
+                box.Right + offsetX,
+                box.Bottom + offsetY)
+        };
+    }
+
+    private static IReadOnlyList<YoloDetection> Compact(params YoloDetection?[] detections) =>
+        detections.Where(item => item is not null).Cast<YoloDetection>().ToArray();
+
+    private static DetectionVisualizationFrame CreateVisualization(
+        CapturedFrameEventArgs frame,
+        IReadOnlyList<YoloDetection> detections) =>
+        new(
+            frame.FrameNumber,
+            frame.CapturedAt,
+            frame.Width,
+            frame.Height,
+            detections.Select(item => new DetectionVisual(item.ClassName, item.Confidence, item.Box)).ToArray());
 
     private sealed class ResizeMap
     {

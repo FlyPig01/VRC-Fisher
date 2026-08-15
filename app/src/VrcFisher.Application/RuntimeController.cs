@@ -42,8 +42,20 @@ public sealed class RuntimeController : IRuntimeController
         detectionRuntime.MetricsChanged += OnMetricsChanged;
     }
 
-    public async Task StartObservationAsync(bool automatic, CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
+        if (!inputController.IsTargetForeground)
+        {
+            Update(_snapshot with
+            {
+                IsObserving = false,
+                IsAutomatic = false,
+                Phase = FishingPhase.Stopped,
+                Status = new RuntimeStatus(RuntimeMessageCode.StartTargetNotForeground)
+            });
+            return;
+        }
+
         await modelCatalog.RefreshAsync(cancellationToken);
         if (!modelCatalog.IsReady || !detectionRuntime.IsReady)
         {
@@ -58,7 +70,7 @@ public sealed class RuntimeController : IRuntimeController
             });
             return;
         }
-        if (automatic && !modelCatalog.AutomaticAllowed)
+        if (!modelCatalog.AutomaticAllowed)
         {
             Update(_snapshot with
             {
@@ -71,21 +83,30 @@ public sealed class RuntimeController : IRuntimeController
             });
             return;
         }
+        if (!inputController.IsTargetForeground)
+        {
+            Update(_snapshot with
+            {
+                IsObserving = false,
+                IsAutomatic = false,
+                Phase = FishingPhase.Stopped,
+                Status = new RuntimeStatus(RuntimeMessageCode.StartTargetNotForeground)
+            });
+            return;
+        }
 
         Update(_snapshot with
         {
             IsObserving = true,
-            IsAutomatic = automatic,
+            IsAutomatic = true,
             ModelsReady = true,
             Phase = FishingPhase.Idle,
             Provider = detectionRuntime.Provider,
-            Status = new RuntimeStatus(automatic
-                ? RuntimeMessageCode.AutomaticStarted
-                : RuntimeMessageCode.ObservationStarted)
+            Status = new RuntimeStatus(RuntimeMessageCode.AutomaticStarted)
         });
         try
         {
-            await detectionRuntime.StartAsync(automatic, cancellationToken);
+            await detectionRuntime.StartAsync(cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {

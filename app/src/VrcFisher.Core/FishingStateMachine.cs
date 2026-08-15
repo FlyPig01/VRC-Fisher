@@ -2,6 +2,7 @@ namespace VrcFisher.Core;
 
 public sealed class FishingStateMachine(StateMachineOptions options) : IStateMachine
 {
+    private StateMachineOptions _options = options;
     private readonly Evidence _evidence = new();
     private FishingPhase _phase = FishingPhase.Idle;
     private DateTimeOffset _enteredAt;
@@ -9,6 +10,9 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
     private int _cycle;
 
     public FishingPhase Phase => _phase;
+
+    public void UpdateBiteFallback(TimeSpan value) =>
+        _options = _options with { BiteFallback = value };
 
     public void Reset(DateTimeOffset now)
     {
@@ -20,7 +24,7 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
 
     public StateDecision Step(DetectionObservation observation, DateTimeOffset now)
     {
-        _evidence.Update(observation, options.BiteIndicatorEvidenceWindow);
+        _evidence.Update(observation, _options.BiteIndicatorEvidenceWindow);
 
         if (_phase == FishingPhase.Idle)
         {
@@ -32,55 +36,55 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
         var elapsed = now - _enteredAt;
         switch (_phase)
         {
-            case FishingPhase.Casting when elapsed >= options.CastSettle:
+            case FishingPhase.Casting when elapsed >= _options.CastSettle:
                 Transition(FishingPhase.WaitingForBite, now);
                 break;
             case FishingPhase.WaitingForBite:
-                if (_evidence.BiteIndicatorHits >= options.BiteIndicatorConfirmFrames)
+                if (_evidence.BiteIndicatorHits >= _options.BiteIndicatorConfirmFrames)
                 {
                     Transition(FishingPhase.Hooking, now);
                     return Decision(InputAction.Click, "bite confirmed");
                 }
-                if (options.BiteFallback > TimeSpan.Zero && elapsed >= options.BiteFallback)
+                if (_options.BiteFallback > TimeSpan.Zero && elapsed >= _options.BiteFallback)
                 {
                     Transition(FishingPhase.Hooking, now);
                     return Decision(InputAction.Click, "bite fallback");
                 }
-                if (elapsed >= options.BiteTimeout) return Recover(now, "bite timeout");
+                if (elapsed >= _options.BiteTimeout) return Recover(now, "bite timeout");
                 break;
             case FishingPhase.Hooking:
-                if (elapsed >= options.HookToUiMinimum && _evidence.Ui >= options.UiConfirmFrames)
+                if (elapsed >= _options.HookToUiMinimum && _evidence.Ui >= _options.UiConfirmFrames)
                 {
                     Transition(FishingPhase.Minigame, now);
                     return Decision(InputAction.None, "minigame confirmed");
                 }
-                if (elapsed >= options.BiteToMinigameTimeout) return Recover(now, "minigame did not start");
+                if (elapsed >= _options.BiteToMinigameTimeout) return Recover(now, "minigame did not start");
                 break;
             case FishingPhase.Minigame:
-                if (_evidence.UiLost >= options.UiLostFrames)
+                if (_evidence.UiLost >= _options.UiLostFrames)
                 {
                     var release = ReleaseIfHeld();
                     Transition(FishingPhase.Reeling, now);
                     return Decision(release, "minigame ended");
                 }
-                if (elapsed >= options.MinigameTimeout) return Recover(now, "minigame timeout");
+                if (elapsed >= _options.MinigameTimeout) return Recover(now, "minigame timeout");
                 return Decision(MinigameAction(observation), "follow target");
             case FishingPhase.Reeling:
                 Transition(FishingPhase.Loot, now);
                 return Decision(InputAction.Click, "reel and collect");
             case FishingPhase.Loot:
-                if (elapsed >= options.CycleDelay)
+                if (elapsed >= _options.CycleDelay)
                 {
                     Transition(FishingPhase.Idle, now);
                     return Decision(InputAction.None, "next cycle");
                 }
-                if (elapsed >= options.LootTimeout)
+                if (elapsed >= _options.LootTimeout)
                 {
                     Transition(FishingPhase.Idle, now);
                     return Decision(InputAction.None, "loot timeout");
                 }
                 break;
-            case FishingPhase.Recovery when elapsed >= options.RecoveryDelay:
+            case FishingPhase.Recovery when elapsed >= _options.RecoveryDelay:
                 Transition(FishingPhase.Idle, now);
                 return Decision(InputAction.None, "recovery complete");
         }
@@ -104,12 +108,12 @@ public sealed class FishingStateMachine(StateMachineOptions options) : IStateMac
         if (catchZoneCenter is null || targetCenter is null)
             return ReleaseIfHeld();
 
-        if (targetCenter < catchZoneCenter - options.VerticalDeadband && !_leftHeld)
+        if (targetCenter < catchZoneCenter - _options.VerticalDeadband && !_leftHeld)
         {
             _leftHeld = true;
             return InputAction.Press;
         }
-        if (targetCenter > catchZoneCenter + options.VerticalDeadband && _leftHeld)
+        if (targetCenter > catchZoneCenter + _options.VerticalDeadband && _leftHeld)
         {
             _leftHeld = false;
             return InputAction.Release;

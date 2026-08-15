@@ -14,7 +14,7 @@ public sealed class WindowsGraphicsCaptureSource : IFrameSource
 
     public event EventHandler<CapturedFrameEventArgs>? FrameArrived;
     public bool IsConfigured { get; private set; }
-    public string TargetName { get; private set; } = "未选择显示器或窗口";
+    public string TargetName { get; private set; } = "VRChat";
 
     public void Configure(string targetName)
     {
@@ -26,7 +26,7 @@ public sealed class WindowsGraphicsCaptureSource : IFrameSource
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        if (!IsConfigured) throw new InvalidOperationException("请先选择要捕获的显示器或窗口");
+        if (!IsConfigured) throw new InvalidOperationException("未找到 VRChat 主窗口");
         _running = true;
         return Task.CompletedTask;
     }

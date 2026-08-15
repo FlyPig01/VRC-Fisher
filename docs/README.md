@@ -18,7 +18,7 @@
 | 范围 | 决定 |
 |---|---|
 | 正式软件 | C# / .NET 10 / WinUI 3 / Windows x64 |
-| 捕获 | Windows Graphics Capture，完整显示器 |
+| 捕获 | Windows Graphics Capture，仅限 `VRChat.exe` 主窗口 |
 | 运行时推理 | ONNX Runtime CPU-only 或 DirectML |
 | 数据处理 | Python 3.11 / PyAV / Pillow |
 | 训练 | Python 3.11 / PyTorch 2.13 CUDA 13.0 / Ultralytics YOLO11n；locator 960、minigame 640 |
@@ -39,6 +39,6 @@
 - **目标设计**：已经确定的正式实现要求，但代码尚未完成。
 - **估算**：构建前的容量或性能预算，不能作为实测结论发布。
 
-当前已实现 C# 分层工程、四类双 ONNX Runtime 推理、显式 Raw/NMS 输出解码、动画感叹号时序证据、屏外感叹号兜底滑块、受限自动调频和安装目录性能画像、前台 VRChat 输入保护、鼠标安全释放、F8 紧急停止、最新帧缓冲、模型清单/校验/成组事务下载、GitHub Release 查询、WinUI 模型管理、CPU/DirectML Provider、WGC 完整显示器捕获和内置中英文资源。单一 Inno Setup 已实际生成，并分别完成 CPU-only 与 DirectML 安装和无模型启动验证。
+当前已实现 C# 分层工程、四类双 ONNX Runtime 推理、显式 Raw/NMS 输出解码、动画感叹号时序证据、默认禁用且为 `5-30` 秒的屏外感叹号兜底、固定启用的受限自动调频和安装目录性能画像、前台 VRChat 输入保护、鼠标安全释放、默认 F8 且可确认更改的全局启停热键、15 Hz 点击穿透调试覆盖层、最新帧缓冲、模型清单/校验/成组事务下载、GitHub Release 更新查询、WinUI 模型管理、CPU/DirectML Provider、仅限 VRChat 主窗口的 WGC 捕获、20 种内置语言和全局错误通知。单一 Inno Setup 已实际生成，并分别完成 CPU-only 与 DirectML 安装和无模型启动验证；20 种语言和覆盖层的完整实机安装验收仍待执行。
 
-round3 的最佳权重已导出为 `training/exports/locator.onnx` 与 `minigame.onnx`，并固化到 `models/v0.1.0/`；开发副本位于 `app/models/`。导出契约、抽样 PT/ONNX 对比以及 C# CPU/DirectML 对真实全屏帧的加载推理均已通过。该版本是可发布的模型版本，但不代表对所有场景的精度或自动钓鱼已经验收；`automatic_allowed` 仍为 `false`。
+round3 的最佳权重已导出为 `training/exports/locator.onnx` 与 `minigame.onnx`，并固化到 `models/v0.1.0/`；开发副本位于 `app/models/`。导出契约、抽样 PT/ONNX 对比以及 C# CPU/DirectML 对真实全屏帧的加载推理均已通过。该版本的 `automatic_allowed` 已设为 `true` 以进行实机验证，但不代表所有场景精度或自动钓鱼成功率已经验收。

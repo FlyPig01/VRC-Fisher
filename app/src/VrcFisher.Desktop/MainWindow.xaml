@@ -5,23 +5,95 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid Padding="24" RowSpacing="16" ColumnSpacing="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock x:Name="AppTitleText" Text="VRC-Fisher" FontSize="26" FontWeight="SemiBold" />
-            <TextBlock x:Name="StatusBadge" Text="Models not ready" VerticalAlignment="Center" />
-        </StackPanel>
-        <NavigationView x:Name="Navigation" Grid.Row="1" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="OnNavigationChanged">
-            <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="RunNavigationItem" Content="Run" Tag="run" />
-                <NavigationViewItem x:Name="ModelsNavigationItem" Content="Models" Tag="models" />
-                <NavigationViewItem x:Name="SettingsNavigationItem" Content="Settings" Tag="settings" />
-                <NavigationViewItem x:Name="DiagnosticsNavigationItem" Content="Diagnostics" Tag="diagnostics" />
-            </NavigationView.MenuItems>
-            <Frame x:Name="ContentFrame" />
-        </NavigationView>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="216" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel
+                    Margin="20,24,16,22"
+                    Orientation="Horizontal"
+                    Spacing="10">
+                    <Image
+                        Width="28"
+                        Height="28"
+                        Source="Assets/VRC-Fisher.svg" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        FontWeight="SemiBold"
+                        Text="VRC-Fisher" />
+                </StackPanel>
+
+                <ListView
+                    x:Name="NavigationList"
+                    Grid.Row="1"
+                    Margin="8,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    SelectionChanged="OnNavigationChanged"
+                    SelectionMode="Single">
+                    <ListViewItem x:Name="RunNavigationItem" Tag="run">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <SymbolIcon Symbol="Play" />
+                            <TextBlock x:Name="RunNavigationLabel" VerticalAlignment="Center" Text="Run" />
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem x:Name="ModelsNavigationItem" Tag="models">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <SymbolIcon Symbol="Download" />
+                            <TextBlock x:Name="ModelsNavigationLabel" VerticalAlignment="Center" Text="Models" />
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem x:Name="SettingsNavigationItem" Tag="settings">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <SymbolIcon Symbol="Setting" />
+                            <TextBlock x:Name="SettingsNavigationLabel" VerticalAlignment="Center" Text="Settings" />
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+
+                <Border
+                    Grid.Row="2"
+                    Margin="16,8,16,18"
+                    Padding="0,14,0,0"
+                    BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                    BorderThickness="0,1,0,0">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <SymbolIcon x:Name="StatusIcon" Symbol="Important" />
+                        <TextBlock
+                            x:Name="StatusBadge"
+                            VerticalAlignment="Center"
+                            Text="Models not ready"
+                            TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="28,22,28,26" RowSpacing="14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <InfoBar
+                x:Name="RuntimeNotice"
+                Grid.Row="0"
+                IsClosable="True"
+                IsOpen="False" />
+            <Frame x:Name="ContentFrame" Grid.Row="1" />
+        </Grid>
     </Grid>
 </Window>

@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>เรียกใช้</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>โมเดล</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>การตั้งค่า</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>สถานะปัจจุบัน</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>ความพร้อม</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>กระบวนการ VRChat</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>ไฟล์โมเดล</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Execution Provider</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>ยังไม่พร้อมเรียกใช้</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>ติดตั้งโมเดลและเริ่ม VRChat</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>ติดตั้งและตรวจสอบโมเดลทั้งสองในหน้าโมเดล</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>เริ่ม VRChat; แอปจะเชื่อมต่อกับหน้าต่างหลักโดยอัตโนมัติ</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>เริ่มตกปลาอัตโนมัติ</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>หยุดตกปลาอัตโนมัติ</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>โมเดลยังไม่พร้อม</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>ไม่พร้อมใช้งาน</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>ไม่พบ VRChat</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>รีเฟรช</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>ดาวน์โหลด</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>อัปเดต</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>ยกเลิกการดาวน์โหลด</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>ลบ</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>ยกเลิก</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>ดาวน์โหลดแพ็กเกจโมเดล?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>โมเดลคู่ที่เข้ากันได้ล่าสุดและไฟล์ใบอนุญาตจะถูกดาวน์โหลดจาก FlyPig01/VRC-Fisher</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>อัปเดตแพ็กเกจโมเดล?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>เวอร์ชันล่าสุดจะแทนที่โมเดลที่ติดตั้งทั้งสอง การตั้งค่าแอปพลิเคชันจะไม่เปลี่ยนแปลง</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>ลบโมเดลที่ติดตั้ง?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>การดำเนินการนี้จะลบ locator.onnx, minigame.onnx และบันทึกการติดตั้ง แอปพลิเคชันและการตั้งค่าจะยังคงอยู่</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: ยังไม่ได้ติดตั้ง</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: เวอร์ชัน {1}, {2:N1} MB, ตรวจสอบแล้ว</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, การตรวจสอบแมนนิเฟสต์ล้มเหลว</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>ต้องใช้โมเดลทั้งสอง</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>ตัวระบุการกัดและ UI</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>ตัวตรวจจับส่วนประกอบมินิเกม</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>ค้นหาตัวบ่งชี้การกัดและมินิเกม</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>ค้นหาโซนควบคุมและเป้าหมายที่เคลื่อนที่</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>สแกนเฟรม VRChat ทั้งหมด</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>วิเคราะห์มินิเกมตกปลาที่พบ</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>วัตถุประสงค์</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>สถานะการติดตั้ง</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>เส้นทางในเครื่อง</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>ผู้เผยแพร่ / แหล่งที่มา</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>ยังไม่ได้ติดตั้ง</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · พร้อม</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · การตรวจสอบล้มเหลว</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>โฟลเดอร์โมเดล</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>ขนาดรวม</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>เปิด</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>เวอร์ชัน {0}, {1:N1} MB, ตรวจสอบแล้ว</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, การตรวจสอบความถูกต้องล้มเหลว</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>แพ็กเกจโมเดลถูกลบแล้ว</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>ภาษาของอินเทอร์เฟซ</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>อุปกรณ์การประมวลผล</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>อัตโนมัติ</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>แนะนำให้ใช้อัตโนมัติ ลองใช้ CPU หากเกมกระตุก</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>ปุ่มลัดเริ่ม / หยุด</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>กดปุ่มลัดทั่วโลกนี้เพื่อเริ่มหรือหยุดการตกปลาอัตโนมัติเมื่อ VRChat อยู่ด้านหน้าหรือแอปพลิเคชันนี้ทำงานอยู่เบื้องหลัง</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>เปลี่ยนปุ่มลัดเริ่ม / หยุด?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>เปลี่ยนปุ่มลัดจาก {0} เป็น {1}? การเปลี่ยนแปลงมีผลทันที</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>ยืนยันการเปลี่ยนแปลง</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>ไม่สามารถใช้ปุ่มลัดนี้ได้</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} อาจถูกใช้โดยแอปพลิเคชันอื่นอยู่แล้ว ปุ่มลัดก่อนหน้าจะไม่เปลี่ยนแปลง
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>ทั่วไป</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>อัตโนมัติ</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>ที่จัดเก็บข้อมูลในเครื่อง</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>ตัวสำรองเมื่อตัวบ่งชี้การกัดอยู่นอกจอ</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>เวลารอขั้นต่ำ</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>ตัวบ่งชี้การกัดอาจปรากฏนอกเฟรมที่จับภาพได้ เมื่อเปิดใช้งาน แอปพลิเคชันจะพยายามเข้าสู่มินิเกมหลังจากเวลาที่กำหนดหากไม่พบตัวบ่งชี้ ปิดใช้งานตามค่าเริ่มต้น</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>วัดหลังการเหวี่ยง เลือก 5–30 วินาที ค่าเริ่มต้นคือ 15 วินาที</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>เปิดใช้งาน</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>ปิดใช้งาน</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} วินาที</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>ไดเรกทอรีซอฟต์แวร์</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>พร้อม</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>กำลังตรวจสอบรุ่นโมเดลที่เข้ากันได้...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>กำลังตรวจสอบอัปเดตโมเดล...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>ขณะนี้ไม่สามารถตรวจสอบอัปเดตโมเดลได้ โมเดลที่ติดตั้งยังคงใช้งานได้</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>ขณะนี้ไม่สามารถเข้าถึงผู้เผยแพร่โมเดลได้ ไม่สามารถดาวน์โหลดและอัปเดตได้</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} ไบต์</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>ดาวน์โหลดและตรวจสอบโมเดลแล้ว</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>ยกเลิกการดาวน์โหลดแล้ว ไม่มีการเปลี่ยนแปลงโมเดลที่ติดตั้ง</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>ดาวน์โหลดโมเดลล้มเหลว: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>ประสิทธิภาพของอุปกรณ์ไม่เพียงพอ</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>การอนุมานมินิเกมเกินงบประมาณประสิทธิภาพ 65% แม้ที่ขีดจำกัด 67 ms ดังนั้นอินพุตอัตโนมัติอาจไม่เสถียร</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>ไม่ได้ใช้งาน</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>กำลังเหวี่ยง</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>กำลังรอการกัด</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>กำลังตีเบ็ด</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>มินิเกม</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>กำลังกรอสาย</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>กำลังเก็บรางวัล</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>พักฟื้น</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>หยุด</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat ไม่ทำงานหรือไม่มีหน้าต่างหลัก</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>การเริ่มถูกบล็อกเพราะ VRChat ไม่ได้อยู่เบื้องหน้า</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>ไม่สามารถลงทะเบียนปุ่มลัด {0} ได้</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>ข้อผิดพลาดในการเริ่มต้นที่ไม่คาดคิด: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>ไม่ได้ติดตั้งโมเดล การรู้จำและอินพุตอัตโนมัติถูกปิดใช้งาน</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>ต้องใช้โมเดล ONNX ที่ผ่านการตรวจสอบทั้งสองก่อนเริ่มตกปลาอัตโนมัติ</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>โมเดลที่ติดตั้งไม่ได้รับอนุญาตสำหรับอินพุตอัตโนมัติ</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>เริ่มโหมดอัตโนมัติแล้ว</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>การตรวจจับหยุด: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>หยุดการตกปลาอัตโนมัติแล้ว</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>การจับภาพหยุดลง ปล่อยอินพุตแล้ว</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>เฟรมที่จับภาพเก่าเกินไป ปล่อยอินพุตแล้ว</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat ไม่ได้อยู่เบื้องหน้า การตกปลาอัตโนมัติจะกลับมาทำงานเมื่อคุณกลับไป</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>โมเดลถูกโหลดแล้ว แต่ไม่ได้ตรวจสอบสัญญาข้อมูลส่งออก ตรวจสอบได้เฉพาะ Provider</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>การอนุมานล้มเหลว: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>ข้อผิดพลาดที่ไม่รู้จัก</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>สถานะไม่รู้จัก</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>ไม่พบ VRChat</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>เริ่ม VRChat และเข้าสู่โลกเป้าหมาย จากนั้นกดปุ่มลัดเริ่มอีกครั้ง</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat ต้องอยู่เบื้องหน้า</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>สลับไปที่หน้าต่าง VRChat ก่อน จากนั้นกดปุ่มลัดเริ่มอีกครั้ง ไม่มีการส่งอินพุตเมาส์ใด ๆ</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>ปุ่มลัดเริ่ม/หยุดไม่พร้อมใช้งาน</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} ถูกใช้โดยแอปพลิเคชันอื่นหรือ Windows ปฏิเสธการลงทะเบียน เลือกปุ่มลัดอื่นในการตั้งค่า</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>ไม่สามารถเริ่มการตกปลาอัตโนมัติได้</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>เกิดข้อผิดพลาดที่ไม่คาดคิดและปล่อยอินพุตเมาส์ทั้งหมดแล้ว รายละเอียด: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>โมเดลที่ต้องใช้หายไปหรือเสียหาย</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>เปิดหน้าโมเดลและดาวน์โหลดหรืออัปเดตแพ็กเกจโมเดลที่สมบูรณ์ จากนั้นลองอีกครั้ง</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>แพ็กเกจโมเดลนี้ไม่สามารถควบคุมอินพุตได้</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>ติดตั้งโมเดลที่ระบุว่าเข้ากันได้กับอินพุตอัตโนมัติ</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>การรู้จำหยุดลง</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>ปล่อยอินพุตเมาส์แล้ว ตรวจสอบโมเดลและอุปกรณ์การประมวลผลก่อนเริ่มใหม่ รายละเอียด: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>การจับภาพ VRChat หยุดลง</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>ไม่ได้รับเฟรม VRChat ใหม่ ปล่อยอินพุตเมาส์แล้ว ตรวจสอบว่าหน้าต่างเกมยังใช้งานได้</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>เฟรมที่จับภาพเก่าเกินไป</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>อินพุตอัตโนมัติถูกหยุดชั่วคราวและปล่อยแล้ว ตรวจสอบว่า VRChat หรือคอมพิวเตอร์ค้างหรือโหลดเกิน</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>อินพุตอัตโนมัติถูกหยุดชั่วคราว</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat ไม่ได้อยู่เบื้องหน้าอีกต่อไป จะไม่มีการส่งอินพุตจนกว่าคุณจะกลับไปที่เกม</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>โมเดลเข้ากันไม่ได้กับซอฟต์แวร์นี้</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>ไม่สามารถตรวจสอบรูปแบบผลลัพธ์ของโมเดลได้ ติดตั้งแพ็กเกจโมเดลที่เข้ากันได้แบบสมบูรณ์</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>การรู้จำล้มเหลว</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>ปล่อยอินพุตเมาส์เพื่อความปลอดภัย ลองใช้อุปกรณ์การประมวลผลอื่นหรือติดตั้งโมเดลใหม่ รายละเอียด: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>เหวี่ยง</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>ยืนยันการกัด</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>ถึงเวลารอสำรองตัวบ่งชี้ที่อยู่นอกจอแล้ว</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>หมดเวลาการกัด</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>ยืนยันมินิเกม</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>มินิเกมไม่เริ่ม</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>ยืนยันความสำเร็จ</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>มินิเกมสิ้นสุดลง</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>หมดเวลามินิเกม</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>กำลังติดตามเป้าหมาย</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>กรอสายและเก็บรางวัล</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>เริ่มรอบถัดไป</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>หมดเวลาการเก็บรางวัล</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>พักฟื้นเสร็จสิ้น</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>ตรวจพบความล้มเหลว</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>ขอหยุด</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>กำลังรอ</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>โหมดทำงาน</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>โหมดรันจะทำให้หน้าจอเกมสะอาดตา โหมดดีบักจะเพิ่มกรอบตรวจจับและค่าความเชื่อมั่น</value></data>
+  <data name="RunMode" xml:space="preserve"><value>โหมดรัน</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>รันการตกปลาอัตโนมัติโดยไม่แสดงกรอบตรวจจับ</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>โหมดดีบัก</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>แสดงกรอบตรวจจับที่เสถียรและค่าความเชื่อมั่นบน VRChat</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>กด {0} เพื่อหยุดการตกปลาอัตโนมัติ</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>ไม่สามารถแสดงโอเวอร์เลย์บนหน้าจอได้ จึงไม่เริ่มการตกปลาอัตโนมัติ</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>ไม่สามารถแสดงโอเวอร์เลย์บน VRChat ได้</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>การตกปลาอัตโนมัติหยุดลงและคืนการควบคุมเมาส์แล้ว โปรดรีสตาร์ท VRC-Fisher แล้วลองอีกครั้ง</value></data>
+</root>

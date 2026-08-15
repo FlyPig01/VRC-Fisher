@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Spustit</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Modely</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Nastavení</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Aktuální stav</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Připravenost</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>Proces VRChat</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>Soubory modelů</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Poskytovatel provádění</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Není připraveno ke spuštění</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Nainstalujte modely a spusťte VRChat.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Nainstalujte a ověřte oba modely na stránce Modely.</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>Spusťte VRChat; aplikace se automaticky připojí k hlavnímu oknu.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Spustit automatický rybolov</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Zastavit automatický rybolov</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>Modely nejsou připravené</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Nedostupné</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChat nebyl nalezen</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Obnovit</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>Stáhnout</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Aktualizovat</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Zrušit stahování</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Smazat</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Zrušit</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Zavřít</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Stáhnout balíček modelů?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>Z FlyPig01/VRC-Fisher budou staženy nejnovější kompatibilní dvojice modelů a licenční soubory.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Aktualizovat balíček modelů?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>Nejnovější verze nahradí oba nainstalované modely. Nastavení aplikace se nezmění.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Smazat nainstalované modely?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Tím se smažou locator.onnx, minigame.onnx a záznam o instalaci. Aplikace a nastavení zůstanou zachovány.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: není nainstalováno</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: verze {1}, {2:N1} MB, ověřeno</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, ověření manifestu selhalo</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Oba modely jsou vyžadovány.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Lokátor záběru a rozhraní</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Detektor komponent minihry</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Najde indikátor záběru a minihru</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Najde kontrolní zónu a pohyblivý cíl</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>Skenuje celý snímek VRChat.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Analyzuje nalezenou minihru rybolovu.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Účel</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Stav instalace</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Místní cesta</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Vydavatel / zdroj</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Není nainstalováno</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Připraveno</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Ověření selhalo</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Složka modelů</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Celková velikost</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Otevřít</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>Verze {0}, {1:N1} MB, ověřeno</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, kontrola integrity selhala</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>Balíček modelů byl smazán.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Jazyk rozhraní</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Prováděcí zařízení</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Automaticky</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Automatická volba se doporučuje. Pokud hra zadrhává, zkuste CPU.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Klávesová zkratka spuštění / zastavení</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>Stisknutím této globální klávesové zkratky spustíte nebo zastavíte automatický rybolov, když je VRChat v popředí nebo je tato aplikace na pozadí.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Změnit klávesovou zkratku spuštění / zastavení?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>Změnit klávesovou zkratku z {0} na {1}? Změna se projeví okamžitě.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Potvrdit změnu</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Tuto klávesovou zkratku nelze použít</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} může být již používána jinou aplikací. Předchozí klávesová zkratka zůstává beze změny.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Obecné</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Automatizace</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Místní úložiště</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Náhrada za indikátor mimo obrazovku</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Minimální čekání</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>Indikátor záběru se může objevit mimo zachycený snímek. Když je tato volba povolena, aplikace se pokusí vstoupit do minihry po nastavené době čekání, pokud nebyl detekován žádný indikátor. Ve výchozím nastavení je vypnuto.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>Měřeno po nahození. Zvolte 5–30 sekund; výchozí hodnota je 15 sekund.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Povoleno</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Vypnuto</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} sekund</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Složka softwaru</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Připraveno</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Kontrola kompatibilních verzí modelů...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Kontrola aktualizací modelů...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Aktualizace modelů není momentálně možné zkontrolovat. Nainstalované modely zůstávají k dispozici.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>Vydavatel modelů je momentálně nedostupný. Stahování a aktualizace nejsou k dispozici.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} bajtů</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Modely staženy a ověřeny.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>Stahování zrušeno; nainstalované modely se nezměnily.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Stahování modelu selhalo: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Výkon zařízení je nedostatečný</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>Inference minihry překračuje 65% rozpočet výkonu i při limitu 67 ms, takže automatický vstup může být nestabilní.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Nečinnost</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Nahození</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Čekání na záběr</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Zaseknutí</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Minihra</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Navíjení</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Sbírání</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Zotavení</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Zastaveno</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat neběží nebo jeho hlavní okno není dostupné</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>Spuštění bylo zablokováno, protože VRChat není v popředí</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>Klávesovou zkratku {0} se nepodařilo zaregistrovat</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Neočekávaná chyba při spuštění: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>Modely nejsou nainstalovány; rozpoznávání a automatický vstup jsou vypnuty</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Před spuštěním automatického rybolovu jsou vyžadovány oba ověřené modely ONNX</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>Nainstalované modely nejsou schváleny pro automatický vstup</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Automatický režim spuštěn</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Detekce zastavena: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Automatický rybolov zastaven</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>Snímání zastaveno; vstup byl uvolněn</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>Snímek je zastaralý; vstup byl uvolněn</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat není v popředí; automatický rybolov se obnoví, až se vrátíte</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>Modely jsou načteny, ale výstupní kontrakt není ověřen; lze zkontrolovat pouze Provider</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Inference selhala: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>neznámá chyba</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Neznámý stav</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChat nebyl nalezen</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>Spusťte VRChat a vstupte do cílového světa, poté znovu stiskněte klávesovou zkratku spuštění.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat musí být v popředí</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Nejprve přepněte do okna VRChat, poté znovu stiskněte klávesovou zkratku spuštění. Nebyl odeslán žádný vstup myši.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>Klávesová zkratka spuštění / zastavení není k dispozici</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} je již používána jinou aplikací nebo Windows odmítl její registraci. V Nastavení zvolte jinou klávesovou zkratku.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Automatický rybolov se nepodařilo spustit</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Došlo k neočekávané chybě a veškerý vstup myši byl uvolněn. Podrobnosti: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>Požadované modely chybí nebo jsou poškozené</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Otevřete Modely a stáhněte nebo aktualizujte kompletní balíček modelů, poté to zkuste znovu.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Tento balíček modelů nemůže ovládat vstup</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Nainstalujte verzi modelů, která je označena jako kompatibilní s automatickým vstupem.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>Rozpoznávání zastaveno</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>Vstup myši byl uvolněn. Před restartem zkontrolujte modely a prováděcí zařízení. Podrobnosti: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>Snímání VRChat zastaveno</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Nebyly přijaty žádné nové snímky VRChat. Vstup myši byl uvolněn; zkontrolujte, zda je okno hry stále k dispozici.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>Zachycený snímek je příliš starý</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>Automatický vstup byl pozastaven a uvolněn. Zkontrolujte, zda VRChat nebo počítač nejsou zamrzlé nebo přetížené.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Automatický vstup je pozastaven</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat již není v popředí. Dokud se nevrátíte do hry, nebude odesílán žádný vstup.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>Modely jsou s tímto softwarem nekompatibilní</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>Formát výstupu modelů se nepodařilo ověřit. Nainstalujte kompletní kompatibilní balíček modelů.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>Rozpoznávání selhalo</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>Vstup myši byl z bezpečnostních důvodů uvolněn. Zkuste jiné prováděcí zařízení nebo přeinstalujte modely. Podrobnosti: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Nahození</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Záběr potvrzen</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>Náhradní čekání na záběr mimo obrazovku uplynulo</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>Čas na záběr vypršel</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Minihra potvrzena</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>Minihra se nespustila</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Úspěch potvrzen</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>Minihra skončila</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>Čas minihry vypršel</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Následování cíle</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Navinout a posbírat</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Spouštění dalšího cyklu</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>Čas na sběr vypršel</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Zotavení dokončeno</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Detekováno selhání</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Požadováno zastavení</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>Čekání</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Pracovní režim</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Režim spuštění udržuje herní obraz čistý. Režim ladění přidává rozpoznávací rámečky a hodnoty spolehlivosti.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Režim spuštění</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Spustí automatický rybolov bez rozpoznávacích rámečků.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Režim ladění</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Zobrazí stabilizované rozpoznávací rámečky a hodnoty spolehlivosti přes VRChat.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Stiskněte {0} pro zastavení automatického rybolovu</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Obrazový překryv není k dispozici; automatický rybolov nebyl spuštěn</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Překryv pro VRChat není k dispozici</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automatický rybolov byl zastaven a vstup myši byl uvolněn. Restartujte VRC-Fisher a zkuste to znovu.</value></data>
+</root>

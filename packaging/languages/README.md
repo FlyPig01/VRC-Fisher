@@ -1,12 +1,12 @@
 # Inno Setup language source
 
-`ChineseSimplified.isl` is a build-time installer translation copied without modification from the official Inno Setup source repository:
+The 19 non-English `.isl` files in this directory are build-time installer translations copied without modification from the official Inno Setup source repository. English is provided by Inno Setup's built-in `Default.isl`.
 
 ```text
 Repository: https://github.com/jrsoftware/issrc
-Path: Files/Languages/ChineseSimplified.isl
-Upstream commit inspected: 791ae13f404dd74012fe7ad6f660521dcfb815b7
-Maintainer recorded by the file: Zhenghan Yang (Kira)
+Path: Files/Languages/*.isl
+Upstream commit inspected: 9e1c9960af0dfbabce635ff8250f2958ec312254
+Maintainers: recorded in each individual language file
 ```
 
-The translation is compiled into `VRC-Fisher-Setup-x64.exe`. End users do not download this file or any separate language pack. When updating it, preserve the upstream header and verify the Setup with the repository's pinned Inno Setup major version.
+The translations are compiled into `VRC-Fisher-Setup-x64.exe`. End users do not download these files or any separate language pack. When updating them, preserve the upstream headers and verify the Setup with the repository's pinned Inno Setup major version.

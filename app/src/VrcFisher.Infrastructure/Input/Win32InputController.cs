@@ -20,7 +20,10 @@ public sealed class Win32InputController : IInputController
             try
             {
                 using var process = Process.GetProcessById((int)processId);
-                return string.Equals(process.ProcessName, "VRChat", StringComparison.OrdinalIgnoreCase);
+                return string.Equals(
+                    process.ProcessName,
+                    TargetApplication.ProcessName,
+                    StringComparison.OrdinalIgnoreCase);
             }
             catch (ArgumentException)
             {

@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>実行</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>モデル</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>現在のステータス</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>準備状態</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>VRChatプロセス</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>モデルファイル</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>実行プロバイダー</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>実行準備ができていません</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>モデルをインストールしてVRChatを起動してください。</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>モデルページで両方のモデルをインストールして検証してください。</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>VRChatを起動してください。アプリはメインウィンドウに自動的に接続します。</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>自動釣り開始</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>自動釣り停止</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>モデルが準備できていません</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>利用不可</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChatが見つかりません</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>再読み込み</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>ダウンロードをキャンセル</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>モデルパッケージをダウンロードしますか？</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>最新の互換性のあるモデルペアとライセンスファイルがFlyPig01/VRC-Fisherからダウンロードされます。</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>モデルパッケージを更新しますか？</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>最新バージョンがインストール済みの両方のモデルを置き換えます。アプリケーション設定は変更されません。</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>インストール済みのモデルを削除しますか？</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>これによりlocator.onnx、minigame.onnx、およびインストール記録が削除されます。アプリケーションと設定は保持されます。</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: 未インストール</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: バージョン {1}、{2:N1} MB、検証済み</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB、マニフェスト検証に失敗しました</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>両方のモデルが必要です。</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>アタリとUIロケーター</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>ミニゲームコンポーネント検出器</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>アタリインジケーターとミニゲームを見つけます</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>コントロールゾーンと移動ターゲットを見つけます</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>VRChatフレーム全体をスキャンします。</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>特定された釣りミニゲームを分析します。</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>目的</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>インストール状態</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>ローカルパス</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>発行者 / ソース</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>未インストール</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · 準備完了</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · 検証失敗</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>モデルフォルダー</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>合計サイズ</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>バージョン {0}、{1:N1} MB、検証済み</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB、整合性チェックに失敗しました</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>モデルパッケージは削除されました。</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>インターフェース言語</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>実行デバイス</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>自動が推奨されます。ゲームがカクつく場合はCPUをお試しください。</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>開始 / 停止ホットキー</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>このグローバルホットキーを押すと、VRChatが前面にあるか、このアプリケーションがバックグラウンドにあるときに自動釣りを開始または停止できます。</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>開始 / 停止ホットキーを変更しますか？</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>ホットキーを {0} から {1} に変更しますか？ 変更はすぐに有効になります。</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>変更を確認</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>このホットキーは使用できません</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} は別のアプリケーションで既に使用されている可能性があります。以前のホットキーは変更されていません。
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>一般</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>自動化</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>ローカルストレージ</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>画面外インジケーターフォールバック</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>最小待機</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>アタリインジケーターはキャプチャされたフレームの外に表示されることがあります。有効にすると、インジケーターが検出されなかった場合、設定された待機時間後にミニゲームへの参加を試みます。デフォルトでは無効です。</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>キャスト後に測定されます。5〜30秒を選択してください。デフォルトは15秒です。</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0}秒</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>ソフトウェアディレクトリ</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>準備完了</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>互換性のあるモデルリリースを確認しています...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>モデルの更新を確認しています...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>現在モデルの更新を確認できません。インストール済みのモデルは引き続き利用できます。</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>現在モデル発行者に接続できません。ダウンロードと更新は利用できません。</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} バイト</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>モデルがダウンロードされ、検証されました。</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>ダウンロードがキャンセルされました。インストール済みのモデルは変更されていません。</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>モデルのダウンロードに失敗しました: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>デバイスの性能が不足しています</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>ミニゲーム推論は67ms制限でも65%のパフォーマンス予算を超えているため、自動入力が不安定になる可能性があります。</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>待機中</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>キャスト中</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>アタリ待ち</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>フッキング中</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>ミニゲーム</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>リール中</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>回収中</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>回復中</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>停止中</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChatが実行されていないか、メインウィンドウが利用できません</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>VRChatが前面にないため、開始がブロックされました</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>{0} ホットキーを登録できませんでした</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>予期しない起動エラー: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>モデルがインストールされていません。認識と自動入力は無効です</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>自動釣りを開始するには、検証済みの両方のONNXモデルが必要です</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>インストール済みのモデルは自動入力が承認されていません</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>自動モードが開始されました</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>検出が停止しました: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>自動釣りが停止しました</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>キャプチャが停止しました。入力は解放されました</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>キャプチャフレームが古いため、入力は解放されました</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChatが前面にありません。戻ると自動釣りが再開します</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>モデルは読み込まれていますが、出力コントラクトが検証されていません。Providerのみ確認できます</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>推論に失敗しました: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>不明なエラー</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>不明なステータス</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChatが見つかりませんでした</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>VRChatを起動して対象ワールドに入り、再度開始ホットキーを押してください。</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChatを前面に表示する必要があります</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>最初にVRChatウィンドウに切り替えてから、再度開始ホットキーを押してください。マウス入力は送信されませんでした。</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>開始 / 停止ホットキーは利用できません</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} は別のアプリケーションで既に使用されているか、Windowsが登録を拒否しました。設定で別のホットキーを選択してください。</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>自動釣りを開始できませんでした</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>予期しないエラーが発生し、すべてのマウス入力が解放されました。詳細: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>必要なモデルが見つからないか、破損しています</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>モデルを開いて完全なモデルパッケージをダウンロードまたは更新し、もう一度お試しください。</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>このモデルパッケージは入力を制御できません</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>自動入力と互換性があるとマークされたモデルリリースをインストールしてください。</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>認識が停止しました</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>マウス入力が解放されました。再起動する前にモデルと実行デバイスを確認してください。詳細: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>VRChatのキャプチャが停止しました</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>新しいVRChatフレームが受信されませんでした。マウス入力は解放されました。ゲームウィンドウがまだ利用可能か確認してください。</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>キャプチャされたフレームが古すぎます</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>自動入力は一時停止され、解放されました。VRChatまたはコンピューターがフリーズまたは過負荷になっていないか確認してください。</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>自動入力は一時停止されています</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChatが前面になくなりました。ゲームに戻るまで入力は送信されません。</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>モデルがこのソフトウェアと互換性がありません</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>モデルの出力形式を検証できませんでした。完全な互換モデルパッケージをインストールしてください。</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>認識に失敗しました</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>安全のためマウス入力が解放されました。別の実行デバイスを試すか、モデルを再インストールしてください。詳細: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>キャスト</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>アタリ確認</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>画面外アタリのフォールバック待機時間に達しました</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>アタリがタイムアウトしました</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>ミニゲーム確認</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>ミニゲームが開始されませんでした</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>成功確認</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>ミニゲーム終了</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>ミニゲームがタイムアウトしました</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>ターゲット追従中</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>リールして回収</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>次のサイクルを開始</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>回収がタイムアウトしました</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>回復完了</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>失敗を検出</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>停止要求</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>待機中</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>作業モード</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>実行モードではゲーム画面をきれいに保ちます。デバッグモードでは認識ボックスと信頼値を表示します。</value></data>
+  <data name="RunMode" xml:space="preserve"><value>実行モード</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>認識ボックスなしで自動釣りを実行します。</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>デバッグモード</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>VRChat上に安定化された認識ボックスと信頼値を表示します。</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>自動釣りを停止するには {0} を押してください</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>画面オーバーレイが利用できないため、自動釣りは開始されませんでした。</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChatオーバーレイが利用できません</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自動釣りは停止され、マウス入力は解放されました。VRC-Fisherを再起動して、もう一度お試しください。</value></data>
+</root>

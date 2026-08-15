@@ -20,8 +20,8 @@
 |---|---|---|
 | 语言与平台 | C#、.NET 10、Windows x64 | 原生 Windows 集成明确，运行和打包不携带 Python 环境 |
 | GUI | WinUI 3、Windows App SDK | 现代 Fluent 控件、高 DPI、主题和 Windows 11 视觉 |
-| 界面架构 | MVVM、CommunityToolkit.Mvvm | 将界面状态与捕获、推理和输入隔离 |
-| 屏幕捕获 | Windows Graphics Capture | 低复制、适合持续捕获完整显示器 |
+| 界面架构 | 页面 + 最小能力接口 | 页面只编排交互，不获得捕获、推理或输入实现 |
+| 屏幕捕获 | Windows Graphics Capture | 按窗口句柄持续捕获，仅接受 `VRChat.exe` 主窗口 |
 | 推理 | Microsoft.ML.OnnxRuntime | 同一 ONNX 可切换 CPU 与 DirectML Provider |
 | 输入和窗口 | Win32 API / P/Invoke | 获取 VRChat 窗口、全局停止键和鼠标控制 |
 | 配置 | System.Text.Json | 在安装目录内存储可审计的 JSON |
@@ -39,7 +39,7 @@ WinUI 3 的代价是体积与空闲内存高于精简 C++/Win32。项目接受�
 | 维度 | C# / WinUI 3 | C++ / Win32 或 WinUI 3 |
 |---|---|---|
 | Windows Graphics Capture、Win32、DirectML 集成 | 有成熟 .NET 绑定和 P/Invoke 路径 | 可直接调用原生 API |
-| GUI 开发与迭代 | MVVM、资源本地化和内存安全代码更快 | 生命周期、ABI 和资源管理成本更高 |
+| GUI 开发与迭代 | 原生控件、资源本地化和内存安全代码更快 | 生命周期、ABI 和资源管理成本更高 |
 | 安装体积与内存 | 通常更大 | 有机会更小 |
 | 运行时上限 | 对 30 FPS 小模型目标足够，但必须实测 | 更适合以后证明需要极限优化时使用 |
 | 维护风险 | 依赖托管运行时和 Windows App SDK 版本 | 需要自行承担更多内存、线程和 DLL 管理风险 |
@@ -101,7 +101,7 @@ CUDA 只影响开发机训练速度，不影响最终用户选择 CPU-only 或 D
 
 ## 6. 版本策略
 
-创建 C# 解决方案时必须锁定 Windows App SDK、CommunityToolkit.Mvvm 和两种 ONNX Runtime 包的精确版本，并提交锁定结果。训练环境同样应在 `training/` 内固定版本。
+创建 C# 解决方案时必须锁定 Windows App SDK 和两种 ONNX Runtime 包的精确版本，并提交锁定结果。训练环境同样应在 `training/` 内固定版本。
 
 新开发者不应照搬当前开发机的 Python、Inno Setup 或仓库绝对路径。部署文档使用 `py -3.11` 发现本机解释器；若机器没有 Python Launcher，可以把命令中的解释器变量替换为本机 Python 3.11 的实际路径。
 

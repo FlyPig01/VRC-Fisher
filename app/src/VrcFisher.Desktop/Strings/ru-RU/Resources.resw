@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Запуск</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Модели</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Текущий статус</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Готовность</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>Процесс VRChat</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>Файлы моделей</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Execution provider</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Не готов к запуску</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Установите модели и запустите VRChat.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Установите и проверьте обе модели на странице «Модели».</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>Запустите VRChat; приложение автоматически подключится к его главному окну.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Начать автоловлю</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Остановить автоловлю</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>Модели не готовы</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Недоступно</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChat не найден</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Отменить загрузку</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Скачать пакет моделей?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>Последняя совместимая пара моделей и файлы лицензий будут загружены из FlyPig01/VRC-Fisher.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Обновить пакет моделей?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>Последняя версия заменит обе установленные модели. Настройки приложения не изменятся.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Удалить установленные модели?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Это удалит locator.onnx, minigame.onnx и запись об установке. Приложение и настройки сохранятся.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: не установлен</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: версия {1}, {2:N1} MB, проверено</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, проверка манифеста не пройдена</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Требуются обе модели.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Локатор поклёвки и UI</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Детектор компонентов мини-игры</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Находит индикатор поклёвки и мини-игру</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Находит контрольную зону и движущуюся цель</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>Сканирует весь кадр VRChat.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Анализирует найденную мини-игру рыбалки.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Назначение</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Статус установки</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Локальный путь</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Издатель / источник</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Не установлен</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Готово</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Проверка не пройдена</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Папка моделей</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Общий размер</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>Версия {0}, {1:N1} MB, проверено</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, проверка целостности не пройдена</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>Пакет моделей был удалён.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык интерфейса</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Устройство выполнения</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Автоматически</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Рекомендуется «Автоматически». Попробуйте CPU, если игра тормозит.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Горячая клавиша запуска / остановки</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>Нажмите эту глобальную горячую клавишу, чтобы запустить или остановить автоловлю, когда VRChat находится на переднем плане или это приложение работает в фоновом режиме.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Изменить горячую клавишу запуска / остановки?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>Изменить горячую клавишу с {0} на {1}? Изменение вступит в силу немедленно.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Подтвердить изменение</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Эта горячая клавиша не может быть использована</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} может уже использоваться другим приложением. Предыдущая горячая клавиша не изменена.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Общие</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Автоматизация</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Локальное хранилище</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Запасной вариант для индикатора вне экрана</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Минимальное ожидание</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>Индикатор поклёвки может появляться за пределами захваченного кадра. Если параметр включён, приложение пытается войти в мини-игру после заданной задержки, если индикатор не был обнаружен. По умолчанию отключено.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>Отсчитывается после заброса. Выберите 5–30 секунд; по умолчанию 15 секунд.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Включено</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Отключено</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} сек.</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Каталог программы</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Проверка совместимых версий моделей...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Проверка обновлений моделей...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Сейчас невозможно проверить обновления моделей. Установленные модели остаются доступными.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>Сейчас недоступен издатель моделей. Загрузка и обновления недоступны.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} байт</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Модели загружены и проверены.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>Загрузка отменена; установленные модели не были изменены.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Не удалось загрузить модель: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Производительность устройства недостаточна</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>Инференс мини-игры превышает бюджет производительности 65% даже при пределе 67 мс, поэтому автоматический ввод может быть нестабильным.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Ожидание</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Заброс</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Ожидание поклёвки</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Подсечка</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Мини-игра</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Вываживание</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Сбор</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Восстановление</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Остановлено</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat не запущен или его главное окно недоступно</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>Запуск заблокирован, так как VRChat не находится на переднем плане</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>Не удалось зарегистрировать горячую клавишу {0}</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Неожиданный сбой при запуске: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>Модели не установлены; распознавание и автоматический ввод отключены</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Перед запуском автоловли требуются обе проверенные модели ONNX</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>Установленные модели не одобрены для автоматического ввода</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Автоматический режим запущен</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Распознавание остановлено: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Автоловля остановлена</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>Захват остановлен; ввод освобождён</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>Кадр захвата устарел; ввод освобождён</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat не на переднем плане; автоловля возобновится при возвращении</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>Модели загружены, но контракт вывода не проверен; можно проверить только Provider</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Сбой инференса: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>неизвестная ошибка</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Неизвестный статус</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChat не найден</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>Запустите VRChat и войдите в нужный мир, затем снова нажмите горячую клавишу запуска.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat должен быть на переднем плане</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Сначала переключитесь на окно VRChat, затем снова нажмите горячую клавишу запуска. Ввод мыши не отправлялся.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>Горячая клавиша запуска / остановки недоступна</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} уже используется другим приложением или Windows отклонил её регистрацию. Выберите другую горячую клавишу в настройках.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Не удалось запустить автоловлю</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Произошла непредвиденная ошибка, и весь ввод мыши был освобождён. Подробности: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>Необходимые модели отсутствуют или повреждены</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Откройте «Модели» и загрузите или обновите полный пакет моделей, затем повторите попытку.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Этот пакет моделей не может управлять вводом</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Установите версию моделей, помеченную как совместимую с автоматическим вводом.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>Распознавание остановлено</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>Ввод мыши был освобождён. Проверьте модели и устройство выполнения перед перезапуском. Подробности: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>Захват VRChat остановлен</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Не получено новых кадров VRChat. Ввод мыши освобождён; проверьте, что окно игры всё ещё доступно.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>Захваченный кадр слишком старый</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>Автоматический ввод был приостановлен и освобождён. Проверьте, не завис ли VRChat или компьютер, не перегружен ли он.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Автоматический ввод приостановлен</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat больше не на переднем плане. Ввод не будет отправляться, пока вы не вернётесь в игру.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>Модели несовместимы с этим программным обеспечением</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>Не удалось проверить формат вывода модели. Установите полный совместимый пакет моделей.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>Ошибка распознавания</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>Ввод мыши освобождён в целях безопасности. Попробуйте другое устройство выполнения или переустановите модели. Подробности: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Заброс</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Поклёвка подтверждена</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>Сработал запасной вариант: индикатор вне экрана</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>Время ожидания поклёвки истекло</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Мини-игра подтверждена</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>Мини-игра не началась</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Успех подтверждён</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>Мини-игра завершена</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>Время мини-игры истекло</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Следуем за целью</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Вываживание и сбор</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Начало следующего цикла</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>Время сбора истекло</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Восстановление завершено</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Обнаружен сбой</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Запрошена остановка</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>Ожидание</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Режим работы</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Режим запуска сохраняет игровой вид чистым. Режим отладки добавляет рамки распознавания и значения уверенности.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Режим запуска</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Запускает автоматическую рыбалку без рамок распознавания.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Режим отладки</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Показывает стабилизированные рамки распознавания и значения уверенности поверх VRChat.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Нажмите {0}, чтобы остановить автоматическую рыбалку</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Экранный оверлей недоступен; автоматическая рыбалка не запущена</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Оверлей VRChat недоступен</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Автоматическая рыбалка остановлена, и ввод мыши освобождён. Перезапустите VRC-Fisher и попробуйте снова.</value></data>
+</root>

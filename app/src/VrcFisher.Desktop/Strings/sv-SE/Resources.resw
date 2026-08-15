@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>VRC-Fisher</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Kör</value>
+  </data>
+  <data name="Models" xml:space="preserve">
+    <value>Modeller</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Aktuell status</value>
+  </data>
+  <data name="Readiness" xml:space="preserve">
+    <value>Beredskap</value>
+  </data>
+  <data name="CaptureSource" xml:space="preserve">
+    <value>VRChat-process</value>
+  </data>
+  <data name="ModelFiles" xml:space="preserve">
+    <value>Modellfiler</value>
+  </data>
+  <data name="ExecutionProvider" xml:space="preserve">
+    <value>Exekveringsprovider</value>
+  </data>
+  <data name="PreparationRequiredTitle" xml:space="preserve">
+    <value>Inte redo att köra</value>
+  </data>
+  <data name="PreparationModelsAndCapture" xml:space="preserve">
+    <value>Installera modeller och starta VRChat.</value>
+  </data>
+  <data name="PreparationModels" xml:space="preserve">
+    <value>Installera och verifiera båda modellerna på sidan Modeller.</value>
+  </data>
+  <data name="PreparationCapture" xml:space="preserve">
+    <value>Starta VRChat; appen ansluter automatiskt till dess huvudfönster.</value>
+  </data>
+  <data name="StartFishing" xml:space="preserve">
+    <value>Starta automatiskt fiske</value>
+  </data>
+  <data name="StopFishing" xml:space="preserve">
+    <value>Stoppa automatiskt fiske</value>
+  </data>
+  <data name="ModelsNotReady" xml:space="preserve">
+    <value>Modeller inte redo</value>
+  </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Inte tillgänglig</value>
+  </data>
+  <data name="VrChatProcessNotFound" xml:space="preserve">
+    <value>VRChat hittades inte</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Uppdatera</value>
+  </data>
+  <data name="DownloadModels" xml:space="preserve">
+    <value>Ladda ner</value>
+  </data>
+  <data name="UpdateModels" xml:space="preserve">
+    <value>Uppdatera</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Avbryt nedladdning</value>
+  </data>
+  <data name="DeleteModels" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Avbryt</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Stäng</value>
+  </data>
+  <data name="ConfirmDownloadTitle" xml:space="preserve">
+    <value>Ladda ner modellpaketet?</value>
+  </data>
+  <data name="ConfirmDownloadModels" xml:space="preserve">
+    <value>Det senaste kompatibla modellparet och licensfilerna kommer att laddas ner från FlyPig01/VRC-Fisher.</value>
+  </data>
+  <data name="ConfirmUpdateTitle" xml:space="preserve">
+    <value>Uppdatera modellpaketet?</value>
+  </data>
+  <data name="ConfirmUpdateModels" xml:space="preserve">
+    <value>Den senaste versionen ersätter båda installerade modellerna. Applikationsinställningarna ändras inte.</value>
+  </data>
+  <data name="ConfirmDeleteTitle" xml:space="preserve">
+    <value>Ta bort installerade modeller?</value>
+  </data>
+  <data name="ConfirmDeleteModels" xml:space="preserve">
+    <value>Detta tar bort locator.onnx, minigame.onnx och installationsposten. Applikationen och inställningarna behålls.</value>
+  </data>
+  <data name="ModelMissing" xml:space="preserve">
+    <value>{0}: inte installerad</value>
+  </data>
+  <data name="ModelValid" xml:space="preserve">
+    <value>{0}: version {1}, {2:N1} MB, verifierad</value>
+  </data>
+  <data name="ModelInvalid" xml:space="preserve">
+    <value>{0}: {1:N1} MB, manifestverifiering misslyckades</value>
+  </data>
+  <data name="ModelsDescription" xml:space="preserve">
+    <value>Båda modellerna krävs.</value>
+  </data>
+  <data name="LocatorModelName" xml:space="preserve">
+    <value>Napp- och UI-lokaliserare</value>
+  </data>
+  <data name="MinigameModelName" xml:space="preserve">
+    <value>Detektor för minispelskomponenter</value>
+  </data>
+  <data name="LocatorModelDescription" xml:space="preserve">
+    <value>Hittar nappindikatorn och minispelet</value>
+  </data>
+  <data name="MinigameModelDescription" xml:space="preserve">
+    <value>Hittar kontrollzonen och det rörliga målet</value>
+  </data>
+  <data name="LocatorModelTooltip" xml:space="preserve">
+    <value>Skannar hela VRChat-bilden.</value>
+  </data>
+  <data name="MinigameModelTooltip" xml:space="preserve">
+    <value>Analyserar det lokaliserade fiskeminispelet.</value>
+  </data>
+  <data name="SelectedModelPurpose" xml:space="preserve">
+    <value>Syfte</value>
+  </data>
+  <data name="SelectedModelStatus" xml:space="preserve">
+    <value>Installationsstatus</value>
+  </data>
+  <data name="ModelLocalPath" xml:space="preserve">
+    <value>Lokal sökväg</value>
+  </data>
+  <data name="ModelSource" xml:space="preserve">
+    <value>Utgivare / källa</value>
+  </data>
+  <data name="ModelSourceName" xml:space="preserve">
+    <value>{0} · GitHub Releases</value>
+  </data>
+  <data name="ModelStatusMissing" xml:space="preserve">
+    <value>Inte installerad</value>
+  </data>
+  <data name="ModelRowReady" xml:space="preserve">
+    <value>{0} · Redo</value>
+  </data>
+  <data name="ModelRowInvalid" xml:space="preserve">
+    <value>{0} · Verifiering misslyckades</value>
+  </data>
+  <data name="ModelsFolder" xml:space="preserve">
+    <value>Modellmapp</value>
+  </data>
+  <data name="TotalModelSize" xml:space="preserve">
+    <value>Total storlek</value>
+  </data>
+  <data name="GitHubReleases" xml:space="preserve">
+    <value>GitHub Releases</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Öppna</value>
+  </data>
+  <data name="ModelStatusReady" xml:space="preserve">
+    <value>Version {0}, {1:N1} MB, verifierad</value>
+  </data>
+  <data name="ModelStatusInvalid" xml:space="preserve">
+    <value>{0:N1} MB, integritetskontroll misslyckades</value>
+  </data>
+  <data name="ModelsDeleted" xml:space="preserve">
+    <value>Modellpaketet togs bort.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Gränssnittsspråk</value>
+  </data>
+  <data name="LanguageChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Beräkningsenhet</value>
+  </data>
+  <data name="DeviceAuto" xml:space="preserve">
+    <value>Automatiskt</value>
+  </data>
+  <data name="DeviceCpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="DeviceGpu" xml:space="preserve">
+    <value>GPU (DirectML)</value>
+  </data>
+  <data name="DeviceDescription" xml:space="preserve">
+    <value>Auto rekommenderas. Prova CPU om spelet laggar.</value>
+  </data>
+  <data name="ToggleHotkey" xml:space="preserve">
+    <value>Kortkommando för start/stopp</value>
+  </data>
+  <data name="ToggleHotkeyDescription" xml:space="preserve">
+    <value>Tryck på detta globala kortkommando för att starta eller stoppa det automatiska fisket medan VRChat är i förgrunden eller denna applikation är i bakgrunden.</value>
+  </data>
+  <data name="ConfirmHotkeyTitle" xml:space="preserve">
+    <value>Ändra kortkommandot för start/stopp?</value>
+  </data>
+  <data name="ConfirmHotkeyMessage" xml:space="preserve">
+    <value>Ändra kortkommandot från {0} till {1}? Ändringen träder i kraft omedelbart.</value>
+  </data>
+  <data name="ConfirmChange" xml:space="preserve">
+    <value>Bekräfta ändring</value>
+  </data>
+  <data name="HotkeyChangeFailedTitle" xml:space="preserve">
+    <value>Detta kortkommando kan inte användas</value>
+  </data>
+  <data name="HotkeyChangeFailed" xml:space="preserve">
+    <value>{0} kan redan användas av en annan applikation. Det tidigare kortkommandot är oförändrat.
+
+{1}</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Allmänt</value>
+  </data>
+  <data name="AutomationSettings" xml:space="preserve">
+    <value>Automatisering</value>
+  </data>
+  <data name="StorageSettings" xml:space="preserve">
+    <value>Lokal lagring</value>
+  </data>
+  <data name="BiteFallback" xml:space="preserve">
+    <value>Fallback för napp utanför skärmen</value>
+  </data>
+  <data name="BiteFallbackDelay" xml:space="preserve">
+    <value>Minsta väntetid</value>
+  </data>
+  <data name="BiteFallbackDescription" xml:space="preserve">
+    <value>Nappindikatorn kan visas utanför den fångade bilden. När aktiverat försöker applikationen gå in i minispelet efter den konfigurerade väntetiden om ingen indikator detekterades. Inaktiverat som standard.</value>
+  </data>
+  <data name="BiteFallbackDelayDescription" xml:space="preserve">
+    <value>Uppmätt efter kast. Välj 5–30 sekunder; standard är 15 sekunder.</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Aktiverad</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Inaktiverad</value>
+  </data>
+  <data name="BiteFallbackSeconds" xml:space="preserve">
+    <value>{0:N0} sekunder</value>
+  </data>
+  <data name="SoftwareRoot" xml:space="preserve">
+    <value>Programkatalog</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="CheckingModels" xml:space="preserve">
+    <value>Kontrollerar kompatibla modellversioner...</value>
+  </data>
+  <data name="CheckingUpdates" xml:space="preserve">
+    <value>Kontrollerar efter modelluppdateringar...</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Modelluppdateringar kan inte kontrolleras just nu. Installerade modeller finns kvar.</value>
+  </data>
+  <data name="UpdateCheckFailedNoModels" xml:space="preserve">
+    <value>Modellutgivaren kan inte nås just nu. Nedladdningar och uppdateringar är otillgängliga.</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>{0}: {1:N0}/{2:N0} byte</value>
+  </data>
+  <data name="DownloadComplete" xml:space="preserve">
+    <value>Modeller nedladdade och verifierade.</value>
+  </data>
+  <data name="DownloadCancelled" xml:space="preserve">
+    <value>Nedladdning avbruten; installerade modeller ändrades inte.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Modellnedladdning misslyckades: {0}</value>
+  </data>
+  <data name="PerformanceInsufficientTitle" xml:space="preserve">
+    <value>Enhetens prestanda är otillräcklig</value>
+  </data>
+  <data name="PerformanceInsufficientMessage" xml:space="preserve">
+    <value>Minispelsinferens överskrider prestandabudgeten på 65 % även vid 67 ms-gränsen, så automatisk inmatning kan vara instabil.</value>
+  </data>
+  <data name="PhaseIdle" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+  <data name="PhaseCasting" xml:space="preserve">
+    <value>Kastar</value>
+  </data>
+  <data name="PhaseWaitingForBite" xml:space="preserve">
+    <value>Väntar på napp</value>
+  </data>
+  <data name="PhaseHooking" xml:space="preserve">
+    <value>Krokar</value>
+  </data>
+  <data name="PhaseMinigame" xml:space="preserve">
+    <value>Minispel</value>
+  </data>
+  <data name="PhaseReeling" xml:space="preserve">
+    <value>Drar in</value>
+  </data>
+  <data name="PhaseLoot" xml:space="preserve">
+    <value>Samlar</value>
+  </data>
+  <data name="PhaseRecovery" xml:space="preserve">
+    <value>Återhämtning</value>
+  </data>
+  <data name="PhaseStopped" xml:space="preserve">
+    <value>Stoppad</value>
+  </data>
+  <data name="RuntimeVrChatNotRunning" xml:space="preserve">
+    <value>VRChat körs inte eller dess huvudfönster är inte tillgängligt</value>
+  </data>
+  <data name="RuntimeStartTargetNotForeground" xml:space="preserve">
+    <value>Start blockerades eftersom VRChat inte är i förgrunden</value>
+  </data>
+  <data name="RuntimeHotkeyRegistrationFailed" xml:space="preserve">
+    <value>Kortkommandot {0} kunde inte registreras</value>
+  </data>
+  <data name="RuntimeUnexpectedFailure" xml:space="preserve">
+    <value>Oväntat startfel: {0}</value>
+  </data>
+  <data name="RuntimeModelsUnavailable" xml:space="preserve">
+    <value>Modeller är inte installerade; igenkänning och automatisk inmatning är inaktiverade</value>
+  </data>
+  <data name="RuntimeModelsRequired" xml:space="preserve">
+    <value>Båda verifierade ONNX-modellerna krävs innan automatiskt fiske kan starta</value>
+  </data>
+  <data name="RuntimeAutomaticNotAllowed" xml:space="preserve">
+    <value>De installerade modellerna är inte godkända för automatisk inmatning</value>
+  </data>
+  <data name="RuntimeAutomaticStarted" xml:space="preserve">
+    <value>Automatiskt läge startat</value>
+  </data>
+  <data name="RuntimeDetectionStopped" xml:space="preserve">
+    <value>Detektering stoppad: {0}</value>
+  </data>
+  <data name="RuntimeStopped" xml:space="preserve">
+    <value>Automatiskt fiske stoppat</value>
+  </data>
+  <data name="RuntimeCaptureStopped" xml:space="preserve">
+    <value>Skärmfångst stoppad; inmatning frigjordes</value>
+  </data>
+  <data name="RuntimeFrameStale" xml:space="preserve">
+    <value>Den fångade bilden är för gammal; inmatning frigjordes</value>
+  </data>
+  <data name="RuntimeTargetNotForeground" xml:space="preserve">
+    <value>VRChat är inte i förgrunden; automatiskt fiske återupptas när du återvänder</value>
+  </data>
+  <data name="RuntimeOutputContractUnverified" xml:space="preserve">
+    <value>Modeller är laddade, men utdatakontraktet är overifierat; endast Providern kan kontrolleras</value>
+  </data>
+  <data name="RuntimeInferenceFailed" xml:space="preserve">
+    <value>Inferens misslyckades: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>okänt fel</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Okänd status</value>
+  </data>
+  <data name="AlertVrChatNotRunningTitle" xml:space="preserve">
+    <value>VRChat hittades inte</value>
+  </data>
+  <data name="AlertVrChatNotRunningMessage" xml:space="preserve">
+    <value>Starta VRChat och gå till målvärlden, tryck sedan på startkortkommandot igen.</value>
+  </data>
+  <data name="AlertVrChatBackgroundTitle" xml:space="preserve">
+    <value>VRChat måste vara i förgrunden</value>
+  </data>
+  <data name="AlertVrChatBackgroundMessage" xml:space="preserve">
+    <value>Växla till VRChat-fönstret först, tryck sedan på startkortkommandot igen. Ingen musinmatning skickades.</value>
+  </data>
+  <data name="AlertHotkeyFailedTitle" xml:space="preserve">
+    <value>Kortkommandot för start/stopp är inte tillgängligt</value>
+  </data>
+  <data name="AlertHotkeyFailedMessage" xml:space="preserve">
+    <value>{0} används redan av en annan applikation eller Windows vägrade registrera det. Välj ett annat kortkommando i Inställningar.</value>
+  </data>
+  <data name="AlertUnexpectedFailureTitle" xml:space="preserve">
+    <value>Automatiskt fiske kunde inte starta</value>
+  </data>
+  <data name="AlertUnexpectedFailureMessage" xml:space="preserve">
+    <value>Ett oväntat fel inträffade och all musinmatning frigjordes. Detaljer: {0}</value>
+  </data>
+  <data name="AlertModelsMissingTitle" xml:space="preserve">
+    <value>Nödvändiga modeller saknas eller är skadade</value>
+  </data>
+  <data name="AlertModelsMissingMessage" xml:space="preserve">
+    <value>Öppna Modeller och ladda ner eller uppdatera det kompletta modellpaketet, försök sedan igen.</value>
+  </data>
+  <data name="AlertModelsUnapprovedTitle" xml:space="preserve">
+    <value>Detta modellpaket kan inte styra inmatning</value>
+  </data>
+  <data name="AlertModelsUnapprovedMessage" xml:space="preserve">
+    <value>Installera en modellversion som är markerad som kompatibel med automatisk inmatning.</value>
+  </data>
+  <data name="AlertDetectionStoppedTitle" xml:space="preserve">
+    <value>Igenkänning stoppad</value>
+  </data>
+  <data name="AlertDetectionStoppedMessage" xml:space="preserve">
+    <value>Musinmatning frigjordes. Kontrollera modellerna och exekveringsenheten innan du startar om. Detaljer: {0}</value>
+  </data>
+  <data name="AlertCaptureStoppedTitle" xml:space="preserve">
+    <value>VRChat-skärmfångst stoppad</value>
+  </data>
+  <data name="AlertCaptureStoppedMessage" xml:space="preserve">
+    <value>Inga nya VRChat-bilder erhölls. Musinmatning frigjordes; kontrollera att spelfönstret fortfarande är tillgängligt.</value>
+  </data>
+  <data name="AlertFrameStaleTitle" xml:space="preserve">
+    <value>Den fångade bilden är för gammal</value>
+  </data>
+  <data name="AlertFrameStaleMessage" xml:space="preserve">
+    <value>Automatisk inmatning pausades och frigjordes. Kontrollera om VRChat eller datorn är frusen eller överbelastad.</value>
+  </data>
+  <data name="AlertVrChatPausedTitle" xml:space="preserve">
+    <value>Automatisk inmatning är pausad</value>
+  </data>
+  <data name="AlertVrChatPausedMessage" xml:space="preserve">
+    <value>VRChat är inte längre i förgrunden. Ingen inmatning skickas förrän du återvänder till spelet.</value>
+  </data>
+  <data name="AlertModelContractTitle" xml:space="preserve">
+    <value>Modellerna är inkompatibla med denna programvara</value>
+  </data>
+  <data name="AlertModelContractMessage" xml:space="preserve">
+    <value>Modellens utdataformat kunde inte verifieras. Installera det kompletta kompatibla modellpaketet.</value>
+  </data>
+  <data name="AlertInferenceFailedTitle" xml:space="preserve">
+    <value>Igenkänning misslyckades</value>
+  </data>
+  <data name="AlertInferenceFailedMessage" xml:space="preserve">
+    <value>Musinmatning frigjordes av säkerhetsskäl. Prova en annan exekveringsenhet eller installera om modellerna. Detaljer: {0}</value>
+  </data>
+  <data name="DecisionCast" xml:space="preserve">
+    <value>Kasta</value>
+  </data>
+  <data name="DecisionBiteConfirmed" xml:space="preserve">
+    <value>Napp bekräftat</value>
+  </data>
+  <data name="DecisionBiteFallback" xml:space="preserve">
+    <value>Tidsgräns för napp utanför skärmen nådd</value>
+  </data>
+  <data name="DecisionBiteTimeout" xml:space="preserve">
+    <value>Timeout för napp</value>
+  </data>
+  <data name="DecisionMinigameConfirmed" xml:space="preserve">
+    <value>Minispel bekräftat</value>
+  </data>
+  <data name="DecisionMinigameDidNotStart" xml:space="preserve">
+    <value>Minispelet startade inte</value>
+  </data>
+  <data name="DecisionSuccessConfirmed" xml:space="preserve">
+    <value>Framgång bekräftad</value>
+  </data>
+  <data name="DecisionMinigameEnded" xml:space="preserve">
+    <value>Minispelet avslutades</value>
+  </data>
+  <data name="DecisionMinigameTimeout" xml:space="preserve">
+    <value>Timeout för minispel</value>
+  </data>
+  <data name="DecisionFollowTarget" xml:space="preserve">
+    <value>Följer mål</value>
+  </data>
+  <data name="DecisionReelAndCollect" xml:space="preserve">
+    <value>Dra in och samla</value>
+  </data>
+  <data name="DecisionNextCycle" xml:space="preserve">
+    <value>Startar nästa cykel</value>
+  </data>
+  <data name="DecisionLootTimeout" xml:space="preserve">
+    <value>Tidsgräns för insamling överskreds</value>
+  </data>
+  <data name="DecisionRecoveryComplete" xml:space="preserve">
+    <value>Återhämtning klar</value>
+  </data>
+  <data name="DecisionFailureDetected" xml:space="preserve">
+    <value>Fel upptäcktes</value>
+  </data>
+  <data name="DecisionStopRequested" xml:space="preserve">
+    <value>Stopp begärt</value>
+  </data>
+  <data name="DecisionWaiting" xml:space="preserve">
+    <value>Väntar</value>
+  </data>
+  <data name="WorkMode" xml:space="preserve"><value>Arbetsläge</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Körläget håller spelvyn ren. Felsökningsläget lägger till igenkänningsrutor och konfidensvärden.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Körläge</value></data>
+  <data name="RunModeDescription" xml:space="preserve"><value>Kör autofiske utan igenkänningsrutor.</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Felsökningsläge</value></data>
+  <data name="DebugModeDescription" xml:space="preserve"><value>Visa stabiliserade igenkänningsrutor och konfidensvärden över VRChat.</value></data>
+  <data name="OverlayStopHint" xml:space="preserve"><value>Tryck på {0} för att stoppa autofisket</value></data>
+  <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Skärmöverlägget är inte tillgängligt; autofisket startades inte</value></data>
+  <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat-överlägget är inte tillgängligt</value></data>
+  <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Autofisket stoppades och musinmatningen släpptes. Starta om VRC-Fisher och försök igen.</value></data>
+</root>
