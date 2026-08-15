@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Felsökningsläge</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Visa stabiliserade igenkänningsrutor och konfidensvärden över VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Tryck på {0} för att stoppa autofisket</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Startar automatiskt fiske…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Starten misslyckades; musinmatningen släpptes. Kontrollera VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Skärmöverlägget är inte tillgängligt; autofisket startades inte</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat-överlägget är inte tillgängligt</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Autofisket stoppades och musinmatningen släpptes. Starta om VRC-Fisher och försök igen.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Minne</value></data>
   <data name="System" xml:space="preserve"><value>System</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Vald enhet</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Använd enhet</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Senaste körningen</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Ingen körning har registrerats ännu</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Väntar på bekräftelse vid nästa körning</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fysiska kärnor / {2} logiska trådar</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Ingen information om grafikkortet</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · drivrutin {3}</value></data>

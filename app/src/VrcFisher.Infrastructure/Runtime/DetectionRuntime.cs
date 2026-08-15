@@ -13,7 +13,8 @@ public sealed class DetectionRuntime(
     IFrameSource capture,
     IModelCatalog modelCatalog,
     IInputController inputController,
-    ILogger<DetectionRuntime> logger) : IDetectionRuntime, IAsyncDisposable
+    ILogger<DetectionRuntime> logger,
+    Func<AppOptions, IDetector>? detectorFactory = null) : IDetectionRuntime, IAsyncDisposable
 {
     private static readonly TimeSpan FirstFrameTimeout = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan FrameWaitTimeout = TimeSpan.FromMilliseconds(750);
@@ -24,12 +25,13 @@ public sealed class DetectionRuntime(
     private FishingStateMachine _stateMachine = new(StateMachineOptions.Default);
     private InferencePerformanceScheduler? _performance;
     private PerformanceProfileIdentity? _profileIdentity;
-    private OnnxRuntimeDetector? _detector;
+    private IDetector? _detector;
     private CancellationTokenSource? _runCancellation;
     private TaskCompletionSource<bool>? _firstFrame;
     private Task? _runTask;
     private ExecutionRuntimeInfo _execution = ExecutionRuntimeInfo.Unavailable();
     private bool _prepared;
+    private Exception? _captureFailure;
     private long _captured;
     private long _lastDroppedForSample;
     private DateTimeOffset _lastInferenceAt = DateTimeOffset.MinValue;
@@ -54,7 +56,7 @@ public sealed class DetectionRuntime(
         }
 
         var options = optionsProvider();
-        var detector = new OnnxRuntimeDetector(
+        var detector = detectorFactory?.Invoke(options) ?? new OnnxRuntimeDetector(
             layout.Models,
             options.Device,
             (float)options.ConfidenceThreshold,
@@ -93,8 +95,10 @@ public sealed class DetectionRuntime(
             _lastInferenceAt = DateTimeOffset.MinValue;
             _runCancellation = runCancellation;
             _firstFrame = firstFrame;
+            _captureFailure = null;
             _prepared = true;
             capture.FrameArrived += OnFrameArrived;
+            capture.CaptureFailed += OnCaptureFailed;
         }
 
         try
@@ -104,6 +108,11 @@ public sealed class DetectionRuntime(
                 cancellationToken,
                 runCancellation.Token);
             await firstFrame.Task.WaitAsync(FirstFrameTimeout, startupCancellation.Token);
+            lock (_sync)
+            {
+                if (_captureFailure is not null)
+                    throw new InvalidOperationException("屏幕捕获在首帧准备期间失败", _captureFailure);
+            }
         }
         catch (TimeoutException error)
         {
@@ -129,6 +138,8 @@ public sealed class DetectionRuntime(
         {
             if (!_prepared || _runCancellation is null)
                 throw new InvalidOperationException("检测运行时尚未完成准备");
+            if (_captureFailure is not null)
+                throw new InvalidOperationException("屏幕捕获在激活前失败", _captureFailure);
             if (_runTask is not null) return;
             var runToken = _runCancellation.Token;
             _runTask = Task.Run(() => ProcessFramesAsync(runToken), runToken);
@@ -140,7 +151,7 @@ public sealed class DetectionRuntime(
     {
         Task? task;
         CancellationTokenSource? runCancellation;
-        OnnxRuntimeDetector? detector;
+        IDetector? detector;
         InferencePerformanceScheduler? performance;
         PerformanceProfileIdentity? profileIdentity;
         lock (_sync)
@@ -150,6 +161,7 @@ public sealed class DetectionRuntime(
             task = _runTask;
             _runTask = null;
             capture.FrameArrived -= OnFrameArrived;
+            capture.CaptureFailed -= OnCaptureFailed;
             detector = _detector;
             _detector = null;
             performance = _performance;
@@ -157,6 +169,7 @@ public sealed class DetectionRuntime(
             _performance = null;
             _profileIdentity = null;
             _firstFrame = null;
+            _captureFailure = null;
             _prepared = false;
             _execution = ExecutionRuntimeInfo.Unavailable(optionsProvider().Device);
             _frames.Clear();
@@ -215,6 +228,27 @@ public sealed class DetectionRuntime(
             lock (_sync) firstFrame = _firstFrame;
             firstFrame?.TrySetResult(true);
         }
+    }
+
+    private void OnCaptureFailed(object? sender, FrameSourceFailedEventArgs args)
+    {
+        TaskCompletionSource<bool>? firstFrame;
+        var active = false;
+        lock (_sync)
+        {
+            if (!_prepared) return;
+            _captureFailure = args.Exception;
+            firstFrame = _firstFrame;
+            active = _runTask is not null;
+        }
+
+        var failure = new InvalidOperationException(
+            $"屏幕捕获失败：{args.Exception.GetBaseException().Message}",
+            args.Exception);
+        logger.LogError(args.Exception, "screen capture callback failed; input released");
+        inputController.ReleaseAll();
+        if (firstFrame?.TrySetException(failure) != true && active)
+            Publish(FishingPhase.Recovery, RuntimeMessageCode.DetectionStopped, failure.Message);
     }
 
     private async Task ProcessFramesAsync(CancellationToken cancellationToken)

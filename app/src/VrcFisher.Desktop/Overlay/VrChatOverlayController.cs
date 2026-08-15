@@ -22,7 +22,9 @@ internal sealed class VrChatOverlayController : IDisposable
         Interval = TimeSpan.FromMilliseconds(1000d / RefreshRateHz)
     };
     private DetectionVisualizationFrame? _pendingFrame;
-    private bool _wasRunning;
+    private DateTimeOffset _lastSnapshotUpdate;
+    private DateTimeOffset _failureVisibleUntil;
+    private bool _wasVisible;
     private bool _wasDebug;
     private bool _failed;
     private bool _disposed;
@@ -76,29 +78,51 @@ internal sealed class VrChatOverlayController : IDisposable
 
     private void Render()
     {
-        var running = _runtime.Snapshot.IsObserving;
+        var now = DateTimeOffset.UtcNow;
+        var snapshot = _runtime.Snapshot;
+        if (snapshot.UpdatedAt != _lastSnapshotUpdate)
+        {
+            _lastSnapshotUpdate = snapshot.UpdatedAt;
+            if (snapshot.Lifecycle == RuntimeLifecycle.Stopped
+                && snapshot.Status.Code is RuntimeMessageCode.DetectionStopped
+                    or RuntimeMessageCode.UnexpectedFailure)
+            {
+                _failureVisibleUntil = now.AddSeconds(6);
+            }
+        }
+
+        var starting = snapshot.Lifecycle == RuntimeLifecycle.Starting;
+        var running = snapshot.Lifecycle == RuntimeLifecycle.Running && snapshot.IsObserving;
+        var failed = snapshot.Lifecycle == RuntimeLifecycle.Stopped && now < _failureVisibleUntil;
+        var visible = starting || running || failed;
         var options = _optionsProvider();
         var debug = options.WorkMode == ApplicationMode.Debug;
-        if (!running
+        if (!visible
             || !NativeVrChatOverlay.TryGetVisibleClientBounds(
                 _capture.TargetWindow,
                 out var bounds,
                 out var scale))
         {
-            if (_wasRunning) ResetVisualization();
+            if (_wasVisible) ResetVisualization();
             _overlay.HideAll();
-            _wasRunning = running;
+            _wasVisible = visible;
             _wasDebug = debug;
             return;
         }
 
-        _wasRunning = true;
+        _wasVisible = true;
+        var prompt = starting
+            ? UiStrings.Get("OverlayStarting")
+            : failed
+                ? UiStrings.Get("OverlayStartFailed")
+                : UiStrings.Format("OverlayStopHint", options.ToggleHotkey);
         _overlay.ShowPrompt(
             bounds,
             scale,
             options.WorkMode,
-            UiStrings.Format("OverlayStopHint", options.ToggleHotkey));
-        if (!debug)
+            prompt,
+            failed);
+        if (!running || !debug)
         {
             if (_wasDebug) ResetVisualization();
             _overlay.HideDetections();

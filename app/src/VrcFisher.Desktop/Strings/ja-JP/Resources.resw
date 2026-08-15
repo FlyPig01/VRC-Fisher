@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>デバッグモード</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>VRChat上に安定化された認識ボックスと信頼値を表示します。</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>自動釣りを停止するには {0} を押してください</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>自動釣りを開始しています…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>起動に失敗しました。マウス入力は解除されました。VRC-Fisher を確認してください。</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>画面オーバーレイが利用できないため、自動釣りは開始されませんでした。</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChatオーバーレイが利用できません</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自動釣りは停止され、マウス入力は解放されました。VRC-Fisherを再起動して、もう一度お試しください。</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>メモリ</value></data>
   <data name="System" xml:space="preserve"><value>システム</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>選択したデバイス</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>実際のデバイス</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>直近の実行</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>実行履歴はまだありません</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>次回の実行で確認します</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · 物理 {1} コア / 論理 {2} スレッド</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>GPU 情報を取得できません</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · VRAM {2} · ドライバー {3}</value></data>

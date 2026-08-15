@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>除錯模式</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>在 VRChat 上顯示穩定後的辨識框和信心值。</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>按 {0} 停止自動釣魚</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>正在啟動自動釣魚…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>啟動失敗，滑鼠輸入已釋放；請查看 VRC-Fisher。</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>畫面覆蓋層無法使用，自動釣魚未啟動。</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat 覆蓋層無法使用</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自動釣魚已停止，且滑鼠輸入已釋放。請重新啟動 VRC-Fisher，然後再試一次。</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>記憶體</value></data>
   <data name="System" xml:space="preserve"><value>系統</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>使用者選擇</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>實際使用</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>最近一次執行</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>尚無執行記錄</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>等待下次執行確認</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} 個實體核心 / {2} 個邏輯執行緒</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>無法取得顯示卡資訊</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} 顯示記憶體 · 驅動程式 {3}</value></data>

@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Mode débogage</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Affiche les cadres de reconnaissance stabilisés et les valeurs de confiance sur VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Appuyez sur {0} pour arrêter la pêche automatique</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Démarrage de la pêche automatique…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Échec du démarrage ; la souris a été relâchée. Consultez VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>La superposition d'écran est indisponible ; la pêche automatique n'a pas démarré</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>La superposition VRChat est indisponible</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>La pêche automatique a été arrêtée et l'entrée souris a été libérée. Redémarrez VRC-Fisher, puis réessayez.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Mémoire</value></data>
   <data name="System" xml:space="preserve"><value>Système</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Périphérique choisi</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Périphérique utilisé</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Dernière exécution</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Aucune exécution enregistrée</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>En attente de confirmation au prochain démarrage</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} cœurs physiques / {2} threads logiques</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Informations de carte graphique indisponibles</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} de VRAM · pilote {3}</value></data>

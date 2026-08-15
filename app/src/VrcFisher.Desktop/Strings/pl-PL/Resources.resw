@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Tryb debugowania</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Pokazuje stabilizowane ramki rozpoznawania i wartości ufności na VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Naciśnij {0}, aby zatrzymać automatyczne wędkowanie</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Uruchamianie automatycznego łowienia…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Nie udało się uruchomić; zwolniono sterowanie myszą. Sprawdź VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Nakładka ekranowa jest niedostępna; nie uruchomiono automatycznego wędkowania</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Nakładka VRChat jest niedostępna</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automatyczne wędkowanie zostało zatrzymane i zwolniono kontrolę myszy. Uruchom ponownie VRC-Fisher, a następnie spróbuj ponownie.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Pamięć</value></data>
   <data name="System" xml:space="preserve"><value>System</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Wybrane urządzenie</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Używane urządzenie</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Ostatnie uruchomienie</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Brak zapisanych uruchomień</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Oczekiwanie na potwierdzenie przy następnym uruchomieniu</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · rdzenie fizyczne: {1} / wątki logiczne: {2}</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Brak informacji o karcie graficznej</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · VRAM {2} · sterownik {3}</value></data>

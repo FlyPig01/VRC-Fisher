@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Режим налагодження</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Показує стабілізовані рамки розпізнавання та значення впевненості поверх VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Натисніть {0}, щоб зупинити автоматичну риболовлю</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Запуск автоматичної риболовлі…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Не вдалося запустити; керування мишею відпущено. Перевірте VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Екранне накладання недоступне; автоматичну риболовлю не запущено</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Накладання VRChat недоступне</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Автоматичну риболовлю зупинено, і введення миші звільнено. Перезапустіть VRC-Fisher і спробуйте ще раз.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Пам’ять</value></data>
   <data name="System" xml:space="preserve"><value>Система</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Вибраний пристрій</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Фактичний пристрій</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Останній запуск</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Історії запусків ще немає</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Очікується підтвердження під час наступного запуску</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · фізичних ядер: {1} / логічних потоків: {2}</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Відомості про відеокарту недоступні</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · відеопам’ять {2} · драйвер {3}</value></data>

@@ -76,6 +76,40 @@ public sealed class RuntimeControllerTests
     }
 
     [Fact]
+    public async Task Successful_execution_is_retained_after_stop()
+    {
+        var controller = Create(new StubModelCatalog(), new StubDetectionRuntime(), new StubInputController());
+
+        await controller.StartAsync(CancellationToken.None);
+        await controller.StopAsync(CancellationToken.None);
+
+        Assert.Equal(InferenceBackend.Unavailable, controller.Snapshot.Execution.Backend);
+        Assert.Equal(InferenceBackend.Cpu, controller.Snapshot.LastSuccessfulExecution?.Backend);
+        Assert.Equal("CPU", controller.Snapshot.LastSuccessfulExecution?.DeviceName);
+    }
+
+    [Fact]
+    public void Execution_history_requires_a_new_run_after_the_requested_device_changes()
+    {
+        var previous = new ExecutionRuntimeInfo(
+            ExecutionDevice.Cpu,
+            InferenceBackend.Cpu,
+            "CPU",
+            false,
+            null);
+
+        Assert.Equal(
+            ExecutionHistoryState.Confirmed,
+            ExecutionRuntimeInfo.GetHistoryState(previous, ExecutionDevice.Cpu));
+        Assert.Equal(
+            ExecutionHistoryState.AwaitingConfirmation,
+            ExecutionRuntimeInfo.GetHistoryState(previous, ExecutionDevice.Gpu));
+        Assert.Equal(
+            ExecutionHistoryState.NoRun,
+            ExecutionRuntimeInfo.GetHistoryState(null, ExecutionDevice.Auto));
+    }
+
+    [Fact]
     public async Task Stop_during_start_cancels_the_transaction_and_is_idempotent()
     {
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Virheenetsintätila</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Näytä vakautetut tunnistuslaatikot ja luottamusarvot VRChatin päällä.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Paina {0} lopettaaksesi automaattisen kalastuksen</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Automaattista kalastusta käynnistetään…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Käynnistys epäonnistui; hiiren syöte vapautettiin. Tarkista VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Näyttöpeitto ei ole käytettävissä; automaattista kalastusta ei käynnistetty</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat-peitto ei ole käytettävissä</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automaattinen kalastus pysäytettiin ja hiiren syöte vapautettiin. Käynnistä VRC-Fisher uudelleen ja yritä uudelleen.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Muisti</value></data>
   <data name="System" xml:space="preserve"><value>Järjestelmä</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Valittu laite</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Käytetty laite</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Viimeisin suoritus</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Ei vielä suoritushistoriaa</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Odotetaan seuraavan suorituksen vahvistusta</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fyysistä ydintä / {2} loogista säiettä</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Näytönohjaimen tietoja ei ole saatavilla</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · ajuri {3}</value></data>

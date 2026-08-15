@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Режим отладки</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Показывает стабилизированные рамки распознавания и значения уверенности поверх VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Нажмите {0}, чтобы остановить автоматическую рыбалку</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Запуск автоматической рыбалки…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Не удалось запустить; управление мышью отпущено. Проверьте VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Экранный оверлей недоступен; автоматическая рыбалка не запущена</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Оверлей VRChat недоступен</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Автоматическая рыбалка остановлена, и ввод мыши освобождён. Перезапустите VRC-Fisher и попробуйте снова.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Память</value></data>
   <data name="System" xml:space="preserve"><value>Система</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Выбранное устройство</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Используемое устройство</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Последний запуск</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Запусков пока не было</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Ожидание подтверждения при следующем запуске</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · физических ядер: {1} / логических потоков: {2}</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Сведения о видеокарте недоступны</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · видеопамять {2} · драйвер {3}</value></data>

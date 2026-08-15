@@ -58,7 +58,7 @@ Desktop -------------------------------> Infrastructure
 
 `Desktop/Pages` 只依赖 `IDesktopPageContext`、Application/Core 契约和共享 UI，不反查窗口，也不直接调用 ONNX Runtime、GitHub API、Windows Graphics Capture 或 Win32。`MainWindow` 只负责固定导航、页面创建和授权上下文；`App` 是唯一依赖组装入口。后台服务只向 UI 发布不可变、低频的运行快照。
 
-Windows 通用边界固定为：Core/Application 只持有捕获、推理、输入、硬件和 UI 通知契约；WGC/COM、DirectML、Win32 和 WinUI 分别留在 Infrastructure/Desktop。运行设备使用结构化字段，不以 Provider 字符串驱动业务。启停由同一串行门禁和取消令牌协调；平台无关测试验证事务状态，WGC、COM、DirectML 与 WinUI 调度由 Windows 集成验收覆盖。硬件检测失败只显示不可用，不得阻止自动流程。
+Windows 通用边界固定为：Core/Application 只持有捕获、推理、输入、硬件和 UI 通知契约；WGC/COM、DirectML、Win32 和 WinUI 分别留在 Infrastructure/Desktop。运行设备使用结构化字段，不以 Provider 字符串驱动业务；当前会话和当前进程内最近一次成功运行结果分开保存。启停由同一串行门禁和取消令牌协调；捕获层通过结构化失败事件接入首帧门禁，回调先释放帧锁再通知 Application 回滚。平台无关测试验证事务状态，WGC、COM、DirectML 与 WinUI 调度由 Windows 集成验收覆盖。硬件检测失败只显示不可用，不得阻止自动流程。
 
 ## 3. 实时管线
 
@@ -151,7 +151,7 @@ Windows Graphics Capture（VRChat 主窗口）
 
 侧栏固定显示且不可收起，不重复放置小品牌图标或小软件名，入口顺序为运行、模型、使用指南、设置。界面使用 WinUI 3 原生 Fluent 控件、明暗主题和系统强调色；不使用营销式大标题、嵌套卡片、大面积渐变或持续动画。
 
-自动钓鱼运行时由 Desktop 层维护独立的 Win32 点击穿透覆盖层，只跟随前台 VRChat 客户区。运行和调试模式都在右上角显示当前停止热键；调试模式额外复用推理层已经产生的四类最终结果，以固定 `15 Hz` 绘制细边框和 `0.00-1.00` 置信度数字。覆盖层由若干无激活、无任务栏项的窄窗口组成，不遮挡框内画面，也不进入以 VRChat 窗口为目标的 WGC 捕获。
+自动钓鱼运行时由 Desktop 层维护独立的 Win32 点击穿透覆盖层，只跟随前台 VRChat 客户区。启动事务期间显示“正在启动”，成功后显示当前停止热键，启动失败后显示 6 秒红色提示；这些提示均不激活软件窗口。调试模式额外复用推理层已经产生的四类最终结果，以固定 `15 Hz` 绘制细边框和 `0.00-1.00` 置信度数字。覆盖层由若干无激活、无任务栏项的窄窗口组成，不遮挡框内画面，也不进入以 VRChat 窗口为目标的 WGC 捕获。
 
 显示防抖位于 Application 层：同类框坐标和置信度使用 `alpha=0.42` 的指数平滑，约对应 `90 ms` 视觉响应；连续两次推理未检出时暂时保留，第三次才隐藏，超过 `500 ms` 的整帧结果直接作废。大于画面宽或高 `15%` 的位置跳变直接吸附，避免 UI 真正移动后产生长距离滞后。该数据流只供覆盖层读取，`FishingStateMachine` 仍直接消费未平滑 `DetectionObservation`。
 

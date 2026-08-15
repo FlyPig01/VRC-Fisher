@@ -13,6 +13,7 @@ public sealed class RuntimeController : IRuntimeController
     private readonly SemaphoreSlim _transition = new(1, 1);
     private CancellationTokenSource? _startupCancellation;
     private int _foregroundStopScheduled;
+    private int _runtimeFailureStopScheduled;
     private RuntimeSnapshot _snapshot = new(
         RuntimeLifecycle.Stopped,
         FishingPhase.Stopped,
@@ -20,6 +21,7 @@ public sealed class RuntimeController : IRuntimeController
         false,
         false,
         ExecutionRuntimeInfo.Unavailable(),
+        null,
         0,
         0,
         InferencePerformanceSnapshot.Default,
@@ -71,6 +73,7 @@ public sealed class RuntimeController : IRuntimeController
                 Phase = FishingPhase.Stopped,
                 Status = new RuntimeStatus(RuntimeMessageCode.Starting)
             });
+            Interlocked.Exchange(ref _runtimeFailureStopScheduled, 0);
 
             await modelCatalog.RefreshAsync(startupCancellation.Token);
             if (!modelCatalog.IsReady || !detectionRuntime.IsReady)
@@ -97,6 +100,7 @@ public sealed class RuntimeController : IRuntimeController
                 return;
             }
 
+            var execution = detectionRuntime.Execution;
             Update(Snapshot with
             {
                 Lifecycle = RuntimeLifecycle.Running,
@@ -104,7 +108,8 @@ public sealed class RuntimeController : IRuntimeController
                 IsAutomatic = true,
                 ModelsReady = true,
                 Phase = FishingPhase.Idle,
-                Execution = detectionRuntime.Execution,
+                Execution = execution,
+                LastSuccessfulExecution = execution,
                 Status = new RuntimeStatus(RuntimeMessageCode.AutomaticStarted)
             });
             detectionRuntime.Activate();
@@ -260,5 +265,33 @@ public sealed class RuntimeController : IRuntimeController
                 catch (Exception error) { logger.LogError(error, "runtime could not stop after VRChat lost foreground"); }
             });
         }
+
+        else if (metrics.Status.Code == RuntimeMessageCode.DetectionStopped
+                 && Interlocked.CompareExchange(ref _runtimeFailureStopScheduled, 1, 0) == 0)
+        {
+            inputController.ReleaseAll();
+            _ = Task.Run(() => StopAfterRuntimeFailureAsync(metrics.Status));
+        }
+    }
+
+    private async Task StopAfterRuntimeFailureAsync(RuntimeStatus failure)
+    {
+        try
+        {
+            await StopAsync(CancellationToken.None);
+        }
+        catch (Exception error)
+        {
+            logger.LogError(error, "runtime could not roll back after a capture failure");
+        }
+        inputController.ReleaseAll();
+        Update(Snapshot with
+        {
+            Lifecycle = RuntimeLifecycle.Stopped,
+            IsObserving = false,
+            IsAutomatic = false,
+            Phase = FishingPhase.Recovery,
+            Status = failure
+        });
     }
 }

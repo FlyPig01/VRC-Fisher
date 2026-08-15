@@ -167,6 +167,8 @@
   <data name="DebugMode" xml:space="preserve"><value>调试模式</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>在 VRChat 画面上显示经过防抖的识别框和置信度。</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>按 {0} 停止自动钓鱼</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>正在启动自动钓鱼…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>启动失败，鼠标输入已释放；请查看 VRC-Fisher。</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>屏幕覆盖层不可用，自动钓鱼未启动</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat 屏幕覆盖层不可用</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>自动钓鱼已停止，鼠标输入已释放。请重启 VRC-Fisher 后重试。</value></data>
@@ -177,7 +179,9 @@
   <data name="Memory" xml:space="preserve"><value>内存</value></data>
   <data name="System" xml:space="preserve"><value>系统</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>用户选择</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>实际使用</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>最近一次运行</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>暂无运行记录</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>等待下次运行确认</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} 个物理核心 / {2} 个逻辑线程</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>无法获取显卡信息</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} 显存 · 驱动 {3}</value></data>

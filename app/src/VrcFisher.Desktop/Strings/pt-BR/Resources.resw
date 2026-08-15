@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Modo de depuração</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Mostra caixas de reconhecimento estabilizadas e valores de confiança sobre o VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Pressione {0} para parar a pesca automática</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Iniciando pesca automática…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Falha ao iniciar; o controle do mouse foi liberado. Verifique o VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>A sobreposição de tela está indisponível; a pesca automática não foi iniciada</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>A sobreposição do VRChat está indisponível</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>A pesca automática foi interrompida e a entrada do mouse foi liberada. Reinicie o VRC-Fisher e tente novamente.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Memória</value></data>
   <data name="System" xml:space="preserve"><value>Sistema</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Dispositivo escolhido</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Dispositivo usado</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Execução mais recente</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Nenhuma execução registrada</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Aguardando a próxima execução para confirmar</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} núcleos físicos / {2} threads lógicas</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Informações da placa de vídeo indisponíveis</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} de VRAM · driver {3}</value></data>

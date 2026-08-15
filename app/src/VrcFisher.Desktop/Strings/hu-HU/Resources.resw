@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Hibakeresési mód</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Stabilizált felismerő keretek és megbízhatósági értékek megjelenítése a VRChat felett.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Nyomja meg a(z) {0} gombot az automatikus horgászat leállításához</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Automatikus horgászat indítása…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Az indítás sikertelen; az egérvezérlés feloldva. Ellenőrizze a VRC-Fishert.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>A képernyő-átfedés nem érhető el; az automatikus horgászat nem indult el</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>A VRChat átfedése nem érhető el</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Az automatikus horgászat leállt, és az egérbemenet feloldásra került. Indítsa újra a VRC-Fisher programot, majd próbálja újra.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Memória</value></data>
   <data name="System" xml:space="preserve"><value>Rendszer</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Kiválasztott eszköz</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Használt eszköz</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Legutóbbi futás</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Még nincs futási előzmény</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Megerősítésre vár a következő futáskor</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fizikai mag / {2} logikai szál</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Nincs elérhető videokártya-információ</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · illesztőprogram {3}</value></data>

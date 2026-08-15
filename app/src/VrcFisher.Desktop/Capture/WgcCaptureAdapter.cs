@@ -32,6 +32,12 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
         remove => source.FrameArrived -= value;
     }
 
+    public event EventHandler<FrameSourceFailedEventArgs>? CaptureFailed
+    {
+        add => source.CaptureFailed += value;
+        remove => source.CaptureFailed -= value;
+    }
+
     public event EventHandler? TargetChanged;
 
     public bool IsConfigured
@@ -90,7 +96,7 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
             _item.Closed += OnTargetClosed;
             source.Configure(TargetApplication.ProcessName);
         }
-        TargetChanged?.Invoke(this, EventArgs.Empty);
+        NotifyTargetChanged();
         return true;
     }
 
@@ -162,26 +168,46 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
             _item = null;
             _targetWindow = IntPtr.Zero;
         }
-        TargetChanged?.Invoke(this, EventArgs.Empty);
+        NotifyTargetChanged();
     }
 
     private void OnTargetClosed(GraphicsCaptureItem sender, object args)
     {
+        var wasRunning = false;
         lock (_sync)
         {
             if (!ReferenceEquals(_item, sender)) return;
+            wasRunning = _running;
             sender.Closed -= OnTargetClosed;
             _item = null;
             _targetWindow = IntPtr.Zero;
         }
-        TargetChanged?.Invoke(this, EventArgs.Empty);
+        NotifyTargetChanged();
+        if (wasRunning)
+            source.PublishCaptureFailure(new InvalidOperationException("VRChat 捕获窗口已关闭"));
+    }
+
+    private void NotifyTargetChanged()
+    {
+        foreach (EventHandler handler in TargetChanged?.GetInvocationList().Cast<EventHandler>() ?? [])
+        {
+            try { handler(this, EventArgs.Empty); }
+            catch
+            {
+                // Target notifications run on WinRT callback threads. UI
+                // subscribers cannot be allowed to terminate the process.
+            }
+        }
     }
 
     private async void OnFrameArrived(Direct3D11CaptureFramePool sender, object args)
     {
-        if (!await _frameGate.WaitAsync(0)) return;
+        var entered = false;
+        Exception? failure = null;
         try
         {
+            entered = await _frameGate.WaitAsync(0);
+            if (!entered) return;
             while (_running)
             {
                 using var frame = sender.TryGetNextFrame();
@@ -197,20 +223,55 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
         {
             // Closing a frame pool may race with its final event.
         }
+        catch (Exception error)
+        {
+            lock (_sync)
+            {
+                if (_running)
+                {
+                    _running = false;
+                    failure = new InvalidOperationException("VRChat 画面捕获失败", error);
+                }
+            }
+        }
         finally
         {
-            _frameGate.Release();
+            if (entered) _frameGate.Release();
         }
+
+        // Runtime rollback may stop the frame pool, so notify only after the
+        // callback no longer owns the frame gate.
+        if (failure is not null)
+            source.PublishCaptureFailure(failure);
     }
 
     private static unsafe byte[] CopyBgra(IMemoryBufferReference reference, BitmapPlaneDescription plane, int width, int height)
     {
-        var access = (IMemoryBufferByteAccess)reference;
-        access.GetBuffer(out var source, out _);
+        ArgumentNullException.ThrowIfNull(reference);
+        if (width <= 0 || height <= 0)
+            throw new InvalidDataException($"捕获帧尺寸无效：{width}x{height}");
+
+        var access = reference.As<IMemoryBufferByteAccess>();
+        access.GetBuffer(out var source, out var capacity);
+        if (source is null)
+            throw new InvalidDataException("捕获帧缓冲区指针为空");
+
         var rowBytes = checked(width * 4);
+        if (plane.StartIndex < 0)
+            throw new InvalidDataException($"捕获帧起始偏移无效：{plane.StartIndex}");
+        if (plane.Stride < rowBytes)
+            throw new InvalidDataException($"捕获帧步幅 {plane.Stride} 小于行宽 {rowBytes}");
+
+        var finalReadEnd = checked((long)plane.StartIndex + (long)(height - 1) * plane.Stride + rowBytes);
+        if (finalReadEnd > capacity)
+            throw new InvalidDataException($"捕获帧读取越界：需要 {finalReadEnd} 字节，缓冲区仅有 {capacity} 字节");
+
         var output = new byte[checked(rowBytes * height)];
         for (var row = 0; row < height; row++)
-            Marshal.Copy((IntPtr)(source + plane.StartIndex + row * plane.Stride), output, row * rowBytes, rowBytes);
+        {
+            var offset = checked((long)plane.StartIndex + (long)row * plane.Stride);
+            Marshal.Copy((IntPtr)(source + offset), output, row * rowBytes, rowBytes);
+        }
         return output;
     }
 

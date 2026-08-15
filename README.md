@@ -24,7 +24,7 @@ VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序�
 4. 目标世界的感叹号可能在画面外时，启用“屏外感叹号兜底”并设置 `5–30` 秒等待时间；该功能默认禁用，等待时间默认 `15` 秒。
 5. 在 VRChat 前台按启动/停止热键开始自动钓鱼，再按一次停止并释放左键。默认热键为 `F8`，可通过两次确认自由修改；切出 VRChat 会完整停止，返回后不会自动恢复。
 
-当前尚未上传 GitHub Release；本地 `releases/app-v0.1.2/` 与 `releases/models-v0.1.0/` 是供维护者审核的发行物。`app-v0.1.2` Setup 实测为 `57.46 MiB`；最近一次非 C 盘无模型安装实测为 `215.75 MiB`。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
+当前代码版本为 `app-v0.1.3`；本地 `releases/app-v0.1.3/` 与 `releases/models-v0.1.0/` 是供维护者上传 GitHub Release 的发行物。`app-v0.1.3` Setup 实测为 `57.47 MiB`；完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
 
 ## ONNX 性能快照
 

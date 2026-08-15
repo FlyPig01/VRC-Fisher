@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Režim ladění</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Zobrazí stabilizované rozpoznávací rámečky a hodnoty spolehlivosti přes VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Stiskněte {0} pro zastavení automatického rybolovu</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Spouštění automatického rybolovu…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Spuštění selhalo; vstup myši byl uvolněn. Zkontrolujte VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Obrazový překryv není k dispozici; automatický rybolov nebyl spuštěn</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>Překryv pro VRChat není k dispozici</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automatický rybolov byl zastaven a vstup myši byl uvolněn. Restartujte VRC-Fisher a zkuste to znovu.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Paměť</value></data>
   <data name="System" xml:space="preserve"><value>Systém</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Vybrané zařízení</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Použité zařízení</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Poslední spuštění</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Zatím žádný záznam o spuštění</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Čeká se na potvrzení při příštím spuštění</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fyzických jader / {2} logických vláken</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Informace o grafické kartě nejsou dostupné</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · ovladač {3}</value></data>

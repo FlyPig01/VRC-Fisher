@@ -37,6 +37,13 @@ public enum InferenceBackend
     DirectML
 }
 
+public enum ExecutionHistoryState
+{
+    NoRun,
+    AwaitingConfirmation,
+    Confirmed
+}
+
 public enum RuntimeLifecycle
 {
     Stopped,
@@ -158,8 +165,14 @@ public interface IInputController
 public interface IFrameSource : IAsyncDisposable
 {
     event EventHandler<CapturedFrameEventArgs>? FrameArrived;
+    event EventHandler<FrameSourceFailedEventArgs>? CaptureFailed;
     Task StartAsync(CancellationToken cancellationToken);
     Task StopAsync(CancellationToken cancellationToken);
+}
+
+public sealed class FrameSourceFailedEventArgs(Exception exception) : EventArgs
+{
+    public Exception Exception { get; } = exception ?? throw new ArgumentNullException(nameof(exception));
 }
 
 public sealed class CapturedFrameEventArgs(long frameNumber, DateTimeOffset capturedAt, ReadOnlyMemory<byte> bgraPixels, int width, int height) : EventArgs
@@ -171,10 +184,12 @@ public sealed class CapturedFrameEventArgs(long frameNumber, DateTimeOffset capt
     public int Height { get; } = height;
 }
 
-public interface IDetector
+public interface IDetector : IDisposable
 {
     ExecutionRuntimeInfo Execution { get; }
     bool IsReady { get; }
+    bool CanProduceDecisions { get; }
+    bool HasCachedPanel { get; }
     DetectionResult Detect(
         CapturedFrameEventArgs frame,
         FishingPhase phase,
@@ -234,6 +249,7 @@ public sealed record RuntimeSnapshot(
     bool IsAutomatic,
     bool ModelsReady,
     ExecutionRuntimeInfo Execution,
+    ExecutionRuntimeInfo? LastSuccessfulExecution,
     long FramesCaptured,
     long FramesDropped,
     InferencePerformanceSnapshot Performance,
@@ -256,6 +272,15 @@ public sealed record ExecutionRuntimeInfo(
         InferenceBackend.Cpu => "cpu",
         _ => "unavailable"
     };
+
+    public static ExecutionHistoryState GetHistoryState(
+        ExecutionRuntimeInfo? lastSuccessfulExecution,
+        ExecutionDevice requested) => lastSuccessfulExecution switch
+        {
+            null => ExecutionHistoryState.NoRun,
+            { Requested: var previous } when previous != requested => ExecutionHistoryState.AwaitingConfirmation,
+            _ => ExecutionHistoryState.Confirmed
+        };
 }
 
 public sealed record GraphicsAdapterInfo(

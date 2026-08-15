@@ -149,9 +149,10 @@ internal sealed class RunPage : Page
         _modelsValue.Text = modelsReady
             ? UiStrings.Get("Ready")
             : UiStrings.Get("ModelsNotReady");
-        _executionValue.Text = FormatExecution(snapshot.Execution);
+        var lastExecution = FormatLastExecution(snapshot);
+        _executionValue.Text = lastExecution;
         _selectedDeviceValue.Text = UiStrings.Device(_context.Options.Device);
-        _actualDeviceValue.Text = FormatExecution(snapshot.Execution);
+        _actualDeviceValue.Text = lastExecution;
 
         _readinessInfo.IsOpen = !modelsReady || !captureReady;
         _readinessInfo.Title = UiStrings.Get("PreparationRequiredTitle");
@@ -176,6 +177,17 @@ internal sealed class RunPage : Page
         return execution.FellBack
             ? UiStrings.Format("FallbackToCpuFormat", actual, execution.FallbackReason ?? UiStrings.Get("UnknownError"))
             : actual;
+    }
+
+    private string FormatLastExecution(RuntimeSnapshot snapshot)
+    {
+        var execution = snapshot.LastSuccessfulExecution;
+        return ExecutionRuntimeInfo.GetHistoryState(execution, _context.Options.Device) switch
+        {
+            ExecutionHistoryState.NoRun => UiStrings.Get("NoRunHistory"),
+            ExecutionHistoryState.AwaitingConfirmation => UiStrings.Get("AwaitingNextRunConfirmation"),
+            _ => FormatExecution(execution!)
+        };
     }
 
     private static TextBlock ValueText() => new()

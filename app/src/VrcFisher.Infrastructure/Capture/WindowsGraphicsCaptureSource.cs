@@ -13,6 +13,7 @@ public sealed class WindowsGraphicsCaptureSource : IFrameSource
     private bool _running;
 
     public event EventHandler<CapturedFrameEventArgs>? FrameArrived;
+    public event EventHandler<FrameSourceFailedEventArgs>? CaptureFailed;
     public bool IsConfigured { get; private set; }
     public string TargetName { get; private set; } = "VRChat";
 
@@ -53,5 +54,22 @@ public sealed class WindowsGraphicsCaptureSource : IFrameSource
             height);
         _buffer.Publish(frame);
         FrameArrived?.Invoke(this, frame);
+    }
+
+    /// <summary>Called by the Desktop capture adapter after a frame callback fails.</summary>
+    public void PublishCaptureFailure(Exception error)
+    {
+        if (!_running) return;
+        var args = new FrameSourceFailedEventArgs(error);
+        foreach (EventHandler<FrameSourceFailedEventArgs> handler in
+                 CaptureFailed?.GetInvocationList().Cast<EventHandler<FrameSourceFailedEventArgs>>() ?? [])
+        {
+            try { handler(this, args); }
+            catch
+            {
+                // A subscriber must not turn a capture failure notification into
+                // an unhandled exception on the native WGC callback thread.
+            }
+        }
     }
 }

@@ -167,6 +167,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Debug mode</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Show stabilized recognition boxes and confidence values over VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Press {0} to stop auto fishing</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Starting auto fishing...</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Start failed; mouse input was released. Check VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>The screen overlay is unavailable; auto fishing was not started</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>The VRChat overlay is unavailable</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Auto fishing was stopped and mouse input was released. Restart VRC-Fisher, then try again.</value></data>
@@ -177,7 +179,9 @@
   <data name="Memory" xml:space="preserve"><value>Memory</value></data>
   <data name="System" xml:space="preserve"><value>System</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Selected device</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Actual device</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Most recent run</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>No run recorded yet</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Waiting for next run to confirm</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} physical cores / {2} logical threads</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>No graphics adapter information available</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · driver {3}</value></data>

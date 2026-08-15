@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-正式 C# 工程位于 `src/`，包括 Core、Application、Infrastructure 和 Desktop。模型管理、CPU/DirectML、VRChat 进程限定捕获、事务启动、四类双模型推理、受限自动调频、状态机、局内热键、15 Hz 调试覆盖层、静态硬件信息、使用指南和 20 种语言 WinUI 已接入。启动必须依次通过模型、推理、WGC 与首帧校验后才进入运行并抛竿；切出 VRChat 会释放输入并完整停止。候选 ONNX 已通过 CPU/DirectML 加载与真实全屏帧推理，真实 VRChat 资源占用和完整自动流程仍待人工验收。
+正式 C# 工程位于 `src/`，包括 Core、Application、Infrastructure 和 Desktop。模型管理、CPU/DirectML、VRChat 进程限定捕获、事务启动、结构化捕获失败回滚、四类双模型推理、受限自动调频、状态机、局内热键、15 Hz 调试覆盖层、静态硬件信息、使用指南和 20 种语言 WinUI 已接入。启动必须依次通过模型、推理、WGC 与首帧校验后才进入运行并抛竿；首帧失败或切出 VRChat 都会释放输入并完整停止。候选 ONNX 已通过 CPU/DirectML 加载与真实全屏帧推理，真实 VRChat 资源占用和完整自动流程仍待人工验收。
 
 正式软件不需要 Python、MSS、TOML、PyInstaller 或 CUDA。Python 只存在于仓库的离线数据处理与训练目录，不进入发布包。`models/v0.1.0/` 是源码公开的模型版本；安装目录只放用户选择安装的 ONNX 运行时副本。
 

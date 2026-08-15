@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Modalità di debug</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Mostra riquadri di riconoscimento stabilizzati e valori di confidenza sopra VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Premi {0} per fermare la pesca automatica</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Avvio della pesca automatica…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Avvio non riuscito; il mouse è stato rilasciato. Controlla VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>L'overlay dello schermo non è disponibile; la pesca automatica non è stata avviata</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>L'overlay di VRChat non è disponibile</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>La pesca automatica è stata interrotta e l'input del mouse è stato rilasciato. Riavvia VRC-Fisher e riprova.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Memoria</value></data>
   <data name="System" xml:space="preserve"><value>Sistema</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Dispositivo scelto</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Dispositivo usato</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Ultima esecuzione</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Nessuna esecuzione registrata</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>In attesa della prossima esecuzione per la conferma</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} core fisici / {2} thread logici</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Informazioni sulla scheda grafica non disponibili</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · driver {3}</value></data>

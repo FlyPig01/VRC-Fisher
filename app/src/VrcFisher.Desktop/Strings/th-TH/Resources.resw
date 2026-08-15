@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>โหมดดีบัก</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>แสดงกรอบตรวจจับที่เสถียรและค่าความเชื่อมั่นบน VRChat</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>กด {0} เพื่อหยุดการตกปลาอัตโนมัติ</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>กำลังเริ่มตกปลาอัตโนมัติ…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>เริ่มไม่สำเร็จ ระบบปล่อยการควบคุมเมาส์แล้ว โปรดตรวจสอบ VRC-Fisher</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>ไม่สามารถแสดงโอเวอร์เลย์บนหน้าจอได้ จึงไม่เริ่มการตกปลาอัตโนมัติ</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>ไม่สามารถแสดงโอเวอร์เลย์บน VRChat ได้</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>การตกปลาอัตโนมัติหยุดลงและคืนการควบคุมเมาส์แล้ว โปรดรีสตาร์ท VRC-Fisher แล้วลองอีกครั้ง</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>หน่วยความจำ</value></data>
   <data name="System" xml:space="preserve"><value>ระบบ</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>อุปกรณ์ที่เลือก</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>อุปกรณ์ที่ใช้จริง</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>การทำงานล่าสุด</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>ยังไม่มีประวัติการทำงาน</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>รอยืนยันในการทำงานครั้งถัดไป</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} คอร์จริง / {2} เธรดลอจิคัล</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>ไม่พบข้อมูลการ์ดจอ</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · VRAM {2} · ไดรเวอร์ {3}</value></data>

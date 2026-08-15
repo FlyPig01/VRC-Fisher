@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Foutopsporingsmodus</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Toon gestabiliseerde herkenningskaders en betrouwbaarheidswaarden over VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Druk op {0} om automatisch vissen te stoppen</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Automatisch vissen wordt gestart…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Start mislukt; muisinvoer is vrijgegeven. Controleer VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>De schermoverlay is niet beschikbaar; automatisch vissen is niet gestart</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>De VRChat-overlay is niet beschikbaar</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Automatisch vissen is gestopt en de muisinvoer is vrijgegeven. Start VRC-Fisher opnieuw en probeer het opnieuw.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Geheugen</value></data>
   <data name="System" xml:space="preserve"><value>Systeem</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Gekozen apparaat</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Gebruikt apparaat</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Meest recente uitvoering</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Nog geen uitvoering geregistreerd</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Wachten op bevestiging bij de volgende uitvoering</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fysieke kernen / {2} logische threads</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Geen videokaartinformatie beschikbaar</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · stuurprogramma {3}</value></data>

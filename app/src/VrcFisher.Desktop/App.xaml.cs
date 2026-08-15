@@ -61,6 +61,9 @@ public partial class App : Microsoft.UI.Xaml.Application
         _detection = new DetectionRuntime(_layout, () => _options, _wgc, _models, _input, _loggerFactory.CreateLogger<DetectionRuntime>());
         _runtime = new RuntimeController(_models, _detection, _input, _loggerFactory.CreateLogger<RuntimeController>());
         _hotkey = TryStartHotkey(_options.ToggleHotkey);
+        UnhandledException += OnXamlUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
     }
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
@@ -200,7 +203,7 @@ public partial class App : Microsoft.UI.Xaml.Application
             }
             await _runtime.StartAsync(CancellationToken.None);
             if (!_runtime.Snapshot.IsObserving)
-                _window?.ShowRuntimeNotice(_runtime.Snapshot.Status, activate: true);
+                _window?.ShowRuntimeNotice(_runtime.Snapshot.Status, activate: false);
         }
         catch (Exception error)
         {
@@ -208,7 +211,7 @@ public partial class App : Microsoft.UI.Xaml.Application
             await _runtime.StopAsync(CancellationToken.None);
             _window?.ShowRuntimeNotice(
                 new VrcFisher.Core.RuntimeStatus(VrcFisher.Core.RuntimeMessageCode.UnexpectedFailure, error.Message),
-                activate: true);
+                activate: false);
         }
         finally
         {
@@ -299,5 +302,27 @@ public partial class App : Microsoft.UI.Xaml.Application
         _window?.ShowRuntimeNotice(
             new VrcFisher.Core.RuntimeStatus(VrcFisher.Core.RuntimeMessageCode.OverlayUnavailable),
             activate: true);
+    }
+
+    private void OnXamlUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs args)
+    {
+        _input.ReleaseAll();
+        _loggerFactory.CreateLogger<App>().LogCritical(args.Exception, "unhandled XAML exception; input released");
+    }
+
+    private void OnDomainUnhandledException(object? sender, System.UnhandledExceptionEventArgs args)
+    {
+        _input.ReleaseAll();
+        _loggerFactory.CreateLogger<App>().LogCritical(
+            args.ExceptionObject as Exception,
+            "unhandled process exception; input released; terminating={Terminating}",
+            args.IsTerminating);
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs args)
+    {
+        _input.ReleaseAll();
+        _loggerFactory.CreateLogger<App>().LogError(args.Exception, "unobserved task exception; input released");
+        args.SetObserved();
     }
 }

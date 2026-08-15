@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Hata ayıklama modu</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>VRChat üzerinde stabilize edilmiş tanıma kutularını ve güven değerlerini gösterir.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Otomatik balıkçılığı durdurmak için {0} tuşuna basın</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Otomatik balıkçılık başlatılıyor…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>Başlatılamadı; fare girişi serbest bırakıldı. VRC-Fisher'ı kontrol edin.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>Ekran kaplaması kullanılamıyor; otomatik balıkçılık başlatılmadı</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>VRChat kaplaması kullanılamıyor</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>Otomatik balıkçılık durduruldu ve fare girişi serbest bırakıldı. VRC-Fisher'ı yeniden başlatın ve tekrar deneyin.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Bellek</value></data>
   <data name="System" xml:space="preserve"><value>Sistem</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Seçilen cihaz</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Kullanılan cihaz</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Son çalışma</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Henüz çalışma kaydı yok</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Sonraki çalışmada onay bekleniyor</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} fiziksel çekirdek / {2} mantıksal iş parçacığı</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>Ekran kartı bilgisi alınamadı</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} VRAM · sürücü {3}</value></data>

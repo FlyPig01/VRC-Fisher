@@ -8,6 +8,7 @@ internal sealed class NativeVrChatOverlay : IDisposable
 {
     private static readonly uint PromptForeground = NativeOverlaySurface.Color(255, 255, 255);
     private static readonly uint PromptBackground = NativeOverlaySurface.Color(28, 28, 30);
+    private static readonly uint ErrorBackground = NativeOverlaySurface.Color(176, 36, 48);
     private static readonly IReadOnlyDictionary<string, uint> ClassColors =
         new Dictionary<string, uint>(StringComparer.Ordinal)
         {
@@ -52,7 +53,7 @@ internal sealed class NativeVrChatOverlay : IDisposable
         return true;
     }
 
-    public void ShowPrompt(ScreenBounds bounds, double scale, ApplicationMode mode, string text)
+    public void ShowPrompt(ScreenBounds bounds, double scale, ApplicationMode mode, string text, bool isError = false)
     {
         var fontHeight = Math.Max(15, (int)Math.Round(15 * scale));
         var paddingX = Math.Max(12, (int)Math.Round(12 * scale));
@@ -72,7 +73,7 @@ internal sealed class NativeVrChatOverlay : IDisposable
             height,
             fontHeight,
             PromptForeground,
-            PromptBackground);
+            isError ? ErrorBackground : PromptBackground);
         _modeIcon.ShowText(
             mode == ApplicationMode.Debug ? "\uEBE8" : "\u25B6",
             promptX - iconWidth,
@@ -81,7 +82,7 @@ internal sealed class NativeVrChatOverlay : IDisposable
             height,
             fontHeight,
             PromptForeground,
-            PromptBackground,
+            isError ? ErrorBackground : PromptBackground,
             mode == ApplicationMode.Debug ? "Segoe Fluent Icons" : "Segoe UI Symbol");
     }
 

@@ -489,6 +489,8 @@
   <data name="DebugMode" xml:space="preserve"><value>Modo de depuración</value></data>
   <data name="DebugModeDescription" xml:space="preserve"><value>Muestra cuadros de reconocimiento estabilizados y valores de confianza sobre VRChat.</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Pulsa {0} para detener la pesca automática</value></data>
+  <data name="OverlayStarting" xml:space="preserve"><value>Iniciando pesca automática…</value></data>
+  <data name="OverlayStartFailed" xml:space="preserve"><value>El inicio falló; se liberó el ratón. Revisa VRC-Fisher.</value></data>
   <data name="RuntimeOverlayUnavailable" xml:space="preserve"><value>La superposición de pantalla no está disponible; la pesca automática no se inició</value></data>
   <data name="AlertOverlayFailedTitle" xml:space="preserve"><value>La superposición de VRChat no está disponible</value></data>
   <data name="AlertOverlayFailedMessage" xml:space="preserve"><value>La pesca automática se detuvo y se liberó la entrada del ratón. Reinicia VRC-Fisher e inténtalo de nuevo.</value></data>
@@ -499,7 +501,9 @@
   <data name="Memory" xml:space="preserve"><value>Memoria</value></data>
   <data name="System" xml:space="preserve"><value>Sistema</value></data>
   <data name="SelectedDevice" xml:space="preserve"><value>Dispositivo elegido</value></data>
-  <data name="ActualDevice" xml:space="preserve"><value>Dispositivo usado</value></data>
+  <data name="ActualDevice" xml:space="preserve"><value>Última ejecución</value></data>
+  <data name="NoRunHistory" xml:space="preserve"><value>Aún no hay ejecuciones registradas</value></data>
+  <data name="AwaitingNextRunConfirmation" xml:space="preserve"><value>Esperando la próxima ejecución para confirmar</value></data>
   <data name="CpuTopologyFormat" xml:space="preserve"><value>{0} · {1} núcleos físicos / {2} hilos lógicos</value></data>
   <data name="NoGraphicsAdapter" xml:space="preserve"><value>No hay información de la tarjeta gráfica</value></data>
   <data name="GpuAdapterFormat" xml:space="preserve"><value>#{0} {1} · {2} de VRAM · controlador {3}</value></data>
