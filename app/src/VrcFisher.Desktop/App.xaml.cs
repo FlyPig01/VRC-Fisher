@@ -23,6 +23,7 @@ public partial class App : Microsoft.UI.Xaml.Application
     private readonly WindowsGraphicsCaptureSource _capture;
     private readonly WgcCaptureAdapter _wgc;
     private readonly ModelCatalog _models;
+    private readonly ModelDownloadCoordinator _modelDownloads;
     private readonly OptionsStore _optionsStore;
     private readonly Win32InputController _input;
     private readonly Task<HardwareSnapshot> _hardware;
@@ -52,6 +53,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         _models = new ModelCatalog(
             _layout,
             new HttpClient { Timeout = TimeSpan.FromMinutes(10) });
+        _modelDownloads = new ModelDownloadCoordinator(_models);
         _capture = new WindowsGraphicsCaptureSource();
         _wgc = new WgcCaptureAdapter(_capture);
         _input = new Win32InputController();
@@ -80,6 +82,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         _window = new MainWindow(
             _runtime,
             _models,
+            _modelDownloads,
             _layout,
             _wgc,
             _options,
@@ -144,6 +147,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         _overlay?.Dispose();
         _overlay = null;
         await _runtime.StopAsync(CancellationToken.None);
+        await _modelDownloads.DisposeAsync();
         await _detection.DisposeAsync();
         await _wgc.DisposeAsync();
         _hotkey?.Dispose();

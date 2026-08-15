@@ -18,13 +18,13 @@ VRC-Fisher 是一个仅面向 Windows 的 VRChat 钓鱼自动化项目。程序�
 
 ## 快速使用
 
-1. 在软件“使用指南”页点击本地封面，进入当前支持的 [Fins Fishing](https://vrchat.com/home/world/wrld_ae001ea3-ed05-42f0-adf2-3d47efd10a77/info)。
+1. 在软件“使用指南”页点击本地封面查看 [Fins Fishing](https://vrchat.com/home/world/wrld_ae001ea3-ed05-42f0-adf2-3d47efd10a77/info) 的官方网页信息，再从 VRChat 内进入该世界。
 2. 打开 VRC-Fisher，确认两个模型已安装并通过校验。
 3. 软件找到 VRChat 主窗口后选择运行设备和工作模式；识别频率始终自动调节。运行模式不显示识别框，调试模式显示经过防抖的识别框和置信度数字。
 4. 目标世界的感叹号可能在画面外时，启用“屏外感叹号兜底”并设置 `5–30` 秒等待时间；该功能默认禁用，等待时间默认 `15` 秒。
 5. 在 VRChat 前台按启动/停止热键开始自动钓鱼，再按一次停止并释放左键。默认热键为 `F8`，可通过两次确认自由修改；切出 VRChat 会完整停止，返回后不会自动恢复。
 
-当前尚未上传 GitHub Release；本地 `releases/app-v0.1.1/` 与 `releases/models-v0.1.0/` 是供维护者审核的发行物。`app-v0.1.1` Setup 实测为 `57.47 MiB`，非 C 盘无模型安装实测为 `215.75 MiB`。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
+当前尚未上传 GitHub Release；本地 `releases/app-v0.1.2/` 与 `releases/models-v0.1.0/` 是供维护者审核的发行物。`app-v0.1.2` Setup 实测为 `57.46 MiB`；最近一次非 C 盘无模型安装实测为 `215.75 MiB`。完整说明和卸载行为见 [使用手册](USER_GUIDE.md)。
 
 ## ONNX 性能快照
 

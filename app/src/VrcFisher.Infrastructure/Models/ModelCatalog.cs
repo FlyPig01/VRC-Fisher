@@ -1,6 +1,8 @@
 using System.Net.Http.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using VrcFisher.Application;
@@ -17,6 +19,9 @@ public sealed class ModelCatalog : IModelCatalog
     private static readonly string[] RequiredModels = ["locator.onnx", "minigame.onnx"];
     private static readonly string[] RequiredDocumentation = ["MODEL_CARD.md", "MODEL_LICENSE.txt"];
     private const int MaximumDownloadAttempts = 3;
+    private const int MaximumReleaseChanges = 3;
+    private const int MaximumConcurrentDownloads = 2;
+    private const string DownloadDirectoryPrefix = "models-download-";
     private readonly DirectoryLayout _layout;
     private readonly HttpClient _httpClient;
     private readonly string _repository;
@@ -167,10 +172,25 @@ public sealed class ModelCatalog : IModelCatalog
         await _operation.WaitAsync(cancellationToken);
         try
         {
-            ResolvedModelRelease? source;
-            lock (_sync) source = _latestRelease;
-            source ??= await ResolveLatestManifestAsync(cancellationToken);
-            return await DownloadManifestAsync(source.Manifest, source.ManifestUri, progress, cancellationToken);
+            for (var releaseAttempt = 1; releaseAttempt <= MaximumReleaseChanges; releaseAttempt++)
+            {
+                var source = await ResolveLatestManifestAsync(cancellationToken);
+                SetLatestRelease(source);
+                try
+                {
+                    return await DownloadManifestAsync(
+                        source.Manifest,
+                        source.ManifestUri,
+                        progress,
+                        VerifyLatestReleaseAsync,
+                        cancellationToken);
+                }
+                catch (ModelReleaseChangedException) when (releaseAttempt < MaximumReleaseChanges)
+                {
+                }
+            }
+
+            throw new InvalidDataException("模型发布版本连续发生变化，请稍后重试");
         }
         finally
         {
@@ -190,7 +210,12 @@ public sealed class ModelCatalog : IModelCatalog
             var manifest = await GetJsonAsync<ModelManifest>(manifestUri, null, cancellationToken)
                 ?? throw new InvalidDataException("模型清单为空");
             ValidateManifest(manifest);
-            return await DownloadManifestAsync(manifest, manifestUri, progress, cancellationToken);
+            return await DownloadManifestAsync(
+                manifest,
+                manifestUri,
+                progress,
+                verifyLatest: null,
+                cancellationToken);
         }
         finally
         {
@@ -256,45 +281,69 @@ public sealed class ModelCatalog : IModelCatalog
         throw new InvalidDataException("没有找到与当前 runtime_api 兼容的 models-v* Release");
     }
 
+    private Task<ResolvedModelRelease> VerifyLatestReleaseAsync(CancellationToken cancellationToken) =>
+        ResolveLatestManifestAsync(cancellationToken);
+
+    private void SetLatestRelease(ResolvedModelRelease release)
+    {
+        lock (_sync)
+        {
+            _latestRelease = release;
+            _latestVersion = release.Manifest.Version;
+            _updateAvailable = IsNewerVersion(_latestVersion, _installedVersion);
+            _updateCheckSucceeded = true;
+        }
+        RaiseStatusChanged();
+    }
+
     private async Task<ModelManifest> DownloadManifestAsync(
         ModelManifest manifest,
         Uri manifestUri,
         IProgress<ModelDownloadProgress>? progress,
+        Func<CancellationToken, Task<ResolvedModelRelease>>? verifyLatest,
         CancellationToken cancellationToken)
     {
         _layout.Ensure();
-        var staging = Path.Combine(_layout.Downloads, $"models-{Guid.NewGuid():N}");
+        var fingerprint = ManifestFingerprint(manifest);
+        var staging = Path.Combine(_layout.Downloads, $"{DownloadDirectoryPrefix}{fingerprint[..16]}");
         var backup = Path.Combine(_layout.Downloads, $"models-backup-{Guid.NewGuid():N}");
+        DeleteStaleDownloadDirectories(staging);
         Directory.CreateDirectory(staging);
         var files = manifest.Models.Concat(manifest.Documentation).ToArray();
-        var totalBytes = files.Sum(item => item.Size);
-        long completedBytes = 0;
-        var completedFiles = 0;
+        var tracker = new ModelDownloadProgressTracker(files, progress);
+        var committed = false;
 
         try
         {
-            foreach (var file in files)
+            using var concurrency = new SemaphoreSlim(MaximumConcurrentDownloads);
+            var downloads = files.Select(async file =>
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                var destination = Path.Combine(staging, file.FileName);
-                var uri = new Uri(manifestUri, file.FileName);
-                await DownloadFileAsync(
-                    uri,
-                    destination,
-                    file,
-                    completedBytes,
-                    totalBytes,
-                    completedFiles,
-                    progress,
-                    cancellationToken);
-                completedBytes += file.Size;
-                completedFiles++;
-                progress?.Report(new(
-                    file.FileName,
-                    completedBytes,
-                    totalBytes,
-                    completedFiles,
-                    files.Length));
+                await concurrency.WaitAsync(cancellationToken);
+                try
+                {
+                    var destination = Path.Combine(staging, file.FileName);
+                    var uri = new Uri(manifestUri, file.FileName);
+                    await DownloadFileAsync(uri, destination, file, tracker, cancellationToken);
+                }
+                finally
+                {
+                    concurrency.Release();
+                }
+            }).ToArray();
+            await Task.WhenAll(downloads);
+
+            if (verifyLatest is not null)
+            {
+                var latest = await verifyLatest(cancellationToken);
+                SetLatestRelease(latest);
+                if (!string.Equals(
+                        fingerprint,
+                        ManifestFingerprint(latest.Manifest),
+                        StringComparison.Ordinal))
+                {
+                    DeleteDirectoryIfPresent(staging);
+                    throw new ModelReleaseChangedException();
+                }
             }
 
             await File.WriteAllTextAsync(
@@ -303,6 +352,7 @@ public sealed class ModelCatalog : IModelCatalog
                 cancellationToken);
 
             ReplaceModelDirectory(staging, backup, cancellationToken);
+            committed = true;
             await RefreshAsync(CancellationToken.None);
             lock (_sync)
             {
@@ -313,9 +363,14 @@ public sealed class ModelCatalog : IModelCatalog
             RaiseStatusChanged();
             return manifest;
         }
-        finally
+        catch (InvalidDataException)
         {
             DeleteDirectoryIfPresent(staging);
+            throw;
+        }
+        finally
+        {
+            if (committed) DeleteDirectoryIfPresent(staging);
             DeleteDirectoryIfPresent(backup);
         }
     }
@@ -415,53 +470,114 @@ public sealed class ModelCatalog : IModelCatalog
         Uri uri,
         string destination,
         ModelFileInfo expected,
-        long completedBytes,
-        long totalBytes,
-        int completedFiles,
-        IProgress<ModelDownloadProgress>? progress,
+        ModelDownloadProgressTracker tracker,
         CancellationToken cancellationToken)
     {
+        if (File.Exists(destination))
+        {
+            try
+            {
+                await VerifyAsync(destination, expected, cancellationToken);
+                tracker.Complete(expected);
+                return;
+            }
+            catch (InvalidDataException)
+            {
+                File.Delete(destination);
+            }
+        }
+
+        var partial = destination + ".part";
+        if (File.Exists(partial) && new FileInfo(partial).Length > expected.Size)
+            File.Delete(partial);
+
         for (var attempt = 1; attempt <= MaximumDownloadAttempts; attempt++)
         {
             try
             {
+                var existingBytes = File.Exists(partial) ? new FileInfo(partial).Length : 0;
+                tracker.Report(expected, existingBytes);
                 using var request = CreateRequest(uri, null);
+                if (existingBytes > 0)
+                    request.Headers.Range = new RangeHeaderValue(existingBytes, null);
                 using var response = await _httpClient.SendAsync(
                     request,
                     HttpCompletionOption.ResponseHeadersRead,
                     cancellationToken);
+                if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable
+                    && existingBytes > 0)
+                {
+                    if (existingBytes == expected.Size)
+                    {
+                        await VerifyAsync(partial, expected, cancellationToken);
+                        File.Move(partial, destination, overwrite: true);
+                        tracker.Complete(expected);
+                        return;
+                    }
+                    File.Delete(partial);
+                    if (attempt < MaximumDownloadAttempts)
+                    {
+                        await DelayBeforeRetryAsync(attempt, cancellationToken);
+                        continue;
+                    }
+                }
                 if (IsTransient(response.StatusCode) && attempt < MaximumDownloadAttempts)
                 {
                     await DelayBeforeRetryAsync(attempt, cancellationToken);
                     continue;
                 }
                 response.EnsureSuccessStatusCode();
+
+                var append = existingBytes > 0
+                    && response.StatusCode == HttpStatusCode.PartialContent
+                    && HasExpectedContentRange(response, existingBytes, expected.Size);
+                if (existingBytes > 0
+                    && response.StatusCode == HttpStatusCode.PartialContent
+                    && !append)
+                {
+                    File.Delete(partial);
+                    if (attempt < MaximumDownloadAttempts)
+                    {
+                        await DelayBeforeRetryAsync(attempt, cancellationToken);
+                        continue;
+                    }
+                    throw new InvalidDataException($"服务器返回了无效的断点范围：{expected.FileName}");
+                }
+
                 await using var input = await response.Content.ReadAsStreamAsync(cancellationToken);
                 var buffer = new byte[1024 * 1024];
-                long fileBytes = 0;
+                long fileBytes = append ? existingBytes : 0;
                 int read;
-                await using (var output = File.Create(destination))
+                await using (var output = new FileStream(
+                                 partial,
+                                 append ? FileMode.Append : FileMode.Create,
+                                 FileAccess.Write,
+                                 FileShare.None,
+                                 buffer.Length,
+                                 useAsync: true))
                 {
                     while ((read = await input.ReadAsync(buffer, cancellationToken)) > 0)
                     {
                         await output.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
                         fileBytes += read;
-                        progress?.Report(new(
-                            expected.FileName,
-                            completedBytes + fileBytes,
-                            totalBytes,
-                            completedFiles,
-                            RequiredModels.Length + RequiredDocumentation.Length));
+                        tracker.Report(expected, fileBytes);
                     }
                     await output.FlushAsync(cancellationToken);
                 }
-                await VerifyAsync(destination, expected, cancellationToken);
+                await VerifyAsync(partial, expected, cancellationToken);
+                File.Move(partial, destination, overwrite: true);
+                tracker.Complete(expected);
                 return;
+            }
+            catch (InvalidDataException)
+            {
+                if (File.Exists(partial)) File.Delete(partial);
+                if (attempt >= MaximumDownloadAttempts) throw;
+                await DelayBeforeRetryAsync(attempt, cancellationToken);
             }
             catch (Exception error) when (IsTransient(error, cancellationToken)
                                           && attempt < MaximumDownloadAttempts)
             {
-                if (File.Exists(destination)) File.Delete(destination);
                 await DelayBeforeRetryAsync(attempt, cancellationToken);
             }
         }
@@ -509,6 +625,16 @@ public sealed class ModelCatalog : IModelCatalog
         return request;
     }
 
+    private static bool HasExpectedContentRange(
+        HttpResponseMessage response,
+        long start,
+        long expectedLength)
+    {
+        var range = response.Content.Headers.ContentRange;
+        return range?.From == start
+            && (range.Length is null || range.Length == expectedLength);
+    }
+
     private static bool IsTransient(HttpStatusCode statusCode) =>
         statusCode is HttpStatusCode.RequestTimeout or HttpStatusCode.TooManyRequests
         || (int)statusCode >= 500;
@@ -518,7 +644,7 @@ public sealed class ModelCatalog : IModelCatalog
         || error is TaskCanceledException && !cancellationToken.IsCancellationRequested;
 
     private static Task DelayBeforeRetryAsync(int attempt, CancellationToken cancellationToken) =>
-        Task.Delay(TimeSpan.FromMilliseconds(200 * attempt), cancellationToken);
+        Task.Delay(TimeSpan.FromMilliseconds(250 * Math.Pow(2, attempt - 1)), cancellationToken);
 
     private static async Task VerifyAsync(
         string path,
@@ -550,6 +676,24 @@ public sealed class ModelCatalog : IModelCatalog
         return !string.Equals(latest, installed, StringComparison.Ordinal);
     }
 
+    private static string ManifestFingerprint(ModelManifest manifest)
+    {
+        var value = new StringBuilder()
+            .Append(manifest.SchemaVersion).Append('|')
+            .Append(manifest.RuntimeApi).Append('|')
+            .Append(manifest.Version).Append('|')
+            .Append(manifest.AutomaticAllowed).Append('|');
+        foreach (var file in manifest.Models.Concat(manifest.Documentation)
+                     .OrderBy(item => item.FileName, StringComparer.Ordinal))
+        {
+            value.Append(file.FileName).Append('|')
+                .Append(file.Size).Append('|')
+                .Append(file.Sha256.ToLowerInvariant()).Append('|');
+        }
+        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value.ToString())))
+            .ToLowerInvariant();
+    }
+
     private static string? ReadRepository(string root)
     {
         var path = Path.Combine(root, "release.json");
@@ -579,6 +723,20 @@ public sealed class ModelCatalog : IModelCatalog
         if (Directory.Exists(path)) Directory.Delete(path, recursive: true);
     }
 
+    private void DeleteStaleDownloadDirectories(string current)
+    {
+        if (!Directory.Exists(_layout.Downloads)) return;
+        var currentFullPath = Path.GetFullPath(current);
+        foreach (var directory in Directory.EnumerateDirectories(
+                     _layout.Downloads,
+                     $"{DownloadDirectoryPrefix}*",
+                     SearchOption.TopDirectoryOnly))
+        {
+            if (!string.Equals(Path.GetFullPath(directory), currentFullPath, StringComparison.OrdinalIgnoreCase))
+                DeleteDirectoryIfPresent(directory);
+        }
+    }
+
     private void RaiseStatusChanged() => StatusChanged?.Invoke(this, EventArgs.Empty);
 
     private sealed record GitHubRelease(
@@ -592,6 +750,42 @@ public sealed class ModelCatalog : IModelCatalog
         [property: JsonPropertyName("browser_download_url")] string? BrowserDownloadUrl);
 
     private sealed record ResolvedModelRelease(ModelManifest Manifest, Uri ManifestUri);
+
+    private sealed class ModelDownloadProgressTracker(
+        IReadOnlyList<ModelFileInfo> files,
+        IProgress<ModelDownloadProgress>? progress)
+    {
+        private readonly object _sync = new();
+        private readonly Dictionary<string, long> _downloaded = files.ToDictionary(
+            item => item.FileName,
+            _ => 0L,
+            StringComparer.Ordinal);
+        private readonly HashSet<string> _completed = new(StringComparer.Ordinal);
+        private readonly long _totalBytes = files.Sum(item => item.Size);
+
+        public void Report(ModelFileInfo file, long bytes) => Publish(file, bytes, completed: false);
+
+        public void Complete(ModelFileInfo file) => Publish(file, file.Size, completed: true);
+
+        private void Publish(ModelFileInfo file, long bytes, bool completed)
+        {
+            ModelDownloadProgress snapshot;
+            lock (_sync)
+            {
+                _downloaded[file.FileName] = Math.Clamp(bytes, 0, file.Size);
+                if (completed) _completed.Add(file.FileName);
+                snapshot = new ModelDownloadProgress(
+                    file.FileName,
+                    _downloaded.Values.Sum(),
+                    _totalBytes,
+                    _completed.Count,
+                    files.Count);
+            }
+            progress?.Report(snapshot);
+        }
+    }
+
+    private sealed class ModelReleaseChangedException : Exception;
 }
 
 internal static class UriExtensions

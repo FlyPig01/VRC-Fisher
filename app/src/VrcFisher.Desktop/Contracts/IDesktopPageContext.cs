@@ -7,6 +7,7 @@ internal interface IDesktopPageContext
 {
     IRuntimeController Runtime { get; }
     IModelCatalog Models { get; }
+    ModelDownloadCoordinator ModelDownloads { get; }
     ICaptureTargetState Capture { get; }
     AppOptions Options { get; }
     string SoftwareRoot { get; }

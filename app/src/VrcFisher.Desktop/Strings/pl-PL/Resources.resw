@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} jest aktywny. Podczas kontroli nie znaleziono konfliktu globalnej rejestracji.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Obsługiwany świat VRChat</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Obsługiwany jest tylko ten świat. Zmiana interfejsu łowienia może wymagać aktualizacji modeli.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Otwórz obsługiwany świat w VRChat</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Wyświetl stronę internetową obsługiwanego świata</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Szybki start</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Kliknij obraz powyżej i wejdź do obsługiwanego świata.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Kliknij obraz powyżej, aby wyświetlić stronę świata, a następnie wejdź do niego w VRChat.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Zainstaluj oba modele, wejdź do strefy łowienia i trzymaj VRChat na pierwszym planie.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Naciśnij {0}, aby uruchomić. Naciśnij ponownie lub opuść VRChat, aby zatrzymać.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Przygotowywanie modeli, inferencji i przechwytywania…</value></data>

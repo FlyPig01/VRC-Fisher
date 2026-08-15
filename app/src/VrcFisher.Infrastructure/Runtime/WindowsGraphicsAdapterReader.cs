@@ -9,6 +9,7 @@ internal static class WindowsGraphicsAdapterReader
     private const int DxgiErrorNotFound = unchecked((int)0x887A0002);
     private const int EnumAdapters1Slot = 12;
     private const int GetDesc1Slot = 10;
+    private const uint SoftwareAdapterFlag = 2;
     private static readonly Guid IidDxgiFactory1 = new("770AAE78-F26F-4DBA-A829-253C83D1B387");
 
     public static IReadOnlyList<GraphicsAdapterInfo> Read()
@@ -18,16 +19,24 @@ internal static class WindowsGraphicsAdapterReader
         if (adapters.Count == 0)
         {
             return registry
+                .Where(item => !IsSoftwareAdapterName(item.Name))
                 .OrderBy(item => item.Name, StringComparer.OrdinalIgnoreCase)
                 .Select((item, index) => new GraphicsAdapterInfo(index, item.Name, item.Memory, item.Driver))
                 .ToArray();
         }
 
-        return adapters.Select((adapter, index) =>
+        var physicalAdapters = adapters
+            .Where(adapter => (adapter.Flags & SoftwareAdapterFlag) == 0)
+            .GroupBy(adapter => adapter.VendorId != 0 && adapter.DeviceId != 0
+                ? $"device:{adapter.VendorId}:{adapter.DeviceId}:{adapter.SubSystemId}:{adapter.Name}"
+                : $"luid:{adapter.Luid}:{adapter.Name}", StringComparer.Ordinal)
+            .Select(group => group.First())
+            .ToArray();
+        return physicalAdapters.Select(adapter =>
         {
             var metadata = registry.FirstOrDefault(item =>
                 string.Equals(item.Name, adapter.Name, StringComparison.OrdinalIgnoreCase));
-            return new GraphicsAdapterInfo(index, adapter.Name, adapter.Memory, metadata.Driver);
+            return new GraphicsAdapterInfo(adapter.Index, adapter.Name, adapter.Memory, metadata.Driver);
         }).ToArray();
     }
 
@@ -37,9 +46,9 @@ internal static class WindowsGraphicsAdapterReader
         return adapter is null ? $"DirectML device {deviceId}" : $"{adapter.Name} (DirectML {deviceId})";
     }
 
-    private static IReadOnlyList<(string Name, long Memory)> ReadDxgiAdapters()
+    private static IReadOnlyList<DxgiAdapter> ReadDxgiAdapters()
     {
-        var adapters = new List<(string Name, long Memory)>();
+        var adapters = new List<DxgiAdapter>();
         var factoryId = IidDxgiFactory1;
         var result = CreateDXGIFactory1(ref factoryId, out var factory);
         if (result < 0 || factory == IntPtr.Zero) return adapters;
@@ -59,7 +68,15 @@ internal static class WindowsGraphicsAdapterReader
                         || string.IsNullOrWhiteSpace(description.Description))
                         continue;
                     var memory = description.DedicatedVideoMemory.ToUInt64();
-                    adapters.Add((description.Description.Trim(), checked((long)Math.Min(memory, long.MaxValue))));
+                    adapters.Add(new DxgiAdapter(
+                        checked((int)index),
+                        description.Description.Trim(),
+                        checked((long)Math.Min(memory, long.MaxValue)),
+                        description.AdapterLuid,
+                        description.VendorId,
+                        description.DeviceId,
+                        description.SubSystemId,
+                        description.Flags));
                 }
                 finally
                 {
@@ -108,12 +125,25 @@ internal static class WindowsGraphicsAdapterReader
         _ => 0
     };
 
+    private static bool IsSoftwareAdapterName(string name) =>
+        name.Contains("Microsoft Basic Render", StringComparison.OrdinalIgnoreCase);
+
     private static T GetComMethod<T>(IntPtr instance, int slot) where T : Delegate
     {
         var vtable = Marshal.ReadIntPtr(instance);
         var method = Marshal.ReadIntPtr(vtable, slot * IntPtr.Size);
         return Marshal.GetDelegateForFunctionPointer<T>(method);
     }
+
+    private sealed record DxgiAdapter(
+        int Index,
+        string Name,
+        long Memory,
+        long Luid,
+        uint VendorId,
+        uint DeviceId,
+        uint SubSystemId,
+        uint Flags);
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate int EnumAdapters1Delegate(IntPtr factory, uint index, out IntPtr adapter);

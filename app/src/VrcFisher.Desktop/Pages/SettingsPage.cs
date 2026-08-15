@@ -54,8 +54,8 @@ internal sealed class SettingsPage : Page
         }
         _language.SelectionChanged += async (_, _) => await SaveLanguageAsync();
 
-        AddWorkMode(ApplicationMode.Run, new SymbolIcon(Symbol.Play), "RunMode", "RunModeDescription");
-        AddWorkMode(ApplicationMode.Debug, new FontIcon { Glyph = "\uEBE8" }, "DebugMode", "DebugModeDescription");
+        AddWorkMode(ApplicationMode.Run, "RunMode", "RunModeDescription");
+        AddWorkMode(ApplicationMode.Debug, "DebugMode", "DebugModeDescription");
         _workMode.SelectionChanged += async (_, _) => await SaveWorkModeAsync();
 
         AddDevice(ExecutionDevice.Auto, "DeviceAuto");
@@ -313,19 +313,9 @@ internal sealed class SettingsPage : Page
     private void AddDevice(ExecutionDevice device, string resourceKey) =>
         _device.Items.Add(new ComboBoxItem { Content = UiStrings.Get(resourceKey), Tag = device });
 
-    private void AddWorkMode(ApplicationMode mode, IconElement icon, string labelKey, string descriptionKey)
+    private void AddWorkMode(ApplicationMode mode, string labelKey, string descriptionKey)
     {
-        var content = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            Children =
-            {
-                icon,
-                new TextBlock { Text = UiStrings.Get(labelKey), VerticalAlignment = VerticalAlignment.Center }
-            }
-        };
-        var item = new ComboBoxItem { Content = content, Tag = mode };
+        var item = new ComboBoxItem { Content = UiStrings.Get(labelKey), Tag = mode };
         ToolTipService.SetToolTip(item, UiStrings.Get(descriptionKey));
         _workMode.Items.Add(item);
     }

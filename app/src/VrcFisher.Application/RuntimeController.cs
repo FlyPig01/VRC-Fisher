@@ -218,7 +218,23 @@ public sealed class RuntimeController : IRuntimeController
 
     private void OnModelStatusChanged(object? sender, EventArgs args)
     {
-        Update(Snapshot with { ModelsReady = modelCatalog.IsReady });
+        var current = Snapshot;
+        var modelsReady = modelCatalog.IsReady;
+        var status = current.Status;
+        if (current.Lifecycle == RuntimeLifecycle.Stopped)
+        {
+            if (!modelsReady)
+            {
+                status = new RuntimeStatus(RuntimeMessageCode.ModelsUnavailable);
+            }
+            else if (detectionRuntime.IsReady
+                     && status.Code is RuntimeMessageCode.ModelsRequired
+                         or RuntimeMessageCode.ModelsUnavailable)
+            {
+                status = new RuntimeStatus(RuntimeMessageCode.Stopped);
+            }
+        }
+        Update(current with { ModelsReady = modelsReady, Status = status });
     }
 
     private void OnMetricsChanged(object? sender, DetectionRuntimeMetrics metrics)

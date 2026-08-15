@@ -37,6 +37,7 @@ internal sealed class NativeOverlaySurface : IDisposable
     private uint _foreground;
     private string _text = string.Empty;
     private int _fontHeight;
+    private string _fontFamily = string.Empty;
     private bool _disposed;
 
     public NativeOverlaySurface(byte opacity = byte.MaxValue)
@@ -70,9 +71,9 @@ internal sealed class NativeOverlaySurface : IDisposable
         Show(x, y, width, height);
     }
 
-    public Size MeasureText(string text, int fontHeight)
+    public Size MeasureText(string text, int fontHeight, string fontFamily = "Segoe UI")
     {
-        EnsureFont(fontHeight);
+        EnsureFont(fontHeight, fontFamily);
         var dc = GetDC(_window);
         if (dc == IntPtr.Zero)
             return new Size { Width = Math.Max(1, text.Length * fontHeight), Height = fontHeight };
@@ -98,12 +99,13 @@ internal sealed class NativeOverlaySurface : IDisposable
         int height,
         int fontHeight,
         uint foreground,
-        uint background)
+        uint background,
+        string fontFamily = "Segoe UI")
     {
         _text = text;
         _foreground = foreground;
         _background = background;
-        EnsureFont(fontHeight);
+        EnsureFont(fontHeight, fontFamily);
         Show(x, y, width, height);
     }
 
@@ -139,10 +141,13 @@ internal sealed class NativeOverlaySurface : IDisposable
         InvalidateRect(_window, IntPtr.Zero, false);
     }
 
-    private void EnsureFont(int height)
+    private void EnsureFont(int height, string fontFamily)
     {
         height = Math.Max(12, height);
-        if (_font != IntPtr.Zero && _fontHeight == height) return;
+        if (_font != IntPtr.Zero
+            && _fontHeight == height
+            && string.Equals(_fontFamily, fontFamily, StringComparison.Ordinal))
+            return;
         if (_font != IntPtr.Zero) DeleteObject(_font);
         _font = CreateFontW(
             -height,
@@ -158,10 +163,11 @@ internal sealed class NativeOverlaySurface : IDisposable
             0,
             5,
             0,
-            "Segoe UI");
+            fontFamily);
         if (_font == IntPtr.Zero)
             throw new Win32Exception(Marshal.GetLastWin32Error(), "Failed to create the overlay font.");
         _fontHeight = height;
+        _fontFamily = fontFamily;
     }
 
     private void Paint()

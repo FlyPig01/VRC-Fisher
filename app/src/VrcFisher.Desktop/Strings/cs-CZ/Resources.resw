@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} je aktivní. Při kontrole nebyl nalezen konflikt globální registrace.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Podporovaný svět VRChat</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Podporován je pouze tento svět. Změna rybářského UI může vyžadovat aktualizaci modelů.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Otevřít podporovaný svět ve VRChat</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Zobrazit webovou stránku podporovaného světa</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Rychlý start</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Klikněte na obrázek výše a vstupte do podporovaného světa.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Kliknutím na obrázek výše zobrazte webovou stránku světa; do světa vstupte ve VRChat.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Nainstalujte oba modely, vstupte do rybářské oblasti a ponechte VRChat v popředí.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Stiskněte {0} pro spuštění. Další stisk nebo opuštění VRChat běh zastaví.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Příprava modelů, inference a snímání…</value></data>

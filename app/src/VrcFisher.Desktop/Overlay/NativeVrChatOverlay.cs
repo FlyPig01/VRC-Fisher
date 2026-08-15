@@ -20,6 +20,7 @@ internal sealed class NativeVrChatOverlay : IDisposable
     private readonly Dictionary<string, DetectionBoxOverlay> _boxes = ClassColors
         .ToDictionary(item => item.Key, item => new DetectionBoxOverlay(item.Value), StringComparer.Ordinal);
     private readonly NativeOverlaySurface _prompt = new(235);
+    private readonly NativeOverlaySurface _modeIcon = new(235);
     private bool _disposed;
 
     public static bool TryGetVisibleClientBounds(IntPtr target, out ScreenBounds bounds, out double scale)
@@ -51,24 +52,37 @@ internal sealed class NativeVrChatOverlay : IDisposable
         return true;
     }
 
-    public void ShowPrompt(ScreenBounds bounds, double scale, string text)
+    public void ShowPrompt(ScreenBounds bounds, double scale, ApplicationMode mode, string text)
     {
         var fontHeight = Math.Max(15, (int)Math.Round(15 * scale));
         var paddingX = Math.Max(12, (int)Math.Round(12 * scale));
         var paddingY = Math.Max(7, (int)Math.Round(7 * scale));
         var margin = Math.Max(16, (int)Math.Round(18 * scale));
         var measured = _prompt.MeasureText(text, fontHeight);
-        var width = Math.Min(bounds.Width - margin * 2, measured.Width + paddingX * 2);
+        var iconWidth = measured.Height + paddingY * 2;
+        var availableWidth = Math.Max(1, bounds.Width - margin * 2 - iconWidth);
+        var width = Math.Max(1, Math.Min(availableWidth, measured.Width + paddingX * 2));
         var height = measured.Height + paddingY * 2;
+        var promptX = bounds.X + bounds.Width - margin - width;
         _prompt.ShowText(
             text,
-            bounds.X + bounds.Width - margin - width,
+            promptX,
             bounds.Y + margin,
             width,
             height,
             fontHeight,
             PromptForeground,
             PromptBackground);
+        _modeIcon.ShowText(
+            mode == ApplicationMode.Debug ? "\uEBE8" : "\u25B6",
+            promptX - iconWidth,
+            bounds.Y + margin,
+            iconWidth,
+            height,
+            fontHeight,
+            PromptForeground,
+            PromptBackground,
+            mode == ApplicationMode.Debug ? "Segoe Fluent Icons" : "Segoe UI Symbol");
     }
 
     public void ShowDetections(ScreenBounds bounds, double scale, DetectionVisualizationFrame frame)
@@ -109,6 +123,7 @@ internal sealed class NativeVrChatOverlay : IDisposable
     public void HideAll()
     {
         _prompt.Hide();
+        _modeIcon.Hide();
         HideDetections();
     }
 
@@ -117,6 +132,7 @@ internal sealed class NativeVrChatOverlay : IDisposable
         if (_disposed) return;
         _disposed = true;
         _prompt.Dispose();
+        _modeIcon.Dispose();
         foreach (var box in _boxes.Values) box.Dispose();
     }
 

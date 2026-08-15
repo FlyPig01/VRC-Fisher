@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>A(z) {0} aktív. Az ellenőrzéskor nem volt globális regisztrációs ütközés.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Támogatott VRChat-világ</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Csak ez a világ támogatott. A horgászfelület változása modellfrissítést igényelhet.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Támogatott világ megnyitása a VRChatben</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>A támogatott világ weboldalának megtekintése</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Gyors kezdés</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Kattintson a fenti képre, és lépjen be a támogatott világba.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Kattintson a fenti képre a világ weboldalának megtekintéséhez, majd lépjen be a világba a VRChatben.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Telepítse mindkét modellt, menjen a horgászterületre, és tartsa a VRChatet előtérben.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Indításhoz nyomja meg: {0}. Újabb megnyomás vagy a VRChat elhagyása leállítja.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Modellek, következtetés és rögzítés előkészítése…</value></data>

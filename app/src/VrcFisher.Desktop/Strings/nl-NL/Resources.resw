@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} is actief. Bij de controle is geen globaal registratieconflict gevonden.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Ondersteunde VRChat-wereld</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Alleen deze wereld wordt ondersteund. Wijzigingen aan de visinterface kunnen nieuwe modellen vereisen.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Ondersteunde wereld openen in VRChat</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Webpagina van de ondersteunde wereld bekijken</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Snel starten</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Klik op de afbeelding hierboven en betreed de ondersteunde wereld.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Klik op de afbeelding hierboven om de webpagina van de wereld te bekijken en betreed de wereld daarna via VRChat.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Installeer beide modellen, ga naar de visplek en houd VRChat op de voorgrond.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Druk op {0} om te starten. Druk opnieuw of verlaat VRChat om te stoppen.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Modellen, inferentie en opname voorbereiden…</value></data>

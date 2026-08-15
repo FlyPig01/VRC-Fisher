@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} активна. Під час перевірки конфлікту глобальної реєстрації не знайдено.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Підтримуваний світ VRChat</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Підтримується лише цей світ. Зміна інтерфейсу риболовлі може вимагати оновлення моделей.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Відкрити підтримуваний світ у VRChat</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Переглянути вебсторінку підтримуваного світу</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Швидкий старт</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Натисніть зображення вище та увійдіть у підтримуваний світ VRChat.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Натисніть зображення вище, щоб переглянути вебсторінку світу, а потім увійдіть до нього через VRChat.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Установіть обидві моделі, зайдіть до зони риболовлі й залиште VRChat на передньому плані.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Натисніть {0} для запуску. Повторне натискання або вихід із VRChat зупинить роботу.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Підготовка моделей, інференсу та захоплення…</value></data>

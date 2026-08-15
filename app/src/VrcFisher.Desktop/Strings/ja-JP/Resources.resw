@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} が有効です。確認時点でグローバル登録の競合は見つかりませんでした。</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>対応 VRChat ワールド</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>現在はこのワールドのみ対応しています。釣り UI の変更時はモデル更新が必要な場合があります。</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>対応ワールドを VRChat で開く</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>対応ワールドのウェブページを表示</value></data>
   <data name="QuickStart" xml:space="preserve"><value>クイックスタート</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>上の画像をクリックし、VRChat で対応ワールドに入ります。</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>上の画像をクリックしてワールドのウェブページを表示し、その後 VRChat からワールドに入ります。</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>2 つのモデルを導入し、釣り場へ移動して VRChat を前面に保ちます。</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>{0} で開始します。もう一度押すか VRChat から切り替えると停止します。</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>モデル、推論、キャプチャを準備中…</value></data>

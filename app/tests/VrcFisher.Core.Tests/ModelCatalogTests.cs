@@ -239,6 +239,83 @@ public sealed class ModelCatalogTests
             CancellationToken.None));
     }
 
+    [Fact]
+    public async Task Interrupted_download_resumes_from_persistent_partial_file()
+    {
+        using var temporary = new TemporaryDirectory();
+        var layout = new DirectoryLayout(temporary.Path);
+        var locator = Encoding.UTF8.GetBytes("locator-data");
+        var minigame = Encoding.UTF8.GetBytes("minigame-data");
+        var manifest = Manifest("1.0.0", locator, minigame);
+        var files = new Dictionary<string, byte[]>
+        {
+            ["https://test.invalid/model-manifest.json"] = Encoding.UTF8.GetBytes(manifest),
+            ["https://test.invalid/locator.onnx"] = locator,
+            ["https://test.invalid/minigame.onnx"] = minigame,
+            ["https://test.invalid/MODEL_CARD.md"] = ModelCard,
+            ["https://test.invalid/MODEL_LICENSE.txt"] = ModelLicense
+        };
+        var interrupted = new RangeHttpHandler(files, "https://test.invalid/locator.onnx", failAfterBytes: 3);
+        var firstCatalog = new ModelCatalog(layout, new HttpClient(interrupted));
+
+        await Assert.ThrowsAsync<IOException>(() => firstCatalog.DownloadLatestAsync(
+            new Uri("https://test.invalid/model-manifest.json"),
+            CancellationToken.None));
+
+        var partial = Directory.EnumerateFiles(
+                layout.Downloads,
+                "locator.onnx.part",
+                SearchOption.AllDirectories)
+            .Single();
+        var partialLength = new FileInfo(partial).Length;
+        Assert.InRange(partialLength, 1, locator.Length - 1);
+
+        var resumed = new RangeHttpHandler(files, "https://test.invalid/locator.onnx");
+        var secondCatalog = new ModelCatalog(layout, new HttpClient(resumed));
+        await secondCatalog.DownloadLatestAsync(
+            new Uri("https://test.invalid/model-manifest.json"),
+            CancellationToken.None);
+
+        Assert.Contains(partialLength, resumed.RangeStarts);
+        Assert.Equal(locator, await File.ReadAllBytesAsync(Path.Combine(layout.Models, "locator.onnx")));
+        Assert.True(secondCatalog.IsReady);
+        Assert.Empty(Directory.EnumerateDirectories(
+            layout.Downloads,
+            "models-download-*",
+            SearchOption.TopDirectoryOnly));
+    }
+
+    [Fact]
+    public async Task New_release_published_during_download_restarts_with_the_new_manifest()
+    {
+        using var temporary = new TemporaryDirectory();
+        var oldLocator = Encoding.UTF8.GetBytes("old-locator");
+        var oldMinigame = Encoding.UTF8.GetBytes("old-minigame");
+        var newLocator = Encoding.UTF8.GetBytes("new-locator");
+        var newMinigame = Encoding.UTF8.GetBytes("new-minigame");
+        var handler = new ChangingReleaseHttpHandler(
+            Manifest("1.0.0", oldLocator, oldMinigame),
+            Manifest("1.1.0", newLocator, newMinigame),
+            oldLocator,
+            oldMinigame,
+            newLocator,
+            newMinigame);
+        var catalog = new ModelCatalog(
+            new DirectoryLayout(temporary.Path),
+            new HttpClient(handler),
+            "example/project",
+            new Uri("https://api.test/"));
+
+        var installed = await catalog.DownloadLatestAsync(progress: null, CancellationToken.None);
+
+        Assert.Equal("1.1.0", installed.Version);
+        Assert.Equal(newLocator, await File.ReadAllBytesAsync(
+            Path.Combine(temporary.Path, "models", "locator.onnx")));
+        Assert.Equal(newMinigame, await File.ReadAllBytesAsync(
+            Path.Combine(temporary.Path, "models", "minigame.onnx")));
+        Assert.True(handler.ReleaseRequestCount >= 4);
+    }
+
     private static string Manifest(
         string version,
         byte[] locator,
@@ -306,6 +383,125 @@ public sealed class ModelCatalogTests
                 Content = new ByteArrayContent(bytes)
             });
         }
+    }
+
+    private sealed class RangeHttpHandler(
+        Dictionary<string, byte[]> files,
+        string rangedUri,
+        int? failAfterBytes = null) : HttpMessageHandler
+    {
+        private readonly object _sync = new();
+        public List<long> RangeStarts { get; } = [];
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var uri = request.RequestUri!.ToString();
+            if (!files.TryGetValue(uri, out var bytes))
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+
+            var start = request.Headers.Range?.Ranges.Single().From ?? 0;
+            if (uri == rangedUri)
+            {
+                lock (_sync) RangeStarts.Add(start);
+            }
+            var remaining = bytes[(int)start..];
+            Stream stream = uri == rangedUri && failAfterBytes is not null
+                ? new FailingReadStream(remaining, failAfterBytes.Value)
+                : new MemoryStream(remaining, writable: false);
+            var response = new HttpResponseMessage(start > 0
+                ? HttpStatusCode.PartialContent
+                : HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream)
+            };
+            if (start > 0)
+                response.Content.Headers.ContentRange = new(start, bytes.Length - 1, bytes.Length);
+            return Task.FromResult(response);
+        }
+    }
+
+    private sealed class FailingReadStream(byte[] bytes, int failAfterBytes)
+        : MemoryStream(bytes, writable: false)
+    {
+        private int _remaining = failAfterBytes;
+
+        public override ValueTask<int> ReadAsync(
+            Memory<byte> buffer,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (_remaining <= 0) throw new IOException("simulated connection loss");
+            var requested = Math.Min(buffer.Length, _remaining);
+            var read = Read(buffer.Span[..requested]);
+            _remaining -= read;
+            return ValueTask.FromResult(read);
+        }
+    }
+
+    private sealed class ChangingReleaseHttpHandler : HttpMessageHandler
+    {
+        private readonly Dictionary<string, byte[]> _files;
+        private readonly byte[] _oldRelease;
+        private readonly byte[] _newRelease;
+        private int _releaseRequestCount;
+
+        public ChangingReleaseHttpHandler(
+            string oldManifest,
+            string newManifest,
+            byte[] oldLocator,
+            byte[] oldMinigame,
+            byte[] newLocator,
+            byte[] newMinigame)
+        {
+            _oldRelease = Encoding.UTF8.GetBytes(Release("1.0.0", "https://cdn.test/old/model-manifest.json"));
+            _newRelease = Encoding.UTF8.GetBytes(Release("1.1.0", "https://cdn.test/new/model-manifest.json"));
+            _files = new Dictionary<string, byte[]>
+            {
+                ["https://cdn.test/old/model-manifest.json"] = Encoding.UTF8.GetBytes(oldManifest),
+                ["https://cdn.test/old/locator.onnx"] = oldLocator,
+                ["https://cdn.test/old/minigame.onnx"] = oldMinigame,
+                ["https://cdn.test/old/MODEL_CARD.md"] = ModelCard,
+                ["https://cdn.test/old/MODEL_LICENSE.txt"] = ModelLicense,
+                ["https://cdn.test/new/model-manifest.json"] = Encoding.UTF8.GetBytes(newManifest),
+                ["https://cdn.test/new/locator.onnx"] = newLocator,
+                ["https://cdn.test/new/minigame.onnx"] = newMinigame,
+                ["https://cdn.test/new/MODEL_CARD.md"] = ModelCard,
+                ["https://cdn.test/new/MODEL_LICENSE.txt"] = ModelLicense
+            };
+        }
+
+        public int ReleaseRequestCount => Volatile.Read(ref _releaseRequestCount);
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var uri = request.RequestUri!.ToString();
+            byte[]? bytes;
+            if (uri == "https://api.test/repos/example/project/releases?per_page=100")
+            {
+                var count = Interlocked.Increment(ref _releaseRequestCount);
+                bytes = count == 1 ? _oldRelease : _newRelease;
+            }
+            else
+            {
+                _files.TryGetValue(uri, out bytes);
+            }
+            return Task.FromResult(bytes is null
+                ? new HttpResponseMessage(HttpStatusCode.NotFound)
+                : new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent(bytes)
+                });
+        }
+
+        private static string Release(string version, string manifestUrl) => $$"""
+        [{"tag_name":"models-v{{version}}","draft":false,"prerelease":false,"assets":[
+          {"name":"model-manifest.json","browser_download_url":"{{manifestUrl}}"}
+        ]}]
+        """;
     }
 
     private sealed class TemporaryDirectory : IDisposable

@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} on käytössä. Tarkistuksessa ei löytynyt globaalia rekisteröintiristiriitaa.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Tuettu VRChat-maailma</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Vain tätä maailmaa tuetaan. Kalastusliittymän muutos voi vaatia mallien päivityksen.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Avaa tuettu maailma VRChatissa</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Näytä tuetun maailman verkkosivu</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Pika-aloitus</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Napsauta yllä olevaa kuvaa ja siirry tuettuun maailmaan.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Napsauta yllä olevaa kuvaa nähdäksesi maailman verkkosivun ja siirry sitten maailmaan VRChatissa.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Asenna molemmat mallit, siirry kalastusalueelle ja pidä VRChat etualalla.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Käynnistä painamalla {0}. Paina uudelleen tai poistu VRChatista pysäyttääksesi.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Valmistellaan malleja, päättelyä ja kaappausta…</value></data>

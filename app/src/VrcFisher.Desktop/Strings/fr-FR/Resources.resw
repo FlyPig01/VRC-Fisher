@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} est active. Aucun conflit d’enregistrement global n’a été détecté.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Monde VRChat pris en charge</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Seul ce monde est pris en charge. Une modification de son interface de pêche peut nécessiter de nouveaux modèles.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Ouvrir le monde pris en charge dans VRChat</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Afficher la page web du monde pris en charge</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Démarrage rapide</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Cliquez sur l’image ci-dessus et entrez dans le monde pris en charge.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Cliquez sur l’image ci-dessus pour afficher la page web du monde, puis entrez dans ce monde depuis VRChat.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Installez les deux modèles, rejoignez la zone de pêche et gardez VRChat au premier plan.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Appuyez sur {0} pour démarrer. Appuyez à nouveau ou quittez VRChat pour arrêter.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Préparation des modèles, de l’inférence et de la capture…</value></data>

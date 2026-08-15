@@ -196,9 +196,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} 已生效；检测时未发现全局注册冲突。</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>支持的 VRChat 世界</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>当前仅支持此世界；钓鱼 UI 更新后可能需要更新模型。</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>在 VRChat 中打开支持的世界</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>查看此世界的网页信息</value></data>
   <data name="QuickStart" xml:space="preserve"><value>快速开始</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>点击上方图片，在 VRChat 中进入支持的世界。</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>点击上方图片查看此世界的网页信息，然后在 VRChat 中进入该世界。</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>安装两个模型，进入钓鱼区域，并让 VRChat 保持在前台。</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>按 {0} 启动；再次按下或切出 VRChat 即停止。</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>正在准备模型、推理和画面捕获…</value></data>

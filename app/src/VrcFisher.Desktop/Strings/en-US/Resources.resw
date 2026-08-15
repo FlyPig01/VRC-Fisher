@@ -196,9 +196,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} is active. No global registration conflict was found at the time of the check.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Supported VRChat world</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Only this world is supported. If its fishing UI changes, the models may need an update.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Open the supported world in VRChat</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>View the supported world's webpage</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Quick start</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Click the image above and enter the supported world in VRChat.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Click the image above to view the world's webpage, then enter it in VRChat.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Install both models, enter the fishing area, and keep VRChat in the foreground.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Press {0} to start. Press it again, or leave VRChat, to stop.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Preparing models, inference and capture...</value></data>

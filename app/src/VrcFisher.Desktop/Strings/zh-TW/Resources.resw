@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} 已生效；檢查時未發現全域註冊衝突。</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>支援的 VRChat 世界</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>目前僅支援此世界；釣魚 UI 更新後可能需要更新模型。</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>在 VRChat 中開啟支援的世界</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>查看此世界的網頁資訊</value></data>
   <data name="QuickStart" xml:space="preserve"><value>快速開始</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>點擊上方圖片，在 VRChat 中進入支援的世界。</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>點擊上方圖片查看此世界的網頁資訊，然後在 VRChat 中進入該世界。</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>安裝兩個模型，進入釣魚區域，並讓 VRChat 保持在前景。</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>按 {0} 啟動；再次按下或切出 VRChat 即停止。</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>正在準備模型、推論和畫面擷取…</value></data>

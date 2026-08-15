@@ -21,7 +21,9 @@ internal sealed class RunPage : Page
     private readonly TextBlock _modelsValue = ValueText();
     private readonly TextBlock _executionValue = ValueText();
     private readonly TextBlock _cpuValue = ValueText();
-    private readonly TextBlock _gpuValue = ValueText();
+    private readonly TextBlock _physicalCoresValue = NumericValueText();
+    private readonly TextBlock _logicalThreadsValue = NumericValueText();
+    private readonly Grid _graphicsGrid = new() { ColumnSpacing = 20, RowSpacing = 12 };
     private readonly TextBlock _memoryValue = ValueText();
     private readonly TextBlock _systemValue = ValueText();
     private readonly TextBlock _selectedDeviceValue = ValueText();
@@ -61,17 +63,14 @@ internal sealed class RunPage : Page
         AddStatusCell(readinessGrid, 1, UiStrings.Get("ModelFiles"), _modelsValue);
         AddStatusCell(readinessGrid, 2, UiStrings.Get("ExecutionProvider"), _executionValue);
 
-        var hardwareGrid = new Grid { ColumnSpacing = 24, RowSpacing = 16 };
-        hardwareGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(150) });
-        hardwareGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        for (var index = 0; index < 6; index++)
-            hardwareGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        AddHardwareRow(hardwareGrid, 0, UiStrings.Get("Cpu"), _cpuValue);
-        AddHardwareRow(hardwareGrid, 1, UiStrings.Get("Gpu"), _gpuValue);
-        AddHardwareRow(hardwareGrid, 2, UiStrings.Get("Memory"), _memoryValue);
-        AddHardwareRow(hardwareGrid, 3, UiStrings.Get("System"), _systemValue);
-        AddHardwareRow(hardwareGrid, 4, UiStrings.Get("SelectedDevice"), _selectedDeviceValue);
-        AddHardwareRow(hardwareGrid, 5, UiStrings.Get("ActualDevice"), _actualDeviceValue);
+        var processorGrid = CreateProcessorGrid();
+        InitializeGraphicsGrid([]);
+        var systemGrid = CreateInfoGrid(
+            (UiStrings.Get("Memory"), _memoryValue),
+            (UiStrings.Get("System"), _systemValue));
+        var inferenceGrid = CreateInfoGrid(
+            (UiStrings.Get("SelectedDevice"), _selectedDeviceValue),
+            (UiStrings.Get("ActualDevice"), _actualDeviceValue));
 
         var root = UiFactory.PageStack();
         root.Children.Add(UiFactory.PageTitle(UiStrings.Get("Run")));
@@ -79,7 +78,10 @@ internal sealed class RunPage : Page
         root.Children.Add(UiFactory.Section(UiStrings.Get("Readiness"), readinessGrid));
         root.Children.Add(_readinessInfo);
         root.Children.Add(_performanceWarning);
-        root.Children.Add(UiFactory.Section(UiStrings.Get("HardwareInfo"), hardwareGrid));
+        root.Children.Add(UiFactory.Section(UiStrings.Get("Cpu"), processorGrid));
+        root.Children.Add(UiFactory.Section(UiStrings.Get("Gpu"), _graphicsGrid));
+        root.Children.Add(UiFactory.Section(UiStrings.Get("System"), systemGrid));
+        root.Children.Add(UiFactory.Section(UiStrings.Get("ExecutionProvider"), inferenceGrid));
         Content = UiFactory.Scrollable(root);
 
         Loaded += OnLoaded;
@@ -116,20 +118,12 @@ internal sealed class RunPage : Page
 
     private void ApplyHardware(HardwareSnapshot hardware)
     {
-        _cpuValue.Text = UiStrings.Format(
-            "CpuTopologyFormat",
-            hardware.CpuName == "Unavailable" ? UiStrings.Get("Unavailable") : hardware.CpuName,
-            hardware.PhysicalCores,
-            hardware.LogicalProcessors);
-        _gpuValue.Text = hardware.GraphicsAdapters.Count == 0
-            ? UiStrings.Get("NoGraphicsAdapter")
-            : string.Join(Environment.NewLine, hardware.GraphicsAdapters.Select(adapter =>
-                UiStrings.Format(
-                    "GpuAdapterFormat",
-                    adapter.Index,
-                    adapter.Name,
-                    DataSizeFormatter.Format(adapter.DedicatedMemoryBytes),
-                    adapter.DriverVersion ?? UiStrings.Get("Unavailable"))));
+        _cpuValue.Text = hardware.CpuName == "Unavailable"
+            ? UiStrings.Get("Unavailable")
+            : hardware.CpuName;
+        _physicalCoresValue.Text = hardware.PhysicalCores.ToString();
+        _logicalThreadsValue.Text = hardware.LogicalProcessors.ToString();
+        InitializeGraphicsGrid(hardware.GraphicsAdapters);
         _memoryValue.Text = hardware.TotalMemoryBytes > 0
             ? DataSizeFormatter.Format(hardware.TotalMemoryBytes)
             : UiStrings.Get("Unavailable");
@@ -190,6 +184,13 @@ internal sealed class RunPage : Page
         TextWrapping = TextWrapping.Wrap
     };
 
+    private static TextBlock NumericValueText() => new()
+    {
+        FontSize = 16,
+        TextAlignment = TextAlignment.Right,
+        HorizontalAlignment = HorizontalAlignment.Stretch
+    };
+
     private static void AddStatusCell(Grid grid, int column, string label, TextBlock value)
     {
         var cell = UiFactory.StatusCell(label, value);
@@ -205,6 +206,113 @@ internal sealed class RunPage : Page
         grid.Children.Add(labelText);
         Grid.SetRow(value, row);
         Grid.SetColumn(value, 1);
+        grid.Children.Add(value);
+    }
+
+    private static Grid CreateInfoGrid(params (string Label, TextBlock Value)[] rows)
+    {
+        var grid = new Grid { ColumnSpacing = 24, RowSpacing = 14 };
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(150) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        for (var index = 0; index < rows.Length; index++)
+        {
+            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            AddHardwareRow(grid, index, rows[index].Label, rows[index].Value);
+        }
+        return grid;
+    }
+
+    private Grid CreateProcessorGrid()
+    {
+        var grid = CreateTable(
+            ("CPU", new GridLength(1, GridUnitType.Star), TextAlignment.Left),
+            ("Cores", new GridLength(160), TextAlignment.Right),
+            ("Threads", new GridLength(160), TextAlignment.Right));
+        AddTableValue(grid, 1, 0, _cpuValue);
+        AddTableValue(grid, 1, 1, _physicalCoresValue);
+        AddTableValue(grid, 1, 2, _logicalThreadsValue);
+        return grid;
+    }
+
+    private void InitializeGraphicsGrid(IReadOnlyList<GraphicsAdapterInfo> adapters)
+    {
+        _graphicsGrid.Children.Clear();
+        _graphicsGrid.ColumnDefinitions.Clear();
+        _graphicsGrid.RowDefinitions.Clear();
+        ConfigureTable(
+            _graphicsGrid,
+            ("#", new GridLength(44), TextAlignment.Right),
+            ("GPU", new GridLength(1, GridUnitType.Star), TextAlignment.Left),
+            ("Memory", new GridLength(112), TextAlignment.Right),
+            ("Driver", new GridLength(180), TextAlignment.Right));
+
+        if (adapters.Count == 0)
+        {
+            _graphicsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            var unavailable = ValueText();
+            unavailable.Text = UiStrings.Get("NoGraphicsAdapter");
+            AddTableValue(_graphicsGrid, 1, 0, unavailable);
+            Grid.SetColumnSpan(unavailable, 4);
+            return;
+        }
+
+        for (var index = 0; index < adapters.Count; index++)
+        {
+            var adapter = adapters[index];
+            var row = index + 1;
+            _graphicsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            AddTableValue(_graphicsGrid, row, 0, TableValue($"#{adapter.Index}", TextAlignment.Right));
+            AddTableValue(_graphicsGrid, row, 1, TableValue(adapter.Name));
+            AddTableValue(_graphicsGrid, row, 2, TableValue(
+                adapter.DedicatedMemoryBytes > 0
+                    ? DataSizeFormatter.Format(adapter.DedicatedMemoryBytes)
+                    : UiStrings.Get("Unavailable"),
+                TextAlignment.Right));
+            AddTableValue(_graphicsGrid, row, 3, TableValue(
+                adapter.DriverVersion ?? UiStrings.Get("Unavailable"),
+                TextAlignment.Right));
+        }
+    }
+
+    private static Grid CreateTable(
+        params (string Header, GridLength Width, TextAlignment Alignment)[] columns)
+    {
+        var grid = new Grid { ColumnSpacing = 20, RowSpacing = 12 };
+        ConfigureTable(grid, columns);
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        return grid;
+    }
+
+    private static void ConfigureTable(
+        Grid grid,
+        params (string Header, GridLength Width, TextAlignment Alignment)[] columns)
+    {
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        for (var index = 0; index < columns.Length; index++)
+        {
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = columns[index].Width });
+            var header = UiFactory.Secondary(columns[index].Header);
+            header.TextAlignment = columns[index].Alignment;
+            header.HorizontalAlignment = HorizontalAlignment.Stretch;
+            AddTableValue(grid, 0, index, header);
+        }
+    }
+
+    private static TextBlock TableValue(string text, TextAlignment alignment = TextAlignment.Left) => new()
+    {
+        Text = text,
+        FontSize = 16,
+        TextAlignment = alignment,
+        TextTrimming = TextTrimming.CharacterEllipsis,
+        TextWrapping = TextWrapping.NoWrap,
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        VerticalAlignment = VerticalAlignment.Center
+    };
+
+    private static void AddTableValue(Grid grid, int row, int column, FrameworkElement value)
+    {
+        Grid.SetRow(value, row);
+        Grid.SetColumn(value, column);
         grid.Children.Add(value);
     }
 }

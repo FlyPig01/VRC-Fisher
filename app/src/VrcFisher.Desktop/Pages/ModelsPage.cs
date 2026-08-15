@@ -31,7 +31,6 @@ internal sealed class ModelsPage : Page
     };
     private readonly Button _cancel;
     private readonly CancellationTokenSource _pageCancellation = new();
-    private CancellationTokenSource? _downloadCancellation;
     private ModelAction _actionKind;
 
     public ModelsPage(IDesktopPageContext context)
@@ -40,7 +39,7 @@ internal sealed class ModelsPage : Page
         _cancel = UiFactory.CommandButton(Symbol.Cancel, UiStrings.Get("CancelDownload"));
         _cancel.Visibility = Visibility.Collapsed;
         _action.Click += async (_, _) => await ExecuteActionAsync();
-        _cancel.Click += (_, _) => _downloadCancellation?.Cancel();
+        _cancel.Click += (_, _) => _context.ModelDownloads.Cancel();
 
         var modelDetails = new StackPanel
         {
@@ -121,13 +120,25 @@ internal sealed class ModelsPage : Page
         root.Children.Add(UiFactory.Surface(storage));
         Content = UiFactory.Scrollable(root);
 
-        Loaded += async (_, _) => await RefreshAsync(checkForUpdates: true);
-        Unloaded += (_, _) =>
-        {
-            _pageCancellation.Cancel();
-            _downloadCancellation?.Cancel();
-        };
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
+
+    private async void OnLoaded(object sender, RoutedEventArgs args)
+    {
+        _context.ModelDownloads.StateChanged += OnDownloadStateChanged;
+        ApplyDownloadState(_context.ModelDownloads.Snapshot);
+        await RefreshAsync(checkForUpdates: true);
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs args)
+    {
+        _context.ModelDownloads.StateChanged -= OnDownloadStateChanged;
+        _pageCancellation.Cancel();
+    }
+
+    private void OnDownloadStateChanged(object? sender, ModelDownloadSnapshot snapshot) =>
+        DispatcherQueue.TryEnqueue(() => ApplyDownloadState(snapshot));
 
     private async Task RefreshAsync(bool checkForUpdates)
     {
@@ -135,7 +146,11 @@ internal sealed class ModelsPage : Page
         {
             await _context.Models.RefreshAsync(_pageCancellation.Token);
             ApplyCatalogState();
-            if (!checkForUpdates) return;
+            if (!checkForUpdates || _context.ModelDownloads.Snapshot.IsActive)
+            {
+                ApplyDownloadState(_context.ModelDownloads.Snapshot);
+                return;
+            }
 
             _action.IsEnabled = false;
             _message.Text = UiStrings.Get("CheckingUpdates");
@@ -199,7 +214,7 @@ internal sealed class ModelsPage : Page
                 _action.Content = ActionContent(Symbol.Delete, UiStrings.Get("DeleteModels"));
                 break;
         }
-        _action.IsEnabled = _downloadCancellation is null;
+        _action.IsEnabled = !_context.ModelDownloads.Snapshot.IsActive;
     }
 
     private async Task ExecuteActionAsync()
@@ -234,40 +249,41 @@ internal sealed class ModelsPage : Page
         if (action == ModelAction.Delete)
             await DeleteAsync();
         else
-            await DownloadAsync();
+            _context.ModelDownloads.Start();
     }
 
-    private async Task DownloadAsync()
+    private void ApplyDownloadState(ModelDownloadSnapshot snapshot)
     {
-        _downloadCancellation?.Dispose();
-        _downloadCancellation = CancellationTokenSource.CreateLinkedTokenSource(_pageCancellation.Token);
-        SetDownloading(isDownloading: true);
-        _message.Text = UiStrings.Get("CheckingModels");
-        try
+        SetDownloading(snapshot.IsActive);
+        switch (snapshot.Phase)
         {
-            var progress = new Progress<ModelDownloadProgress>(value =>
-            {
-                _progress.Value = value.BytesTotal <= 0 ? 0 : (double)value.BytesDownloaded / value.BytesTotal;
-                _message.Text = $"{value.CurrentFile}: {DataSizeFormatter.FormatProgress(value.BytesDownloaded, value.BytesTotal)}";
-            });
-            await _context.Models.DownloadLatestAsync(progress, _downloadCancellation.Token);
-            _message.Text = UiStrings.Get("DownloadComplete");
-            await RefreshAsync(checkForUpdates: false);
-        }
-        catch (OperationCanceledException)
-        {
-            if (!_pageCancellation.IsCancellationRequested)
+            case ModelDownloadPhase.Resolving:
+                _message.Text = UiStrings.Get("CheckingModels");
+                break;
+            case ModelDownloadPhase.Downloading when snapshot.Progress is not null:
+                var value = snapshot.Progress;
+                _progress.Value = value.BytesTotal <= 0
+                    ? 0
+                    : (double)value.BytesDownloaded / value.BytesTotal;
+                var speed = snapshot.BytesPerSecond > 0
+                    ? $" · {DataSizeFormatter.Format((long)snapshot.BytesPerSecond)}/s"
+                    : string.Empty;
+                _message.Text = $"{value.CurrentFile}: {DataSizeFormatter.FormatProgress(value.BytesDownloaded, value.BytesTotal)}{speed}";
+                break;
+            case ModelDownloadPhase.Completed:
+                _message.Text = UiStrings.Get("DownloadComplete");
+                ApplyCatalogState();
+                break;
+            case ModelDownloadPhase.Cancelled:
                 _message.Text = UiStrings.Get("DownloadCancelled");
-        }
-        catch (Exception error)
-        {
-            _message.Text = UiStrings.Format("DownloadFailed", error.Message);
-        }
-        finally
-        {
-            _downloadCancellation?.Dispose();
-            _downloadCancellation = null;
-            SetDownloading(isDownloading: false);
+                ApplyCatalogState();
+                break;
+            case ModelDownloadPhase.Failed:
+                _message.Text = UiStrings.Format(
+                    "DownloadFailed",
+                    snapshot.Error ?? UiStrings.Get("UnknownError"));
+                ApplyCatalogState();
+                break;
         }
     }
 

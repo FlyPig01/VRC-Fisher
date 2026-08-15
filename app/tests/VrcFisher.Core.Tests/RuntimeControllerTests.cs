@@ -102,6 +102,26 @@ public sealed class RuntimeControllerTests
         Assert.True(input.ReleaseCount >= 2);
     }
 
+    [Fact]
+    public void Model_readiness_change_clears_and_restores_the_model_warning()
+    {
+        var models = new StubModelCatalog { Ready = false };
+        var controller = Create(models, new StubDetectionRuntime(), new StubInputController());
+
+        Assert.False(controller.Snapshot.ModelsReady);
+        Assert.Equal(RuntimeMessageCode.ModelsUnavailable, controller.Snapshot.Status.Code);
+
+        models.SetReady(true);
+
+        Assert.True(controller.Snapshot.ModelsReady);
+        Assert.Equal(RuntimeMessageCode.Stopped, controller.Snapshot.Status.Code);
+
+        models.SetReady(false);
+
+        Assert.False(controller.Snapshot.ModelsReady);
+        Assert.Equal(RuntimeMessageCode.ModelsUnavailable, controller.Snapshot.Status.Code);
+    }
+
     private static RuntimeController Create(
         StubModelCatalog models,
         StubDetectionRuntime detection,
@@ -159,8 +179,9 @@ public sealed class RuntimeControllerTests
     private sealed class StubModelCatalog : IModelCatalog
     {
         public event EventHandler? StatusChanged;
-        public bool IsReady => true;
-        public bool AutomaticAllowed => true;
+        public bool Ready { get; set; } = true;
+        public bool IsReady => Ready;
+        public bool AutomaticAllowed => Ready;
         public long InstalledSize => 0;
         public string Repository => "test/repository";
         public string? InstalledVersion => "test";
@@ -169,6 +190,12 @@ public sealed class RuntimeControllerTests
         public bool UpdateCheckSucceeded => true;
         public Uri SourceUri => new("https://example.invalid/");
         public int RefreshCount { get; private set; }
+
+        public void SetReady(bool ready)
+        {
+            Ready = ready;
+            StatusChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         public IReadOnlyList<ModelStatus> GetStatus() => [];
 

@@ -81,6 +81,21 @@ public sealed class WindowsHardwareInfoProvider : IHardwareInfoProvider
         var product = key?.GetValue("ProductName") as string ?? "Windows";
         var display = key?.GetValue("DisplayVersion") as string;
         var build = key?.GetValue("CurrentBuildNumber") as string;
+        return FormatWindowsVersion(product, display, build);
+    }
+
+    internal static string FormatWindowsVersion(string product, string? display, string? build)
+    {
+        if (int.TryParse(build, out var buildNumber) && buildNumber >= 22000)
+        {
+            const string windows10 = "Windows 10";
+            const string windows11 = "Windows 11";
+            product = product.StartsWith(windows10, StringComparison.OrdinalIgnoreCase)
+                ? windows11 + product[windows10.Length..]
+                : product.StartsWith(windows11, StringComparison.OrdinalIgnoreCase)
+                    ? product
+                    : windows11;
+        }
         return string.Join(' ', new[] { product, display, build is null ? null : $"({build})" }
             .Where(item => !string.IsNullOrWhiteSpace(item)));
     }

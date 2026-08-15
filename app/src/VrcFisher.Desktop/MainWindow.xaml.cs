@@ -17,6 +17,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
 {
     private readonly IRuntimeController _runtime;
     private readonly IModelCatalog _models;
+    private readonly ModelDownloadCoordinator _modelDownloads;
     private readonly DirectoryLayout _layout;
     private readonly WgcCaptureAdapter _capture;
     private readonly Func<AppOptions, Task> _saveOptions;
@@ -30,6 +31,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
     internal MainWindow(
         IRuntimeController runtime,
         IModelCatalog models,
+        ModelDownloadCoordinator modelDownloads,
         DirectoryLayout layout,
         WgcCaptureAdapter capture,
         AppOptions options,
@@ -42,6 +44,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
         ApplyLocalizedChrome();
         _runtime = runtime;
         _models = models;
+        _modelDownloads = modelDownloads;
         _layout = layout;
         _capture = capture;
         _saveOptions = saveOptions;
@@ -65,6 +68,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
 
     IRuntimeController IDesktopPageContext.Runtime => _runtime;
     IModelCatalog IDesktopPageContext.Models => _models;
+    ModelDownloadCoordinator IDesktopPageContext.ModelDownloads => _modelDownloads;
     ICaptureTargetState IDesktopPageContext.Capture => _capture;
     AppOptions IDesktopPageContext.Options => _options;
     string IDesktopPageContext.SoftwareRoot => _layout.Root;

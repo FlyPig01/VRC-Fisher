@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} är aktiv. Ingen global registreringskonflikt hittades vid kontrollen.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>VRChat-värld som stöds</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Endast denna värld stöds. Ändras fiskegränssnittet kan modellerna behöva uppdateras.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Öppna världen i VRChat</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Visa webbsidan för den värld som stöds</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Snabbstart</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Klicka på bilden ovan och gå in i den värld som stöds.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Klicka på bilden ovan för att visa världens webbsida och gå sedan in i världen via VRChat.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Installera båda modellerna, gå till fiskeområdet och håll VRChat i förgrunden.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Tryck {0} för att starta. Tryck igen eller lämna VRChat för att stoppa.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Förbereder modeller, inferens och inspelning…</value></data>

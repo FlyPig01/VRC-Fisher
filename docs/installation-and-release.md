@@ -47,14 +47,14 @@ Setup 内含 .NET、WinUI 3、ONNX Runtime DirectML 和全部语言资源。用�
 dotnet test app\VrcFisher.sln -c Release -p:Platform=x64
 
 .\packaging\build.ps1 `
-  -Version 0.1.1 `
+  -Version 0.1.2 `
   -Repository FlyPig01/VRC-Fisher
 ```
 
 输出：
 
 ```text
-releases/app-v0.1.1/VRC-Fisher-Setup-x64.exe
+releases/app-v0.1.2/VRC-Fisher-Setup-x64.exe
 ```
 
 构建脚本会：
@@ -68,7 +68,7 @@ releases/app-v0.1.1/VRC-Fisher-Setup-x64.exe
 
 Setup 是离线完整安装包，不是几 MB 的联网引导器。模型是唯一可选联网下载内容。
 
-`app-v0.1.1` 实测 Setup 为 `57.47 MiB`，非 C 盘无模型安装为 `215.75 MiB`（含卸载器）。
+`app-v0.1.2` 实测 Setup 为 `57.46 MiB`；最近一次非 C 盘无模型安装为 `215.75 MiB`（含卸载器）。
 
 ## 4. 安装向导
 

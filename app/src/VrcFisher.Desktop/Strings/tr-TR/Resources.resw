@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} etkin. Denetim sırasında genel kayıt çakışması bulunmadı.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Desteklenen VRChat dünyası</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Yalnızca bu dünya desteklenir. Balık tutma arayüzü değişirse modellerin güncellenmesi gerekebilir.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Desteklenen dünyayı VRChat'te aç</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Desteklenen dünyanın web sayfasını görüntüle</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Hızlı başlangıç</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Yukarıdaki görsele tıklayın ve desteklenen dünyaya girin.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Dünyanın web sayfasını görüntülemek için yukarıdaki görsele tıklayın, ardından dünyaya VRChat üzerinden girin.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Her iki modeli kurun, balık tutma alanına gidin ve VRChat'i ön planda tutun.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Başlatmak için {0} tuşuna basın. Tekrar basmak veya VRChat'ten çıkmak durdurur.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Modeller, çıkarım ve yakalama hazırlanıyor…</value></data>

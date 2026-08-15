@@ -93,7 +93,11 @@ internal sealed class VrChatOverlayController : IDisposable
         }
 
         _wasRunning = true;
-        _overlay.ShowPrompt(bounds, scale, UiStrings.Format("OverlayStopHint", options.ToggleHotkey));
+        _overlay.ShowPrompt(
+            bounds,
+            scale,
+            options.WorkMode,
+            UiStrings.Format("OverlayStopHint", options.ToggleHotkey));
         if (!debug)
         {
             if (_wasDebug) ResetVisualization();

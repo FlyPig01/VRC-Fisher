@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} ist aktiv. Bei der Prüfung wurde kein globaler Registrierungskonflikt gefunden.</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>Unterstützte VRChat-Welt</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>Nur diese Welt wird unterstützt. Bei Änderungen an der Angel-UI können neue Modelle nötig sein.</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>Unterstützte Welt in VRChat öffnen</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>Webseite der unterstützten Welt anzeigen</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Schnellstart</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>Klicke auf das Bild oben und betrete die unterstützte Welt in VRChat.</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>Klicke auf das Bild oben, um die Webseite der Welt anzuzeigen; betrete die Welt anschließend in VRChat.</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>Installiere beide Modelle, gehe zum Angelbereich und lasse VRChat im Vordergrund.</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>Drücke {0} zum Starten. Erneut drücken oder VRChat verlassen beendet den Lauf.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Modelle, Inferenz und Aufnahme werden vorbereitet…</value></data>

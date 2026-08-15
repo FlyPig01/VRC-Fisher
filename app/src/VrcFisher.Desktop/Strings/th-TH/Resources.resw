@@ -518,9 +518,9 @@
   <data name="HotkeyChangedMessage" xml:space="preserve"><value>{0} ใช้งานแล้ว ไม่พบการชนกันของการลงทะเบียนปุ่มส่วนกลางขณะตรวจสอบ</value></data>
   <data name="SupportedWorldTitle" xml:space="preserve"><value>โลก VRChat ที่รองรับ</value></data>
   <data name="SupportedWorldScope" xml:space="preserve"><value>รองรับเฉพาะโลกนี้ หาก UI ตกปลาเปลี่ยน อาจต้องอัปเดตโมเดล</value></data>
-  <data name="OpenSupportedWorld" xml:space="preserve"><value>เปิดโลกที่รองรับใน VRChat</value></data>
+  <data name="OpenSupportedWorld" xml:space="preserve"><value>ดูหน้าเว็บของโลกที่รองรับ</value></data>
   <data name="QuickStart" xml:space="preserve"><value>เริ่มใช้อย่างรวดเร็ว</value></data>
-  <data name="GuideStepEnter" xml:space="preserve"><value>คลิกรูปด้านบนแล้วเข้าโลกที่รองรับใน VRChat</value></data>
+  <data name="GuideStepEnter" xml:space="preserve"><value>คลิกรูปด้านบนเพื่อดูหน้าเว็บของโลก แล้วจึงเข้าโลกดังกล่าวผ่าน VRChat</value></data>
   <data name="GuideStepPrepare" xml:space="preserve"><value>ติดตั้งโมเดลทั้งสอง เข้าเขตตกปลา และให้ VRChat อยู่ด้านหน้า</value></data>
   <data name="GuideStepHotkey" xml:space="preserve"><value>กด {0} เพื่อเริ่ม กดอีกครั้งหรือสลับออกจาก VRChat เพื่อหยุด</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>กำลังเตรียมโมเดล การอนุมาน และการจับภาพ…</value></data>
