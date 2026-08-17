@@ -8,14 +8,15 @@ namespace VrcFisher.Desktop.Overlay;
 
 internal sealed class VrChatOverlayController : IDisposable
 {
-    public const int RefreshRateHz = 15;
+    public const int RefreshRateHz = 30;
+    private const int TransientBoundsFailureLimit = 3;
 
     private readonly IRuntimeController _runtime;
     private readonly IDetectionRuntime _detection;
     private readonly WgcCaptureAdapter _capture;
     private readonly Func<AppOptions> _optionsProvider;
     private readonly Action<Exception> _failureHandler;
-    private readonly DetectionDisplaySmoother _smoother = new();
+    private readonly DetectionDisplayBuffer _displayBuffer = new();
     private readonly NativeVrChatOverlay _overlay = new();
     private readonly DispatcherTimer _timer = new()
     {
@@ -26,6 +27,7 @@ internal sealed class VrChatOverlayController : IDisposable
     private DateTimeOffset _failureVisibleUntil;
     private bool _wasVisible;
     private bool _wasDebug;
+    private int _transientBoundsFailures;
     private bool _failed;
     private bool _disposed;
 
@@ -84,8 +86,9 @@ internal sealed class VrChatOverlayController : IDisposable
         {
             _lastSnapshotUpdate = snapshot.UpdatedAt;
             if (snapshot.Lifecycle == RuntimeLifecycle.Stopped
-                && snapshot.Status.Code is RuntimeMessageCode.DetectionStopped
-                    or RuntimeMessageCode.UnexpectedFailure)
+                && (snapshot.Status.Code is RuntimeMessageCode.DetectionStopped
+                    or RuntimeMessageCode.UnexpectedFailure
+                    or RuntimeMessageCode.InputFailed))
             {
                 _failureVisibleUntil = now.AddSeconds(6);
             }
@@ -97,30 +100,45 @@ internal sealed class VrChatOverlayController : IDisposable
         var visible = starting || running || failed;
         var options = _optionsProvider();
         var debug = options.WorkMode == ApplicationMode.Debug;
-        if (!visible
-            || !NativeVrChatOverlay.TryGetVisibleClientBounds(
-                _capture.TargetWindow,
-                out var bounds,
-                out var scale))
+        if (!visible)
         {
-            if (_wasVisible) ResetVisualization();
-            _overlay.HideAll();
-            _wasVisible = visible;
-            _wasDebug = debug;
+            HideAll();
             return;
         }
 
+        var boundsStatus = NativeVrChatOverlay.GetVisibleClientBounds(
+            _capture.TargetWindow,
+            out var bounds,
+            out var scale);
+        if (boundsStatus == NativeVrChatOverlay.OverlayBoundsStatus.TargetUnavailable)
+        {
+            HideAll();
+            return;
+        }
+        if (boundsStatus == NativeVrChatOverlay.OverlayBoundsStatus.TransientFailure)
+        {
+            _transientBoundsFailures++;
+            if (_transientBoundsFailures >= TransientBoundsFailureLimit)
+                HideAll();
+            return;
+        }
+
+        _transientBoundsFailures = 0;
         _wasVisible = true;
-        var prompt = starting
+        var primaryText = starting
             ? UiStrings.Get("OverlayStarting")
             : failed
                 ? UiStrings.Get("OverlayStartFailed")
-                : UiStrings.Format("OverlayStopHint", options.ToggleHotkey);
+                : UiStrings.OverlayStage(snapshot.Phase);
+        var secondaryText = failed
+            ? string.Empty
+            : UiStrings.Format("OverlayStopKeyHint", options.ToggleHotkey);
         _overlay.ShowPrompt(
             bounds,
             scale,
             options.WorkMode,
-            prompt,
+            primaryText,
+            secondaryText,
             failed);
         if (!running || !debug)
         {
@@ -132,8 +150,8 @@ internal sealed class VrChatOverlayController : IDisposable
 
         _wasDebug = true;
         var pending = Interlocked.Exchange(ref _pendingFrame, null);
-        if (pending is not null) _smoother.Push(pending);
-        var current = _smoother.GetCurrent(DateTimeOffset.UtcNow);
+        if (pending is not null) _displayBuffer.Push(pending);
+        var current = _displayBuffer.GetCurrent(DateTimeOffset.UtcNow);
         if (current is null) _overlay.HideDetections();
         else _overlay.ShowDetections(bounds, scale, current);
     }
@@ -141,6 +159,15 @@ internal sealed class VrChatOverlayController : IDisposable
     private void ResetVisualization()
     {
         Interlocked.Exchange(ref _pendingFrame, null);
-        _smoother.Reset();
+        _displayBuffer.Reset();
+    }
+
+    private void HideAll()
+    {
+        if (_wasVisible) ResetVisualization();
+        _overlay.HideAll();
+        _wasVisible = false;
+        _wasDebug = false;
+        _transientBoundsFailures = 0;
     }
 }

@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Automaattinen on suositeltava. Kokeile CPU:ta, jos peli pätkii.</value>
@@ -225,16 +225,13 @@
     <value>Paikallinen tallennus</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Näytön ulkopuolisen ilmaisimen varatoiminto</value>
+    <value>Näytön ulkopuolinen huutomerkki</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Vähimmäisodotusaika</value>
+    <value>Odotus</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>Purentailmaisin voi ilmestyä siepatun kuvan ulkopuolelle. Kun käytössä, sovellus yrittää siirtyä minipeliin määritetyn odotuksen jälkeen, jos ilmaisinta ei havaittu. Pois käytöstä oletuksena.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Mitataan heiton jälkeen. Valitse 5–30 sekuntia; oletus on 15 sekuntia.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Käytössä</value>
@@ -483,11 +480,9 @@
     <value>Odotetaan</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Työtila</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Suoritustila pitää pelinäkymän siistinä. Virheenetsintätila lisää tunnistuslaatikot ja luottamusarvot.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Suoritustila</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Suorita automaattinen kalastus ilman tunnistuslaatikoita.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Virheenetsintätila</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Näytä vakautetut tunnistuslaatikot ja luottamusarvot VRChatin päällä.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Suoritus piilottaa tunnistuslaatikot; Virheenetsintä näyttää laatikot ja luottamusarvot.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Suoritus</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Virheenetsintä</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Paina {0} lopettaaksesi automaattisen kalastuksen</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Automaattista kalastusta käynnistetään…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Käynnistys epäonnistui; hiiren syöte vapautettiin. Tarkista VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Näytä tuetun maailman verkkosivu</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Pika-aloitus</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Napsauta yllä olevaa kuvaa nähdäksesi maailman verkkosivun ja siirry sitten maailmaan VRChatissa.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Asenna molemmat mallit, siirry kalastusalueelle ja pidä VRChat etualalla.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Käynnistä painamalla {0}. Paina uudelleen tai poistu VRChatista pysäyttääksesi.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Tarkista molemmat mallit, ota onki ja säädä näkymä niin, että huutomerkki ja minipelin osat voivat näkyä ruudulla.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Pidä VRChat etualalla ja käynnistä painamalla {0}. Paina uudelleen tai vaihda pois VRChatista pysäyttääksesi.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Valmistellaan malleja, päättelyä ja kaappausta…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Pysäytetään ja vapautetaan hiiri…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat poistui etualalta; automaattikalastus pysäytettiin ja hiiri vapautettiin</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automaattikalastus pysäytetty</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat ei ole enää etualalla. Hiiri vapautettiin; palaa peliin ja paina näppäintä uudelleen.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Toimii vain VRChatin ollessa etualalla eikä rekisteröidy pysyväksi globaaliksi pikanäppäimeksi.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Heitetään</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Odotetaan nappia</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Kalaa väsytetään</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Kelataan sisään</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Paina {0} lopettaaksesi</value></data>
 </root>

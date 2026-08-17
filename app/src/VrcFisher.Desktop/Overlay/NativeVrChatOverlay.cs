@@ -7,7 +7,10 @@ namespace VrcFisher.Desktop.Overlay;
 internal sealed class NativeVrChatOverlay : IDisposable
 {
     private static readonly uint PromptForeground = NativeOverlaySurface.Color(255, 255, 255);
+    private static readonly uint HintForeground = NativeOverlaySurface.Color(194, 194, 200);
     private static readonly uint PromptBackground = NativeOverlaySurface.Color(28, 28, 30);
+    private static readonly uint RunAccentBackground = NativeOverlaySurface.Color(0, 112, 210);
+    private static readonly uint DebugAccentBackground = NativeOverlaySurface.Color(196, 117, 0);
     private static readonly uint ErrorBackground = NativeOverlaySurface.Color(176, 36, 48);
     private static readonly IReadOnlyDictionary<string, uint> ClassColors =
         new Dictionary<string, uint>(StringComparer.Ordinal)
@@ -21,10 +24,13 @@ internal sealed class NativeVrChatOverlay : IDisposable
     private readonly Dictionary<string, DetectionBoxOverlay> _boxes = ClassColors
         .ToDictionary(item => item.Key, item => new DetectionBoxOverlay(item.Value), StringComparer.Ordinal);
     private readonly NativeOverlaySurface _prompt = new(235);
+    private readonly NativeOverlaySurface _promptHint = new(235);
     private readonly NativeOverlaySurface _modeIcon = new(235);
+    private PromptLayout? _promptLayout;
+    private bool _promptVisible;
     private bool _disposed;
 
-    public static bool TryGetVisibleClientBounds(IntPtr target, out ScreenBounds bounds, out double scale)
+    public static OverlayBoundsStatus GetVisibleClientBounds(IntPtr target, out ScreenBounds bounds, out double scale)
     {
         bounds = default;
         scale = 1;
@@ -32,58 +38,103 @@ internal sealed class NativeVrChatOverlay : IDisposable
             || !IsWindow(target)
             || !IsWindowVisible(target)
             || IsIconic(target)
-            || GetForegroundWindow() != target
-            || !GetClientRect(target, out var client))
+            || GetForegroundWindow() != target)
         {
-            return false;
+            return OverlayBoundsStatus.TargetUnavailable;
         }
+        if (!GetClientRect(target, out var client))
+            return OverlayBoundsStatus.TransientFailure;
 
         var topLeft = new Point { X = client.Left, Y = client.Top };
         var bottomRight = new Point { X = client.Right, Y = client.Bottom };
         if (!ClientToScreen(target, ref topLeft) || !ClientToScreen(target, ref bottomRight))
-            return false;
+            return OverlayBoundsStatus.TransientFailure;
 
         var width = bottomRight.X - topLeft.X;
         var height = bottomRight.Y - topLeft.Y;
-        if (width <= 0 || height <= 0) return false;
+        if (width <= 0 || height <= 0) return OverlayBoundsStatus.TransientFailure;
 
         bounds = new ScreenBounds(topLeft.X, topLeft.Y, width, height);
         var dpi = GetDpiForWindow(target);
         scale = dpi == 0 ? 1 : dpi / 96d;
-        return true;
+        return OverlayBoundsStatus.Available;
     }
 
-    public void ShowPrompt(ScreenBounds bounds, double scale, ApplicationMode mode, string text, bool isError = false)
+    public void ShowPrompt(
+        ScreenBounds bounds,
+        double scale,
+        ApplicationMode mode,
+        string primaryText,
+        string secondaryText,
+        bool isError = false)
     {
-        var fontHeight = Math.Max(15, (int)Math.Round(15 * scale));
-        var paddingX = Math.Max(12, (int)Math.Round(12 * scale));
-        var paddingY = Math.Max(7, (int)Math.Round(7 * scale));
+        var layout = new PromptLayout(bounds, scale, mode, primaryText, secondaryText, isError);
+        if (_promptVisible && _promptLayout == layout) return;
+
+        var primaryFontHeight = Math.Max(16, (int)Math.Round(17 * scale));
+        var secondaryFontHeight = Math.Max(12, (int)Math.Round(12 * scale));
+        var paddingX = Math.Max(14, (int)Math.Round(14 * scale));
+        var primaryPaddingY = Math.Max(6, (int)Math.Round(6 * scale));
+        var secondaryPaddingY = Math.Max(5, (int)Math.Round(5 * scale));
         var margin = Math.Max(16, (int)Math.Round(18 * scale));
-        var measured = _prompt.MeasureText(text, fontHeight);
-        var iconWidth = measured.Height + paddingY * 2;
+        var primaryMeasured = _prompt.MeasureText(primaryText, primaryFontHeight);
+        var secondaryMeasured = string.IsNullOrWhiteSpace(secondaryText)
+            ? default
+            : _promptHint.MeasureText(secondaryText, secondaryFontHeight);
+        var primaryHeight = primaryMeasured.Height + primaryPaddingY * 2;
+        var secondaryHeight = string.IsNullOrWhiteSpace(secondaryText)
+            ? 0
+            : secondaryMeasured.Height + secondaryPaddingY * 2;
+        var height = primaryHeight + secondaryHeight;
+        var iconWidth = Math.Max(height, (int)Math.Round(44 * scale));
         var availableWidth = Math.Max(1, bounds.Width - margin * 2 - iconWidth);
-        var width = Math.Max(1, Math.Min(availableWidth, measured.Width + paddingX * 2));
-        var height = measured.Height + paddingY * 2;
+        var contentWidth = Math.Max(primaryMeasured.Width, secondaryMeasured.Width) + paddingX * 2;
+        var width = Math.Max(1, Math.Min(availableWidth, contentWidth));
         var promptX = bounds.X + bounds.Width - margin - width;
+        var promptY = bounds.Y + margin;
+        var background = isError ? ErrorBackground : PromptBackground;
+        var iconBackground = isError
+            ? ErrorBackground
+            : mode == ApplicationMode.Debug
+                ? DebugAccentBackground
+                : RunAccentBackground;
         _prompt.ShowText(
-            text,
+            primaryText,
             promptX,
-            bounds.Y + margin,
+            promptY,
             width,
-            height,
-            fontHeight,
+            primaryHeight,
+            primaryFontHeight,
             PromptForeground,
-            isError ? ErrorBackground : PromptBackground);
+            background);
+        if (secondaryHeight == 0)
+        {
+            _promptHint.Hide();
+        }
+        else
+        {
+            _promptHint.ShowText(
+                secondaryText,
+                promptX,
+                promptY + primaryHeight,
+                width,
+                secondaryHeight,
+                secondaryFontHeight,
+                HintForeground,
+                background);
+        }
         _modeIcon.ShowText(
             mode == ApplicationMode.Debug ? "\uEBE8" : "\u25B6",
             promptX - iconWidth,
-            bounds.Y + margin,
+            promptY,
             iconWidth,
             height,
-            fontHeight,
+            primaryFontHeight,
             PromptForeground,
-            isError ? ErrorBackground : PromptBackground,
+            iconBackground,
             mode == ApplicationMode.Debug ? "Segoe Fluent Icons" : "Segoe UI Symbol");
+        _promptLayout = layout;
+        _promptVisible = true;
     }
 
     public void ShowDetections(ScreenBounds bounds, double scale, DetectionVisualizationFrame frame)
@@ -124,7 +175,9 @@ internal sealed class NativeVrChatOverlay : IDisposable
     public void HideAll()
     {
         _prompt.Hide();
+        _promptHint.Hide();
         _modeIcon.Hide();
+        _promptVisible = false;
         HideDetections();
     }
 
@@ -133,6 +186,7 @@ internal sealed class NativeVrChatOverlay : IDisposable
         if (_disposed) return;
         _disposed = true;
         _prompt.Dispose();
+        _promptHint.Dispose();
         _modeIcon.Dispose();
         foreach (var box in _boxes.Values) box.Dispose();
     }
@@ -193,6 +247,21 @@ internal sealed class NativeVrChatOverlay : IDisposable
     }
 
     internal readonly record struct ScreenBounds(int X, int Y, int Width, int Height);
+
+    internal enum OverlayBoundsStatus
+    {
+        Available,
+        TransientFailure,
+        TargetUnavailable
+    }
+
+    private readonly record struct PromptLayout(
+        ScreenBounds Bounds,
+        double Scale,
+        ApplicationMode Mode,
+        string PrimaryText,
+        string SecondaryText,
+        bool IsError);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct Point

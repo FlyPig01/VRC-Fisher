@@ -17,6 +17,7 @@ namespace VrcFisher.Desktop;
 public partial class App : Microsoft.UI.Xaml.Application
 {
     private readonly DirectoryLayout _layout;
+    private readonly FileLoggerProvider _fileLoggerProvider;
     private readonly ILoggerFactory _loggerFactory;
     private readonly RuntimeController _runtime;
     private readonly DetectionRuntime _detection;
@@ -41,7 +42,6 @@ public partial class App : Microsoft.UI.Xaml.Application
         InitializeComponent();
         _layout = installedLayout;
         _layout.Ensure();
-        _loggerFactory = LoggerFactory.Create(builder => builder.AddProvider(new FileLoggerProvider(Path.Combine(_layout.Logs, "vrc-fisher.log"))));
         _optionsStore = new OptionsStore(_layout.Root);
         _options = _optionsStore.Load();
         var optionsPath = Path.Combine(_layout.Config, "user.json");
@@ -50,13 +50,20 @@ public partial class App : Microsoft.UI.Xaml.Application
         UiStrings.Configure(UiLanguage.Resolve(_options.Language));
         if (_options.Device == VrcFisher.Core.ExecutionDevice.Gpu && !OnnxRuntimeDetector.SupportsDirectML)
             _options = _options with { Device = VrcFisher.Core.ExecutionDevice.Auto };
+        _fileLoggerProvider = new FileLoggerProvider(_layout.Logs, _options.WorkMode);
+        _loggerFactory = LoggerFactory.Create(builder => builder
+            .SetMinimumLevel(LogLevel.Debug)
+            .AddProvider(_fileLoggerProvider));
         _models = new ModelCatalog(
             _layout,
             new HttpClient { Timeout = TimeSpan.FromMinutes(10) });
         _modelDownloads = new ModelDownloadCoordinator(_models);
         _capture = new WindowsGraphicsCaptureSource();
-        _wgc = new WgcCaptureAdapter(_capture);
-        _input = new Win32InputController();
+        _wgc = new WgcCaptureAdapter(_capture, _loggerFactory.CreateLogger<WgcCaptureAdapter>());
+        var foreground = new VrChatForegroundState();
+        _input = new Win32InputController(
+            foreground,
+            _loggerFactory.CreateLogger<Win32InputController>());
         _hardware = new WindowsHardwareInfoProvider().ReadAsync(CancellationToken.None);
         _detection = new DetectionRuntime(_layout, () => _options, _wgc, _models, _input, _loggerFactory.CreateLogger<DetectionRuntime>());
         _runtime = new RuntimeController(_models, _detection, _input, _loggerFactory.CreateLogger<RuntimeController>());
@@ -221,7 +228,9 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     private async Task SaveOptionsAsync(AppOptions options)
     {
-        _options = options.Normalize();
+        options = options.Normalize();
+        _options = options;
+        _fileLoggerProvider.SetMode(options.WorkMode);
         await _optionsStore.SaveAsync(_options);
     }
 

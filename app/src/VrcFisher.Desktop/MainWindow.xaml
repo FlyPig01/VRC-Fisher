@@ -31,7 +31,7 @@
                     SelectionMode="Single">
                     <ListViewItem x:Name="RunNavigationItem" Tag="run">
                         <StackPanel Orientation="Horizontal" Spacing="12">
-                            <SymbolIcon Symbol="Play" />
+                            <FontIcon x:Name="RunNavigationIcon" Glyph="&#xE768;" />
                             <TextBlock x:Name="RunNavigationLabel" VerticalAlignment="Center" Text="Run" />
                         </StackPanel>
                     </ListViewItem>

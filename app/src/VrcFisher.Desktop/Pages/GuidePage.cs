@@ -66,7 +66,6 @@ internal sealed class GuidePage : Page
         };
 
         var root = UiFactory.PageStack();
-        root.Children.Add(UiFactory.PageTitle(UiStrings.Get("Guide")));
         root.Children.Add(UiFactory.Surface(worldCard));
         root.Children.Add(UiFactory.Section(UiStrings.Get("QuickStart"), steps));
         Content = UiFactory.Scrollable(root);

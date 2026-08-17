@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Az Automatikus ajánlott. Próbálja ki a CPU-t, ha a játék akadozik.</value>
@@ -225,16 +225,13 @@
     <value>Helyi tárolás</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Képernyőn kívüli jelző tartalék</value>
+    <value>Képernyőn kívüli felkiáltójel</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Minimális várakozás</value>
+    <value>Várakozás</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>A kapásjelző megjelenhet a rögzített képkockán kívül. Ha engedélyezve van, az alkalmazás a beállított várakozás után megpróbál belépni a minijátékba, ha nem észlelt jelzőt. Alapértelmezés szerint letiltva.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>A dobás után mérve. Válasszon 5–30 másodpercet; az alapértelmezés 15 másodperc.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Engedélyezve</value>
@@ -483,11 +480,9 @@
     <value>Várakozás</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Munkamód</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>A futtatási mód tisztán tartja a játéknézetet. A hibakeresési mód felismerő kereteket és megbízhatósági értékeket ad hozzá.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Futtatási mód</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Automatikus horgászat futtatása felismerő keretek nélkül.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Hibakeresési mód</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Stabilizált felismerő keretek és megbízhatósági értékek megjelenítése a VRChat felett.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>A Futtatás elrejti a kereteket; a Hibakeresés megjeleníti a kereteket és a megbízhatóságot.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Futtatás</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Hibakeresés</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Nyomja meg a(z) {0} gombot az automatikus horgászat leállításához</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Automatikus horgászat indítása…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Az indítás sikertelen; az egérvezérlés feloldva. Ellenőrizze a VRC-Fishert.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>A támogatott világ weboldalának megtekintése</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Gyors kezdés</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Kattintson a fenti képre a világ weboldalának megtekintéséhez, majd lépjen be a világba a VRChatben.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Telepítse mindkét modellt, menjen a horgászterületre, és tartsa a VRChatet előtérben.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Indításhoz nyomja meg: {0}. Újabb megnyomás vagy a VRChat elhagyása leállítja.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Ellenőrizze mindkét modellt, vegye fel a horgászbotot, és állítsa be a nézetet úgy, hogy a felkiáltójel és a minijáték elemei is megjelenhessenek a képernyőn.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Tartsa a VRChatet előtérben, majd nyomja meg a(z) {0} billentyűt az indításhoz. Újabb megnyomás vagy elváltás a VRChatről leállítja.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Modellek, következtetés és rögzítés előkészítése…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Leállítás és az egér felengedése…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>A VRChat elhagyta az előteret; az automatikus horgászat leállt, az egér felengedve</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatikus horgászat leállítva</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>A VRChat már nincs előtérben. Az egér fel lett engedve; térjen vissza és nyomja meg újra a billentyűt.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Csak akkor működik, ha a VRChat előtérben van, és nem regisztrálódik tartós globális gyorsbillentyűként.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Dobás</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Kapásra vár</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Küzdelem a hallal</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Bevontatás</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Nyomja meg a(z) {0} gombot a leállításhoz</value></data>
 </root>

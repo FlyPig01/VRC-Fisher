@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Consigliato Automatico. Prova CPU se il gioco rallenta.</value>
@@ -225,16 +225,13 @@
     <value>Archiviazione locale</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Fallback indicatore fuori schermo</value>
+    <value>Punto esclamativo fuori schermo</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Attesa minima</value>
+    <value>Attesa</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>L'indicatore di abboccata può apparire fuori dal frame catturato. Quando abilitato, l'applicazione tenta di entrare nel minigioco dopo l'attesa configurata se non viene rilevato alcun indicatore. Disabilitato per impostazione predefinita.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Misurato dopo il lancio. Scegli 5-30 secondi; il default è 15 secondi.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Abilitato</value>
@@ -483,11 +480,9 @@
     <value>In attesa</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Modalità di lavoro</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>La modalità di esecuzione mantiene pulita la visuale di gioco. La modalità di debug aggiunge riquadri di riconoscimento e valori di confidenza.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Modalità di esecuzione</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Esegue la pesca automatica senza riquadri di riconoscimento.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Modalità di debug</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Mostra riquadri di riconoscimento stabilizzati e valori di confidenza sopra VRChat.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Esecuzione nasconde i riquadri; Debug mostra riquadri e valori di confidenza.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Esecuzione</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Debug</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Premi {0} per fermare la pesca automatica</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Avvio della pesca automatica…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Avvio non riuscito; il mouse è stato rilasciato. Controlla VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Visualizza la pagina web del mondo supportato</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Avvio rapido</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Fai clic sull’immagine sopra per visualizzare la pagina web del mondo, quindi entra nel mondo da VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Installa entrambi i modelli, entra nell’area di pesca e mantieni VRChat in primo piano.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Premi {0} per avviare. Premi di nuovo o esci da VRChat per arrestare.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Verifica entrambi i modelli, prendi la canna da pesca e regola la visuale affinché il punto esclamativo e i componenti del minigioco possano apparire sullo schermo.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Mantieni VRChat in primo piano e premi {0} per avviare. Premi di nuovo o passa a un’altra finestra per arrestare.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Preparazione di modelli, inferenza e acquisizione…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Arresto e rilascio del mouse…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat non è più in primo piano; pesca automatica arrestata e mouse rilasciato</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Pesca automatica arrestata</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat non è più in primo piano. Il mouse è stato rilasciato; torna al gioco e premi di nuovo il tasto.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Funziona solo con VRChat in primo piano e non viene registrato in modo permanente come tasto globale.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Lancio in corso</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>In attesa di abboccata</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Lotta con il pesce</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Recupero della lenza</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Premi {0} per interrompere</value></data>
 </root>

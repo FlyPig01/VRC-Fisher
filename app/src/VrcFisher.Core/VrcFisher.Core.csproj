@@ -4,4 +4,7 @@
     <RootNamespace>VrcFisher.Core</RootNamespace>
     <AssemblyName>VrcFisher.Core</AssemblyName>
   </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="VrcFisher.Core.Tests" />
+  </ItemGroup>
 </Project>

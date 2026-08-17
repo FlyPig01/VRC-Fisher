@@ -1,147 +1,112 @@
 # Data Processing
 
-此目录将完整屏幕录屏转换为可审核的全屏帧，并从一套全屏标注生成 locator 与 minigame 两个数据集。所有视频、图片、标签和生成结果只保存在本机，不提交 Git。
+本目录负责把完整屏幕录屏转换为人工审核的全屏 YOLO 标注，并生成 locator 与 minigame 数据集。模型类别和训练契约见 [视觉与训练](../docs/vision-and-training.md)。
 
-本目录的原创工具代码采用根目录 MIT License；录屏、抽帧、标注、审核图和生成数据集不在该 MIT 授权范围内，默认保持私有且不授予公共数据许可。公开任何数据前必须另行处理 VRChat 世界素材、头像、用户名和其他第三方内容的版权与隐私问题。
+录屏、图片、标签和数据集默认只保存在本机，不提交 Git。
 
-本目录使用四类标签。审核状态直接由抽帧图片和同名 YOLO `.txt` 表达，不维护额外清单。
+## 1. 环境
 
-## 准备环境
-
-需要 Python 3.11 和 uv：
+需要 Python 3.11 和 uv。从 `data_processing/` 执行：
 
 ```powershell
-$Repo = "C:\path\to\VRC-Fisher"
-Set-Location (Join-Path $Repo "data_processing")
-uv sync --locked --extra dev
+$Python311 = py -3.11 -c "import sys; print(sys.executable)"
+uv sync --locked --python $Python311 --extra dev
 uv run --offline pytest -q
 ```
 
-该环境只用于离线处理，不进入 C# 软件或 Setup。首次部署、Python 解释器选择和三套环境的边界见 [开发环境部署](../docs/development-setup.md)。
+环境位于 `data_processing/.venv/`。预标注会调用现有 `training/.venv/` 执行模型推理，不在本目录重复安装 PyTorch。
 
-## 目录
+## 2. 目录
 
-| 路径 | 内容 |
+| 路径 | 职责 |
 |---|---|
-| `input/recordings/` | 原始完整屏幕录屏，例如 `.mp4` |
-| `work/frames/` | 工具抽取的完整屏幕 JPG |
-| `work/annotations/<录屏名>/prelabels/` | 模型生成的原生全屏 YOLO TXT，只读基线 |
-| `work/annotations/<录屏名>/labels/` | 本地页面自动保存的人工草稿 YOLO TXT |
-| `work/annotations/<录屏名>/review.json` | 明确完成审核的帧列表 |
-| `work/annotations/<录屏名>/mapping.json` | 帧、视频、模型哈希和预标注参数 |
-| `input/annotations/<录屏名>/` | 人工审核的全屏 YOLO `.txt` 标签 |
-| `output/locator/` | 由标签生成的全屏原始数据集 |
-| `output/minigame/` | 按 UI 框自动裁剪的局部原始数据集 |
-| `output/review/` | 绘制类别框的人工审核图，不参与训练 |
-| `configs/` | 可提交的处理配置；不能写本机绝对路径 |
+| `input/recordings/` | 原始完整屏幕录屏 |
+| `input/annotations/<录屏名>/` | 最终人工审核的全屏 YOLO TXT |
+| `work/frames/<录屏名>/` | 抽帧图片，可重建 |
+| `work/annotations/<录屏名>/prelabels/` | 模型预标注，只读基线 |
+| `work/annotations/<录屏名>/labels/` | 本地标注器草稿 |
+| `work/annotations/<录屏名>/review.json` | 人工审核状态 |
+| `work/annotations/<录屏名>/mapping.json` | 视频、帧和预标注来源 |
+| `output/locator/` | locator 原始数据 |
+| `output/minigame/` | minigame 裁剪数据 |
+| `output/review/` | 带框审核图，不参与训练 |
+| `configs/` | 可提交配置，不写本机绝对路径 |
 
-帧和标签必须按录屏名使用相同相对路径：
+图片和最终标签必须使用相同录屏名与文件名：
 
 ```text
 work/frames/<录屏名>/frame-00000010.jpg
 input/annotations/<录屏名>/frame-00000010.txt
 ```
 
-## 本地预标注与人工审核
+## 3. 标签
 
-所有命令都从 `E:\MyTools\VRC-Fisher\data_processing` 执行。`data_processing/.venv` 负责抽帧、校验和格式转换；模型推理由命令自动调用现有 `training/.venv`，不在 `data_processing` 中重复安装 PyTorch。
+| ID | 类别 | 框选对象 |
+|---:|---|---|
+| 0 | `bite_indicator` | 咬钩感叹号本身 |
+| 1 | `minigame_panel` | 包含滑块和目标的主面板 |
+| 2 | `catch_zone` | 鼠标控制的捕获区域 |
+| 3 | `moving_target` | 鱼、齿轮或其他移动目标 |
 
-### 1. 选择新视频
+人工只标全屏图片：
 
-录屏可以位于任意目录。不传 `--input` 时会打开 Windows 文件选择器：
+- 感叹号画面通常只标 `bite_indicator`；
+- 小游戏画面必须标 `minigame_panel`、`catch_zone` 和 `moving_target`；
+- 不标轨道、进度条、成功、失败和装饰元素；
+- minigame 局部图片由工具自动裁剪，不维护第二套人工标签。
+
+## 4. 推荐流程
+
+### 4.1 生成预标注批次
+
+录屏建议放在 `input/recordings/`，也可以从任意路径选择：
 
 ```powershell
 uv run vrc-prelabel
 ```
 
-也可以在命令中传入任意相对或绝对路径：
+或：
 
 ```powershell
-uv run vrc-prelabel --input "D:\Recordings\<录屏名>.mp4"
+uv run vrc-prelabel --input "input/recordings/<录屏名>.mp4" --interval 0.5
 ```
 
-需要与项目一起保存的原始录屏仍建议放在：
+命令完成抽帧、重复图片去除和四类预标注，输出到 `work/frames/` 与 `work/annotations/`。输入视频不会被复制或移动。
 
-```text
-input/recordings/<录屏名>.mp4
-```
+目标批次已存在时默认停止。只有确认要删除该批次全部草稿和审核进度时才使用 `--replace`。
 
-输入视频不会被复制或移动。默认抽帧位于 `work/frames/`，预标注和人工草稿位于 `work/annotations/`；需要切换工作目录时使用 `--frames-root` 和 `--batches-root`。
-
-### 2. 生成原生 YOLO 预标注
-
-确认两个首轮权重存在：
-
-```text
-../training/runs/locator-best-init/weights/best.pt
-../training/runs/minigame-best-init/weights/best.pt
-```
-
-然后执行：
-
-```powershell
-Set-Location E:\MyTools\VRC-Fisher\data_processing
-uv run vrc-prelabel `
-  --input "input/recordings/<录屏名>.mp4" `
-  --interval 0.5
-```
-
-命令同时完成稀疏抽帧、CUDA 预标注和完全相同图片去重。预标注直接采用项目四类全屏 YOLO TXT，不生成平台 JSON、不复制第二套图片，也不打 ZIP。默认阈值为：`bite_indicator=0.15`、`minigame_panel=0.20`、`catch_zone=0.20`、`moving_target=0.05`；`minigame_panel` 预标注裁剪不再额外外扩。阈值偏低是为了供人工纠错，不能作为软件运行阈值。
-
-输出固定为：
-
-```text
-work/frames/<录屏名>/*.jpg
-work/annotations/<录屏名>/prelabels/*.txt
-work/annotations/<录屏名>/labels/
-work/annotations/<录屏名>/review.json
-work/annotations/<录屏名>/mapping.json
-```
-
-空的预标注 TXT 只表示模型没有检出，不代表人工确认的负样本。目标目录已存在时默认停止；只有确认要丢弃该批次全部草稿和审核进度时才使用 `--replace`。
-
-### 3. 打开本地标注器
+### 4.2 人工审核
 
 ```powershell
 uv run vrc-annotate --recording "<录屏名>"
 ```
 
-命令只监听 `127.0.0.1:8765` 并打开浏览器，图片和标签不会上传网络。页面支持新增、边线拖动、四角缩放、节点列表精确选框、改类别、删除框、滚轮缩放图片、中键或空格拖动画布、拖动图片进度条跳转、方向键或 `A/D` 切图，以及 `1` 到 `4` 选择类别。画布上的框不显示类别文字，点击框内透明区域会开始新建框，不会选中已有框。
+标注器只监听 `127.0.0.1:8765`，不会上传图片。预标注只是草稿，必须人工：
 
-固定标签为：
+- 补充漏框；
+- 删除误框；
+- 修正边界和类别；
+- 明确确认每一张正样本或负样本。
 
-```text
-bite_indicator
-minigame_panel
-catch_zone
-moving_target
-```
+拖框后自动保存草稿；只有“确认并下一张”或“确认负样本”才记为已审核。关闭页面后可以用同一命令继续。
 
-预标注只是草稿。必须补漏框、删除误框并调整边界，尤其检查绿色鱼等 `moving_target`。小游戏画面必须同时有且仅有一个 `minigame_panel`、一个 `catch_zone` 和一个 `moving_target`。
+### 4.3 提交最终标签
 
-拖框结束后页面自动保存到 `labels/`，但只有点击“确认并下一张”才算人工审核；空画面必须点击“确认负样本”。已审核帧再次修改后会自动回到待审核。点击“恢复预标注”会删除该帧人工草稿并恢复模型初始结果。
-
-关闭页面不会丢失进度。重新执行相同命令即可继续。终端按 `Ctrl+C` 只停止本地服务，不删除数据。
-
-### 4. 提交最终标签
-
-页面显示全部帧审核完成后，停止本地服务并执行：
+全部帧审核完成后执行：
 
 ```powershell
 uv run vrc-commit-annotations --recording "<录屏名>"
 ```
 
-命令要求每一帧都被明确审核，并再次检查 YOLO 坐标、重复类别和小游戏三类组合，然后事务性生成：
+命令重新检查坐标、类别和小游戏三类组合，再事务性写入：
 
 ```text
 input/annotations/<录屏名>/*.txt
 ```
 
-这是项目真正使用的最终全屏 YOLO 标签。已有 TXT 时默认停止；只有确认要替换整段录屏的全部标签时才使用 `--replace`。提交失败不会写入半套标签。
+已有最终标签时默认停止；只有确认替换整段录屏时才使用 `--replace`。
 
-### 5. 后续数据生成
-
-导入成功后依次运行：
+### 4.4 生成和审核数据
 
 ```powershell
 uv run vrc-audit-annotations
@@ -150,89 +115,63 @@ uv run vrc-build-minigame --padding 0 --negative-ratio 0.2
 uv run vrc-build-review
 ```
 
-人工检查 `output/review/` 后才能按录屏划分到训练目录。minigame 保留全部正样本，并从空标签帧中均匀抽取最多正样本数 20% 的局部困难负样本；负样本使用同录屏最近的面板位置裁剪，不直接复制全屏图。原始视频和最终标签长期保留；确认最终标签和 `output/` 正确后，`work/frames/<录屏名>/` 与 `work/annotations/<录屏名>/` 可以删除并从原视频重建。
+必须人工检查：
 
-## 纯手工流程
+```text
+output/review/locator/
+output/review/minigame/
+```
 
-不使用本地模型预标注时，执行以下流程：
+minigame 构建会保留全部正样本，并按配置从审核负样本中选择局部困难负样本。
 
-1. 将录屏放入 `input/recordings/`。
-2. 抽取完整屏幕帧：
+### 4.5 划分训练集
 
-   ```powershell
-   uv run vrc-extract-frames --interval 0.25
-   ```
+至少需要两段独立且已审核的录屏：
 
-   只处理一段指定录屏时，直接将文件路径传给 `--input`：
+```powershell
+uv run vrc-split-recordings --input output/locator --output ../training/datasets/locator
+uv run vrc-split-recordings --input output/minigame --output ../training/datasets/minigame
+```
 
-   ```powershell
-   uv run vrc-extract-frames --input input/recordings/20260812-2035-32.2147786.mp4 --interval 0.25
-   ```
+工具按录屏生成 `train`、`val` 和 `split.json`。同一录屏不得跨集合。完整测试视频放在 `training/test/videos/`，不进入 `data.yaml`。
 
-3. 筛选图片并用 YOLO 格式标注，将标签保存到 `input/annotations/` 的对应目录。无用图片直接删除；确认没有目标但希望作为负样本保留的图片，需要创建同名空 TXT。
-4. 审计标注：
+## 5. 无预标注流程
 
-   ```powershell
-   uv run vrc-audit-annotations
-   ```
+不使用模型时：
 
-5. 审计无错误后生成两份原始数据：
+1. 使用 `vrc-extract-frames --input <video> --interval <seconds>` 抽帧；
+2. 删除无用图片；
+3. 使用任意支持 YOLO 的工具标注全屏图片；
+4. 将同名 TXT 放入 `input/annotations/<录屏名>/`；
+5. 从“生成和审核数据”继续。
 
-   ```powershell
-   uv run vrc-build-locator
-   uv run vrc-build-minigame --padding 0 --negative-ratio 0.2
-   ```
+需要保留为负样本的图片必须有同名空 TXT。没有 TXT 的图片表示尚未审核，不进入数据集。
 
-6. 生成审核图并人工检查所有类别框和负样本：
+## 6. 文件状态
 
-   ```powershell
-   uv run vrc-build-review
-   ```
-
-   审核图位于 `output/review/locator/` 和 `output/review/minigame/`。红色是类别 0，绿色是类别 1；空标签图片显示 `NEGATIVE`。审核图不进入训练集。
-
-7. 至少有两段独立且已标注的录屏后，按录屏划分并复制到训练目录：
-
-   ```powershell
-   uv run vrc-split-recordings --input output/locator --output ../training/datasets/locator
-   uv run vrc-split-recordings --input output/minigame --output ../training/datasets/minigame
-   ```
-
-   划分命令同时写入 `split.json`，用于审核每段录屏属于 `train` 或 `val`。同一录屏绝不能跨集合。
-
-   工具只创建 `images/{train,val}/` 和 `labels/{train,val}/`。完整大屏测试视频放在 `training/test/videos/`，不需要 TXT 标签，也不会写入 `data.yaml`。
-
-PowerShell 中同样从 `data_processing/` 目录执行这些命令。工具的相对默认路径依赖当前目录。
-
-## 标注规则
-
-| ID | 类别 | 框选对象 |
-|---:|---|---|
-| 0 | `bite_indicator` | 咬钩时出现的感叹号，只框提示本身 |
-| 1 | `minigame_panel` | 包住 `catch_zone` 和 `moving_target` 的主控制面板；不要求包含左侧进度条 |
-| 2 | `catch_zone` | 由鼠标控制、需要覆盖目标的捕获区域 |
-| 3 | `moving_target` | 需要保持在捕获区域内的鱼、齿轮或其他物件 |
-
-只人工标注完整屏幕，不维护第二套局部标注：
-
-- 感叹号画面通常只标 `bite_indicator`；
-- 小游戏画面标 `minigame_panel`、`catch_zone` 和 `moving_target`；
-- 轨道、进度条、成功和失败不标；
-- `minigame` 图片由 `minigame_panel` 自动裁剪，类别 2、3 分别换算为局部模型的类别 0、1。
-
-图片是否进入数据集由文件状态决定：
-
-| 图片 | 同名 `.txt` | 结果 |
+| 图片 | 同名 TXT | 含义 |
 |---|---|---|
-| 存在 | 非空 | 正样本，进入数据集 |
-| 存在 | 空文件 | 负样本，进入 locator 数据集 |
-| 存在 | 不存在 | 尚未标注，不进入数据集 |
-| 不存在 | 任意 | 不参与处理；残留 TXT 会被忽略 |
+| 存在 | 非空 | 已审核正样本 |
+| 存在 | 空文件 | 已审核负样本 |
+| 存在 | 不存在 | 未审核，不进入数据集 |
+| 不存在 | 存在 | 无效残留标签 |
 
-不要求给每张抽帧图片做标注。无用帧直接从 `work/frames/` 删除；需要保留为负样本的帧不能删除。
+空预标注不等于人工确认负样本；只有标注器确认或最终空 TXT 才算负样本。
 
-## 停止条件
+## 7. 清理与停止条件
 
-没有带同名 TXT 的图片时，构建命令必须失败；类别组合错误或坐标越界时，审计也必须失败。只有一段录屏时划分工具会拒绝制造 `train/val`；此时可以检查抽帧和标注流程，但不能开始正式训练或报告验证结果。
+长期保留：
 
-完整的数据契约见 [视觉、数据与训练](../docs/vision-and-training.md)。
+- 原始录屏；
+- `input/annotations/` 最终标签；
+- 已审核且仍需训练的 `output/` 或 `training/datasets/`。
+
+最终标签和输出确认正确后，可以删除对应 `work/frames/` 与 `work/annotations/`，它们可由原视频重建。
+
+以下情况必须停止：
+
+- 图片与标签不匹配；
+- YOLO 坐标或类别非法；
+- 小游戏三类组合错误；
+- 只有一段录屏却尝试生成正式 `train/val`；
+- 审核未完成或同一录屏跨集合。

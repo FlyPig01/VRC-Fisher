@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Se recomienda Automático. Prueba con la CPU si el juego se entrecorta.</value>
@@ -225,16 +225,13 @@
     <value>Almacenamiento local</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Respaldo para indicador fuera de pantalla</value>
+    <value>Exclamación fuera de pantalla</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Espera mínima</value>
+    <value>Espera</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>El indicador de picada puede aparecer fuera del fotograma capturado. Cuando está habilitado, la aplicación intenta entrar en el minijuego después de la espera configurada si no se detectó ningún indicador. Deshabilitado por defecto.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Se mide después del lanzamiento. Elige entre 5 y 30 segundos; el valor predeterminado es 15 segundos.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Habilitado</value>
@@ -483,11 +480,9 @@
     <value>Esperando</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Modo de trabajo</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>El modo de ejecución mantiene limpia la vista del juego. El modo de depuración añade cuadros de reconocimiento y valores de confianza.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Modo de ejecución</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Ejecuta la pesca automática sin cuadros de reconocimiento.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Modo de depuración</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Muestra cuadros de reconocimiento estabilizados y valores de confianza sobre VRChat.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Ejecución oculta los cuadros; Depuración muestra cuadros y valores de confianza.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Ejecución</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Depuración</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Pulsa {0} para detener la pesca automática</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Iniciando pesca automática…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>El inicio falló; se liberó el ratón. Revisa VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Ver la página web del mundo compatible</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Inicio rápido</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Haz clic en la imagen superior para ver la página web del mundo y después entra en él desde VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Instala ambos modelos, entra en la zona de pesca y mantén VRChat en primer plano.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Pulsa {0} para iniciar. Pulsa otra vez o sal de VRChat para detener.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Comprueba ambos modelos, toma la caña y ajusta la vista para que la exclamación y los elementos del minijuego puedan aparecer en pantalla.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Mantén VRChat en primer plano y pulsa {0} para iniciar. Pulsa otra vez o cambia de ventana para detener.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Preparando modelos, inferencia y captura…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Deteniendo y liberando el ratón…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat dejó de estar en primer plano; la pesca automática se detuvo y se liberó el ratón</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Pesca automática detenida</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat ya no está en primer plano. Se liberó el ratón; vuelve al juego y pulsa de nuevo la tecla.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Solo funciona con VRChat en primer plano y no se registra permanentemente como tecla global.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Lanzando</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Esperando una picada</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Luchando con el pez</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Recogiendo</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Pulsa {0} para detener</value></data>
 </root>

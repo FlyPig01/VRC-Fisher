@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <VrcExecutionProvider Condition="'$(VrcExecutionProvider)' == ''">DirectML</VrcExecutionProvider>
-    <VersionPrefix>0.1.3</VersionPrefix>
+    <VersionPrefix>0.1.4</VersionPrefix>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <BaseIntermediateOutputPath>obj\$(VrcExecutionProvider)\</BaseIntermediateOutputPath>
     <BaseOutputPath>bin\$(VrcExecutionProvider)\</BaseOutputPath>

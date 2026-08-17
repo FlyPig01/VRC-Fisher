@@ -5,6 +5,10 @@ namespace VrcFisher.Infrastructure.Runtime;
 
 public sealed class InferencePerformanceScheduler
 {
+    public const int MinimumMinigameIntervalMs = 40;
+    public const int DefaultCpuMinigameIntervalMs = 50;
+    public const int MaximumMinigameIntervalMs = 67;
+    public const int MinigameSpeedupStepMs = 2;
     public const int WarmupSamples = 10;
     public const int MinimumSamples = 30;
     public static readonly TimeSpan EvaluationInterval = TimeSpan.FromSeconds(5);
@@ -38,7 +42,9 @@ public sealed class InferencePerformanceScheduler
         var isCpu = provider.Contains("CPU", StringComparison.OrdinalIgnoreCase);
         _locatorIntervalMs = isCpu ? 100 : 80;
         _hookingIntervalMs = isCpu ? 150 : 80;
-        _minigameIntervalMs = isCpu ? 40 : 33;
+        _minigameIntervalMs = isCpu
+            ? DefaultCpuMinigameIntervalMs
+            : MinimumMinigameIntervalMs;
         _panelRecheckIntervalMs = isCpu ? 500 : 250;
     }
 
@@ -56,7 +62,7 @@ public sealed class InferencePerformanceScheduler
     {
         _locatorIntervalMs = Math.Clamp(profile.LocatorIntervalMs, 80, 250);
         _hookingIntervalMs = Math.Clamp(profile.HookingIntervalMs, 80, 250);
-        _minigameIntervalMs = Math.Clamp(profile.MinigameIntervalMs, 33, 67);
+        _minigameIntervalMs = ClampMinigameInterval(profile.MinigameIntervalMs);
         _panelRecheckIntervalMs = Math.Clamp(profile.PanelRecheckIntervalMs, 250, 1000);
         _locatorP95Ms = profile.LocatorP95Ms;
         _locatorAndMinigameP95Ms = profile.LocatorAndMinigameP95Ms;
@@ -162,10 +168,16 @@ public sealed class InferencePerformanceScheduler
         if (_cachedMinigame.SampleCount >= MinimumSamples
             && _cachedMinigameP95Ms is { } cachedP95)
         {
-            var required = cachedP95 / 0.65;
-            _performanceInsufficient = required > 67;
-            var target = SnapAndClamp(required, 33, 67, 5);
-            Tune(ref _minigameIntervalMs, target, 5, stable, now, ref _minigameStableSince);
+            var required = cachedP95 / 0.70;
+            _performanceInsufficient = required > MaximumMinigameIntervalMs;
+            var target = ClampMinigameInterval(required);
+            Tune(
+                ref _minigameIntervalMs,
+                target,
+                MinigameSpeedupStepMs,
+                stable,
+                now,
+                ref _minigameStableSince);
         }
     }
 
@@ -198,6 +210,15 @@ public sealed class InferencePerformanceScheduler
         if (now - stableSince < StableBeforeSpeedup) return;
         current = Math.Max(target, current - step);
         stableSince = now;
+    }
+
+    internal static int ClampMinigameInterval(double requiredMilliseconds)
+    {
+        var roundedUp = (int)Math.Ceiling(requiredMilliseconds);
+        return Math.Clamp(
+            roundedUp,
+            MinimumMinigameIntervalMs,
+            MaximumMinigameIntervalMs);
     }
 
     private LatencyWindow GetWindow(InferenceWorkload workload) => workload switch

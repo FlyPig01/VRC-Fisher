@@ -1,44 +1,30 @@
 # 开发文档
 
-本目录是 VRC-Fisher 技术决策的唯一来源。根目录 `USER_GUIDE.md` 只说明用户如何安装和使用；各子目录 `README.md` 只说明该目录的实际状态和可执行命令。
+本目录只保存当前有效的跨模块设计。历史实验、旧方案和已处理缺陷位于 [`archive/`](archive/README.md)，不得作为现行实现依据。
 
-## 阅读顺序
+## 文档职责
 
-1. [开发环境部署](development-setup.md)：从空白 Windows 环境部署 C#、数据处理或 CUDA 训练环境。
-2. [技术栈](technical-stack.md)：开发环境、运行环境、框架选择和版本策略。
-3. [软件架构](software-architecture.md)：C# 分层、实时管线、状态机和 WinUI 3 前端。
-4. [视觉与训练](vision-and-training.md)：双 YOLO11n、四类全屏标注、数据生成、训练和 ONNX 契约。
-5. [性能与存储预算](performance-budget.md)：开发占用、发布体积、运行资源和验收方法。
-6. [ONNX Runtime 单帧性能实测](onnx-runtime-benchmark.md)：C# CPU/DirectML 与 Python CPU/CUDA 的平均值、P50/P95 和调度建议。
-7. [安装与发布](installation-and-release.md)：单一 DirectML Setup、模型下载、升级和卸载。
-8. [许可证与发布边界](licensing.md)：MIT 原创代码、Ultralytics AGPL、模型、数据集和第三方声明。
-
-## 固定基线
-
-| 范围 | 决定 |
+| 文档 | 唯一职责 |
 |---|---|
-| 正式软件 | C# / .NET 10 / WinUI 3 / Windows x64 |
-| 捕获 | Windows Graphics Capture，仅限 `VRChat.exe` 主窗口 |
-| 运行时推理 | ONNX Runtime DirectML 包内的 CPU / DirectML 后端 |
-| 数据处理 | Python 3.11 / PyAV / Pillow |
-| 训练 | Python 3.11 / PyTorch 2.13 CUDA 13.0 / Ultralytics YOLO11n；locator 960、minigame 640 |
-| 安装 | 一个 Inno Setup 安装程序 |
-| CUDA | 仅用于 NVIDIA 开发机训练；项目内 wheel，不安装 Miniconda 或全局 Toolkit |
-| 许可 | 原创代码 MIT；完整训练子项目与 Ultralytics 衍生模型采用上游标注的 AGPL-3.0；第三方组件各自许可 |
-| 模型开源 | 已验收 `.pt` 与 ONNX 随源码提交到 `models/vX.Y.Z/`；Release 仅作软件下载安装渠道 |
+| [开发环境](development.md) | 各工作区的开发依赖、环境隔离和验证入口 |
+| [架构与运行](architecture.md) | C# 分层、实时管线、状态、安全、持久化和日志边界 |
+| [视觉与训练](vision-and-training.md) | 双模型、类别、数据集和模型验收契约 |
+| [小游戏控制](minigame-control.md) | `catch_zone` 控制算法和控制参数 |
+| [发布与许可](release.md) | 版本、发布物、安装目录、模型更新和许可证边界 |
+| [缺陷记录](bug.md) | 当前尚未关闭的缺陷与验收条件 |
 
-视觉类别固定为四类：`bite_indicator`、`minigame_panel`、`catch_zone`、`moving_target`。不训练成功、失败、轨道或进度条类别。感叹号不可见时只能由用户配置的兜底等待时间触发一次收钩尝试；小游戏面板连续消失后执行一次收杆点击。
+具体操作手册不在本目录重复：
 
-以下决定不是候选方案：OpenCV 不参与运行时识别；WPF 不作为前端；Python 不作为正式软件运行环境；`.pt` 不进入最终用户安装目录但必须在源码仓库公开；CPU 与 DirectML 不需要分别训练模型。
+- 录屏、标注和数据集生成以 [`data_processing/README.md`](../data_processing/README.md) 为准。
+- 训练、评估和导出以 [`training/README.md`](../training/README.md) 为准。
+- C# 工程入口以 [`app/README.md`](../app/README.md) 为准。
+- 安装包和模型包构建以 [`packaging/README.md`](../packaging/README.md) 为准。
+- 最终用户操作以 [`USER_GUIDE.md`](../USER_GUIDE.md) 为准。
 
-## 事实与目标
+## 维护规则
 
-文档中的状态使用以下含义：
-
-- **已实现**：仓库中存在对应代码，并能按文档命令检查。
-- **目标设计**：已经确定的正式实现要求，但代码尚未完成。
-- **估算**：构建前的容量或性能预算，不能作为实测结论发布。
-
-当前已实现 C# 分层工程、四类双 ONNX Runtime 推理、动画感叹号时序证据、屏外感叹号兜底、受限自动调频、事务启动、首帧门禁、前台 VRChat 输入保护、局内热键、15 Hz 点击穿透调试覆盖层、模型成组事务下载、静态硬件信息、使用指南、20 种内置语言和统一错误通知。单一 DirectML Setup 同时提供 `Auto / GPU / CPU`，不再发布独立 CPU-only 构建；完整实机安装与自动钓鱼验收仍待执行。
-
-round3 的最佳权重已导出为 `training/exports/locator.onnx` 与 `minigame.onnx`，并固化到 `models/v0.1.0/`；开发副本位于 `app/models/`。导出契约、抽样 PT/ONNX 对比以及 C# CPU/DirectML 对真实全屏帧的加载推理均已通过。该版本的 `automatic_allowed` 已设为 `true` 以进行实机验证，但不代表所有场景精度或自动钓鱼成功率已经验收。
+1. 设计文档只描述当前行为，不记录调试过程。
+2. 实验数据进入 `archive/` 或 `training/reports/`。
+3. 已关闭缺陷移入缺陷历史，`bug.md` 只保留未关闭项。
+4. 同一参数只在负责该参数的文档中定义，其他位置使用链接。
+5. 程序、命令或目录变化时，同一提交内更新对应职责文档。

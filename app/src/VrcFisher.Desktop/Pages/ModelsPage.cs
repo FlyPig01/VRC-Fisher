@@ -15,6 +15,8 @@ internal sealed class ModelsPage : Page
     private readonly IDesktopPageContext _context;
     private readonly TextBlock _locatorStatus = ModelStatusText();
     private readonly TextBlock _minigameStatus = ModelStatusText();
+    private readonly TextBlock _locatorVersion = ModelVersionText();
+    private readonly TextBlock _minigameVersion = ModelVersionText();
     private readonly TextBlock _totalSize = new() { VerticalAlignment = VerticalAlignment.Center };
     private readonly TextBlock _message = UiFactory.Secondary();
     private readonly ProgressBar _progress = new()
@@ -50,11 +52,13 @@ internal sealed class ModelsPage : Page
                     "locator.onnx",
                     UiStrings.Get("LocatorModelDescription"),
                     UiStrings.Get("LocatorModelTooltip"),
+                    _locatorVersion,
                     _locatorStatus),
                 CreateModelRow(
                     "minigame.onnx",
                     UiStrings.Get("MinigameModelDescription"),
                     UiStrings.Get("MinigameModelTooltip"),
+                    _minigameVersion,
                     _minigameStatus)
             }
         };
@@ -112,7 +116,6 @@ internal sealed class ModelsPage : Page
         AddStorageRow(storage, 2, UiStrings.Get("ModelSource"), source, new Border());
 
         var root = UiFactory.PageStack();
-        root.Children.Add(UiFactory.PageTitle(UiStrings.Get("Models")));
         root.Children.Add(UiFactory.Secondary(UiStrings.Get("ModelsDescription")));
         root.Children.Add(UiFactory.Surface(modelPackage));
         root.Children.Add(_progress);
@@ -183,6 +186,14 @@ internal sealed class ModelsPage : Page
         SetStatus(_locatorStatus, statuses.FirstOrDefault(item => item.Name == "locator.onnx"));
         SetStatus(_minigameStatus, statuses.FirstOrDefault(item => item.Name == "minigame.onnx"));
         _totalSize.Text = FormatSize(_context.Models.InstalledSize);
+        var installedVersion = _context.Models.InstalledVersion;
+        var versionText = string.IsNullOrWhiteSpace(installedVersion)
+            ? string.Empty
+            : installedVersion.StartsWith('v')
+                ? installedVersion
+                : $"v{installedVersion}";
+        SetVersion(_locatorVersion, versionText);
+        SetVersion(_minigameVersion, versionText);
 
         var needsDownload = statuses.Count < 2
             || statuses.Any(item => !item.Installed || !item.Valid);
@@ -305,6 +316,7 @@ internal sealed class ModelsPage : Page
         string name,
         string purpose,
         string tooltip,
+        TextBlock version,
         TextBlock status)
     {
         var grid = new Grid { ColumnSpacing = 20 };
@@ -322,7 +334,8 @@ internal sealed class ModelsPage : Page
                     FontSize = 17,
                     FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
                 },
-                UiFactory.Secondary(purpose)
+                UiFactory.Secondary(purpose),
+                version
             }
         };
         grid.Children.Add(labels);
@@ -363,6 +376,22 @@ internal sealed class ModelsPage : Page
         TextAlignment = TextAlignment.Right,
         VerticalAlignment = VerticalAlignment.Center
     };
+
+    private static TextBlock ModelVersionText()
+    {
+        var text = UiFactory.Secondary();
+        text.FontSize = 12;
+        text.Visibility = Visibility.Collapsed;
+        return text;
+    }
+
+    private static void SetVersion(TextBlock target, string version)
+    {
+        target.Text = version;
+        target.Visibility = string.IsNullOrWhiteSpace(version)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+    }
 
     private static void SetStatus(TextBlock target, ModelStatus? status)
     {

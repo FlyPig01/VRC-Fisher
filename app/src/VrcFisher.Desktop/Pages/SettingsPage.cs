@@ -15,8 +15,13 @@ internal sealed class SettingsPage : Page
 {
     private readonly IDesktopPageContext _context;
     private readonly ComboBox _language = new() { MinWidth = 220 };
-    private readonly ComboBox _workMode = new() { MinWidth = 220 };
-    private readonly ComboBox _device = new() { MinWidth = 220 };
+    private readonly ToggleSwitch _workMode = new();
+    private readonly RadioButtons _device = new()
+    {
+        MaxColumns = 3,
+        Width = 480,
+        HorizontalAlignment = HorizontalAlignment.Left
+    };
     private readonly TextBlock _hotkeyValue = new()
     {
         MinWidth = 120,
@@ -29,8 +34,14 @@ internal sealed class SettingsPage : Page
         Minimum = 5,
         Maximum = 30,
         StepFrequency = 1,
-        Width = 320,
-        HorizontalAlignment = HorizontalAlignment.Left
+        Width = 260,
+        HorizontalAlignment = HorizontalAlignment.Left,
+        VerticalAlignment = VerticalAlignment.Center,
+        RenderTransform = new Microsoft.UI.Xaml.Media.TranslateTransform { Y = 3 }
+    };
+    private readonly TextBlock _biteFallbackDelayLabel = new()
+    {
+        VerticalAlignment = VerticalAlignment.Center
     };
     private readonly TextBlock _biteFallbackValue = new()
     {
@@ -54,13 +65,13 @@ internal sealed class SettingsPage : Page
         }
         _language.SelectionChanged += async (_, _) => await SaveLanguageAsync();
 
-        AddWorkMode(ApplicationMode.Run, "RunMode", "RunModeDescription");
-        AddWorkMode(ApplicationMode.Debug, "DebugMode", "DebugModeDescription");
-        _workMode.SelectionChanged += async (_, _) => await SaveWorkModeAsync();
+        _workMode.OffContent = UiStrings.Get("RunMode");
+        _workMode.OnContent = UiStrings.Get("DebugMode");
+        _workMode.Toggled += async (_, _) => await SaveWorkModeAsync();
 
-        AddDevice(ExecutionDevice.Auto, "DeviceAuto");
-        AddDevice(ExecutionDevice.Cpu, "DeviceCpu");
-        if (_context.SupportsGpu) AddDevice(ExecutionDevice.Gpu, "DeviceGpu");
+        _device.Items.Add(UiStrings.Get("DeviceAuto"));
+        _device.Items.Add(UiStrings.Get("DeviceCpu"));
+        if (_context.SupportsGpu) _device.Items.Add(UiStrings.Get("DeviceGpu"));
         _device.SelectionChanged += async (_, _) => await SaveDeviceAsync();
 
         var changeHotkey = UiFactory.CommandButton(Symbol.Edit, UiStrings.Get("Change"));
@@ -77,6 +88,7 @@ internal sealed class SettingsPage : Page
         _biteFallbackEnabled.Toggled += async (_, _) =>
         {
             _biteFallback.IsEnabled = _biteFallbackEnabled.IsOn;
+            UpdateFallbackVisualState();
             if (_refreshing) return;
             await _context.SaveOptionsAsync(_context.Options with
             {
@@ -112,20 +124,30 @@ internal sealed class SettingsPage : Page
             }
         };
 
-        var fallbackControl = new StackPanel
+        _biteFallbackDelayLabel.Text = UiStrings.Get("BiteFallbackDelay");
+        var fallbackControl = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 16,
-            Children = { _biteFallback, _biteFallbackValue }
+            ColumnSpacing = 14,
+            HorizontalAlignment = HorizontalAlignment.Left
         };
-        var fallbackDelayRow = UiFactory.FormRow(UiStrings.Get("BiteFallbackDelay"), fallbackControl);
-        ToolTipService.SetToolTip(fallbackDelayRow, UiStrings.Get("BiteFallbackDelayDescription"));
-        var fallbackToggleRow = UiFactory.FormRow(UiStrings.Get("BiteFallback"), _biteFallbackEnabled);
-        ToolTipService.SetToolTip(fallbackToggleRow, UiStrings.Get("BiteFallbackDescription"));
+        fallbackControl.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(150) });
+        fallbackControl.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        fallbackControl.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        fallbackControl.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        fallbackControl.Children.Add(_biteFallbackEnabled);
+        Grid.SetColumn(_biteFallbackDelayLabel, 1);
+        fallbackControl.Children.Add(_biteFallbackDelayLabel);
+        Grid.SetColumn(_biteFallback, 2);
+        fallbackControl.Children.Add(_biteFallback);
+        Grid.SetColumn(_biteFallbackValue, 3);
+        fallbackControl.Children.Add(_biteFallbackValue);
+
+        var fallbackRow = UiFactory.FormRow(UiStrings.Get("BiteFallback"), fallbackControl);
+        ToolTipService.SetToolTip(fallbackRow, UiStrings.Get("BiteFallbackDescription"));
         var automationSettings = new StackPanel
         {
             Spacing = 20,
-            Children = { fallbackToggleRow, fallbackDelayRow }
+            Children = { fallbackRow }
         };
 
         var storagePath = new TextBlock
@@ -148,7 +170,6 @@ internal sealed class SettingsPage : Page
         storage.Children.Add(openStorage);
 
         var root = UiFactory.PageStack();
-        root.Children.Add(UiFactory.PageTitle(UiStrings.Get("Settings")));
         root.Children.Add(UiFactory.Section(UiStrings.Get("GeneralSettings"), general));
         root.Children.Add(UiFactory.Section(UiStrings.Get("AutomationSettings"), automationSettings));
         root.Children.Add(UiFactory.Section(
@@ -170,6 +191,7 @@ internal sealed class SettingsPage : Page
         _biteFallback.Value = _context.Options.BiteFallbackSeconds;
         _biteFallback.IsEnabled = _context.Options.BiteFallbackEnabled;
         _biteFallbackValue.Text = FormatBiteFallback(_biteFallback.Value);
+        UpdateFallbackVisualState();
         _refreshing = false;
     }
 
@@ -300,24 +322,21 @@ internal sealed class SettingsPage : Page
 
     private async Task SaveDeviceAsync()
     {
-        if (_refreshing || _device.SelectedItem is not ComboBoxItem { Tag: ExecutionDevice device }) return;
+        if (_refreshing || _device.SelectedIndex < 0) return;
+        var device = _device.SelectedIndex switch
+        {
+            1 => ExecutionDevice.Cpu,
+            2 when _context.SupportsGpu => ExecutionDevice.Gpu,
+            _ => ExecutionDevice.Auto
+        };
         await _context.ChangeDeviceAsync(device);
     }
 
     private async Task SaveWorkModeAsync()
     {
-        if (_refreshing || _workMode.SelectedItem is not ComboBoxItem { Tag: ApplicationMode mode }) return;
+        if (_refreshing) return;
+        var mode = _workMode.IsOn ? ApplicationMode.Debug : ApplicationMode.Run;
         await _context.SaveOptionsAsync(_context.Options with { WorkMode = mode });
-    }
-
-    private void AddDevice(ExecutionDevice device, string resourceKey) =>
-        _device.Items.Add(new ComboBoxItem { Content = UiStrings.Get(resourceKey), Tag = device });
-
-    private void AddWorkMode(ApplicationMode mode, string labelKey, string descriptionKey)
-    {
-        var item = new ComboBoxItem { Content = UiStrings.Get(labelKey), Tag = mode };
-        ToolTipService.SetToolTip(item, UiStrings.Get(descriptionKey));
-        _workMode.Items.Add(item);
     }
 
     private void SelectLanguage(string language)
@@ -329,16 +348,24 @@ internal sealed class SettingsPage : Page
 
     private void SelectDevice(ExecutionDevice device)
     {
-        _device.SelectedItem = _device.Items.OfType<ComboBoxItem>()
-            .FirstOrDefault(item => item.Tag is ExecutionDevice candidate && candidate == device);
-        _device.SelectedIndex = Math.Max(0, _device.SelectedIndex);
+        _device.SelectedIndex = device switch
+        {
+            ExecutionDevice.Cpu => 1,
+            ExecutionDevice.Gpu when _context.SupportsGpu => 2,
+            _ => 0
+        };
     }
 
     private void SelectWorkMode(ApplicationMode mode)
     {
-        _workMode.SelectedItem = _workMode.Items.OfType<ComboBoxItem>()
-            .FirstOrDefault(item => item.Tag is ApplicationMode candidate && candidate == mode);
-        _workMode.SelectedIndex = Math.Max(0, _workMode.SelectedIndex);
+        _workMode.IsOn = mode == ApplicationMode.Debug;
+    }
+
+    private void UpdateFallbackVisualState()
+    {
+        var opacity = _biteFallbackEnabled.IsOn ? 1 : 0.45;
+        _biteFallbackDelayLabel.Opacity = opacity;
+        _biteFallbackValue.Opacity = opacity;
     }
 
     private static string FormatBiteFallback(double seconds) =>

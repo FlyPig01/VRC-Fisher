@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Zalecane jest ustawienie Automatycznie. Spróbuj CPU, jeśli gra się przycina.</value>
@@ -225,16 +225,13 @@
     <value>Pamięć lokalna</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Awaryjne wykrywanie wskaźnika poza ekranem</value>
+    <value>Wykrzyknik poza ekranem</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Minimalny czas oczekiwania</value>
+    <value>Oczekiwanie</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>Wskaźnik brań może pojawić się poza przechwytywaną klatką. Gdy opcja jest włączona, aplikacja próbuje wejść do minigry po skonfigurowanym czasie oczekiwania, jeśli nie wykryto wskaźnika. Domyślnie wyłączone.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Mierzony po rzuceniu. Wybierz 5–30 sekund; domyślnie 15 sekund.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Włączone</value>
@@ -483,11 +480,9 @@
     <value>Oczekiwanie</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Tryb pracy</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Tryb działania utrzymuje widok gry w czystości. Tryb debugowania dodaje ramki rozpoznawania i wartości ufności.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Tryb działania</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Uruchamia automatyczne wędkowanie bez ramek rozpoznawania.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Tryb debugowania</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Pokazuje stabilizowane ramki rozpoznawania i wartości ufności na VRChat.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Działanie ukrywa ramki; Debugowanie pokazuje ramki i wartości ufności.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Działanie</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Debugowanie</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Naciśnij {0}, aby zatrzymać automatyczne wędkowanie</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Uruchamianie automatycznego łowienia…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Nie udało się uruchomić; zwolniono sterowanie myszą. Sprawdź VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Wyświetl stronę internetową obsługiwanego świata</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Szybki start</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Kliknij obraz powyżej, aby wyświetlić stronę świata, a następnie wejdź do niego w VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Zainstaluj oba modele, wejdź do strefy łowienia i trzymaj VRChat na pierwszym planie.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Naciśnij {0}, aby uruchomić. Naciśnij ponownie lub opuść VRChat, aby zatrzymać.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Sprawdź oba modele, weź wędkę i ustaw widok tak, aby wykrzyknik oraz elementy minigry mogły pojawić się na ekranie.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Pozostaw VRChat na pierwszym planie i naciśnij {0}, aby uruchomić. Naciśnij ponownie lub przełącz się z VRChat, aby zatrzymać.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Przygotowywanie modeli, inferencji i przechwytywania…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Zatrzymywanie i zwalnianie myszy…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat opuścił pierwszy plan; automatyczne łowienie zatrzymano, a mysz zwolniono</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatyczne łowienie zatrzymane</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat nie jest już na pierwszym planie. Mysz zwolniono; wróć do gry i ponownie naciśnij klawisz.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Działa tylko gdy VRChat jest na pierwszym planie i nie jest stale rejestrowany jako globalny skrót.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Zarzucanie</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Oczekiwanie na branie</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Walka z rybą</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Zwijanie żyłki</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Naciśnij {0}, aby zatrzymać</value></data>
 </root>

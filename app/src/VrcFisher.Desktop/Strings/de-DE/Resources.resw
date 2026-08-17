@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Automatisch wird empfohlen. Versuchen Sie CPU, wenn das Spiel ruckelt.</value>
@@ -225,16 +225,13 @@
     <value>Lokaler Speicher</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Fallback bei nicht sichtbarem Bissanzeiger</value>
+    <value>Ausrufezeichen außerhalb des Bildes</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Mindestwartezeit</value>
+    <value>Wartezeit</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>Der Bissanzeiger kann außerhalb des erfassten Bildschirms erscheinen. Wenn diese Option aktiviert ist, versucht die Anwendung nach der konfigurierten Wartezeit in das Minigame zu wechseln, wenn kein Bissanzeiger erkannt wurde. Standardmäßig deaktiviert.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Gemessen nach dem Auswerfen. Wählen Sie 5–30 Sekunden; die Standardeinstellung ist 15 Sekunden.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Aktiviert</value>
@@ -483,11 +480,9 @@
     <value>Warten</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Arbeitsmodus</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Der Ausführmodus hält die Spielansicht sauber. Der Debugmodus fügt Erkennungsrahmen und Konfidenzwerte hinzu.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Ausführmodus</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Führt automatisches Angeln ohne Erkennungsrahmen aus.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Debugmodus</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Zeigt stabilisierte Erkennungsrahmen und Konfidenzwerte über VRChat an.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Ausführen blendet Erkennungsrahmen aus; Debug zeigt Rahmen und Konfidenzwerte.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Ausführen</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Debug</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Drücke {0}, um das automatische Angeln zu beenden</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Automatisches Angeln wird gestartet…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Start fehlgeschlagen; Mauseingabe wurde freigegeben. Prüfe VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Webseite der unterstützten Welt anzeigen</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Schnellstart</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Klicke auf das Bild oben, um die Webseite der Welt anzuzeigen; betrete die Welt anschließend in VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Installiere beide Modelle, gehe zum Angelbereich und lasse VRChat im Vordergrund.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Drücke {0} zum Starten. Erneut drücken oder VRChat verlassen beendet den Lauf.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Prüfe beide Modelle, nimm die Angel und richte den Blick so aus, dass Ausrufezeichen und Minispiel-Elemente im Bild erscheinen können.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Lass VRChat im Vordergrund und drücke {0} zum Starten. Erneutes Drücken oder Wechseln aus VRChat stoppt den Lauf.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Modelle, Inferenz und Aufnahme werden vorbereitet…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Wird beendet und Mauseingaben werden freigegeben…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat ist nicht mehr im Vordergrund; automatisches Angeln wurde beendet und die Maus freigegeben</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatisches Angeln beendet</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat ist nicht mehr im Vordergrund. Die Maus wurde freigegeben; kehre ins Spiel zurück und drücke erneut die Taste.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Funktioniert nur, wenn VRChat im Vordergrund ist, und wird nicht dauerhaft als globaler Hotkey registriert.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Auswerfen</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Warten auf einen Biss</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Fisch drillen</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Einholen</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Drücke {0} zum Stoppen</value></data>
 </root>

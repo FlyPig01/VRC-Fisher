@@ -12,9 +12,9 @@ public sealed record AppOptions(
     bool BiteFallbackEnabled = false,
     double BiteFallbackSeconds = 15,
     string ToggleHotkey = "F8",
-    int SettingsVersion = 3)
+    int SettingsVersion = 5)
 {
-    public const int CurrentSettingsVersion = 3;
+    public const int CurrentSettingsVersion = 5;
 
     public static AppOptions Default => new();
 
@@ -208,6 +208,7 @@ public interface IDetectionRuntime
     bool IsReady { get; }
     event EventHandler<DetectionRuntimeMetrics>? MetricsChanged;
     event EventHandler<DetectionVisualizationFrame>? VisualizationChanged;
+    event EventHandler<FishingOperationTrace>? FishingOperationSubmitted;
     Task PrepareAsync(CancellationToken cancellationToken);
     void Activate();
     Task StopAsync(CancellationToken cancellationToken);

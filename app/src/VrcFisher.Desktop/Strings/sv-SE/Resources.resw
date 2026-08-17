@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Auto rekommenderas. Prova CPU om spelet laggar.</value>
@@ -225,16 +225,13 @@
     <value>Lokal lagring</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Fallback för napp utanför skärmen</value>
+    <value>Utropstecken utanför skärmen</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Minsta väntetid</value>
+    <value>Väntetid</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>Nappindikatorn kan visas utanför den fångade bilden. När aktiverat försöker applikationen gå in i minispelet efter den konfigurerade väntetiden om ingen indikator detekterades. Inaktiverat som standard.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Uppmätt efter kast. Välj 5–30 sekunder; standard är 15 sekunder.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Aktiverad</value>
@@ -483,11 +480,9 @@
     <value>Väntar</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Arbetsläge</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Körläget håller spelvyn ren. Felsökningsläget lägger till igenkänningsrutor och konfidensvärden.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Körläge</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Kör autofiske utan igenkänningsrutor.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Felsökningsläge</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Visa stabiliserade igenkänningsrutor och konfidensvärden över VRChat.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Kör döljer igenkänningsrutor; Felsökning visar rutor och konfidensvärden.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Kör</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Felsökning</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Tryck på {0} för att stoppa autofisket</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Startar automatiskt fiske…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Starten misslyckades; musinmatningen släpptes. Kontrollera VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Visa webbsidan för den värld som stöds</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Snabbstart</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Klicka på bilden ovan för att visa världens webbsida och gå sedan in i världen via VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Installera båda modellerna, gå till fiskeområdet och håll VRChat i förgrunden.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Tryck {0} för att starta. Tryck igen eller lämna VRChat för att stoppa.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Kontrollera båda modellerna, ta upp fiskespöet och justera vyn så att utropstecknet och minispelets delar kan visas på skärmen.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Håll VRChat i förgrunden och tryck {0} för att starta. Tryck igen eller växla bort från VRChat för att stoppa.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Förbereder modeller, inferens och inspelning…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Stoppar och släpper musinmatning…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat lämnade förgrunden; automatiskt fiske stoppades och musen släpptes</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatiskt fiske stoppat</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat är inte längre i förgrunden. Musen släpptes; återgå till spelet och tryck igen.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Fungerar bara när VRChat är i förgrunden och registreras inte permanent som global snabbtangent.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Kastar ut</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Väntar på napp</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Kämpar med fisken</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Vevar in</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Tryck på {0} för att stoppa</value></data>
 </root>

@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>แนะนำให้ใช้อัตโนมัติ ลองใช้ CPU หากเกมกระตุก</value>
@@ -225,16 +225,13 @@
     <value>ที่จัดเก็บข้อมูลในเครื่อง</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>ตัวสำรองเมื่อตัวบ่งชี้การกัดอยู่นอกจอ</value>
+    <value>เครื่องหมายอัศเจรีย์นอกจอ</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>เวลารอขั้นต่ำ</value>
+    <value>รอ</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>ตัวบ่งชี้การกัดอาจปรากฏนอกเฟรมที่จับภาพได้ เมื่อเปิดใช้งาน แอปพลิเคชันจะพยายามเข้าสู่มินิเกมหลังจากเวลาที่กำหนดหากไม่พบตัวบ่งชี้ ปิดใช้งานตามค่าเริ่มต้น</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>วัดหลังการเหวี่ยง เลือก 5–30 วินาที ค่าเริ่มต้นคือ 15 วินาที</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>เปิดใช้งาน</value>
@@ -483,11 +480,9 @@
     <value>กำลังรอ</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>โหมดทำงาน</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>โหมดรันจะทำให้หน้าจอเกมสะอาดตา โหมดดีบักจะเพิ่มกรอบตรวจจับและค่าความเชื่อมั่น</value></data>
-  <data name="RunMode" xml:space="preserve"><value>โหมดรัน</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>รันการตกปลาอัตโนมัติโดยไม่แสดงกรอบตรวจจับ</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>โหมดดีบัก</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>แสดงกรอบตรวจจับที่เสถียรและค่าความเชื่อมั่นบน VRChat</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>ทำงานจะซ่อนกรอบตรวจจับ ส่วนดีบักจะแสดงกรอบและค่าความเชื่อมั่น</value></data>
+  <data name="RunMode" xml:space="preserve"><value>ทำงาน</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>ดีบัก</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>กด {0} เพื่อหยุดการตกปลาอัตโนมัติ</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>กำลังเริ่มตกปลาอัตโนมัติ…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>เริ่มไม่สำเร็จ ระบบปล่อยการควบคุมเมาส์แล้ว โปรดตรวจสอบ VRC-Fisher</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>ดูหน้าเว็บของโลกที่รองรับ</value></data>
   <data name="QuickStart" xml:space="preserve"><value>เริ่มใช้อย่างรวดเร็ว</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>คลิกรูปด้านบนเพื่อดูหน้าเว็บของโลก แล้วจึงเข้าโลกดังกล่าวผ่าน VRChat</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>ติดตั้งโมเดลทั้งสอง เข้าเขตตกปลา และให้ VRChat อยู่ด้านหน้า</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>กด {0} เพื่อเริ่ม กดอีกครั้งหรือสลับออกจาก VRChat เพื่อหยุด</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>ตรวจสอบโมเดลทั้งสอง หยิบคันเบ็ด และปรับมุมมองให้เครื่องหมายอัศเจรีย์กับองค์ประกอบมินิเกมสามารถปรากฏบนหน้าจอได้</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>ให้ VRChat อยู่ด้านหน้าแล้วกด {0} เพื่อเริ่ม กดอีกครั้งหรือสลับออกจาก VRChat เพื่อหยุด</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>กำลังเตรียมโมเดล การอนุมาน และการจับภาพ…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>กำลังหยุดและปล่อยอินพุตเมาส์…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat ไม่ได้อยู่ด้านหน้าแล้ว ระบบตกปลาอัตโนมัติหยุดและปล่อยอินพุตเมาส์</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>หยุดตกปลาอัตโนมัติแล้ว</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat ไม่ได้อยู่ด้านหน้า อินพุตเมาส์ถูกปล่อยแล้ว กลับเข้าเกมและกดปุ่มอีกครั้ง</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>ทำงานเฉพาะเมื่อ VRChat อยู่ด้านหน้า และไม่ลงทะเบียนเป็นปุ่มลัดส่วนกลางแบบถาวร</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>กำลังเหวี่ยงเบ็ด</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>กำลังรอปลากินเบ็ด</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>กำลังต่อสู้กับปลา</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>กำลังกรอสาย</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>กด {0} เพื่อหยุด</value></data>
 </root>

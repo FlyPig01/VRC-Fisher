@@ -266,7 +266,7 @@ public sealed class RuntimeController : IRuntimeController
             });
         }
 
-        else if (metrics.Status.Code == RuntimeMessageCode.DetectionStopped
+        else if ((metrics.Status.Code is RuntimeMessageCode.DetectionStopped or RuntimeMessageCode.InputFailed)
                  && Interlocked.CompareExchange(ref _runtimeFailureStopScheduled, 1, 0) == 0)
         {
             inputController.ReleaseAll();

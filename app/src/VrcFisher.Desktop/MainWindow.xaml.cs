@@ -41,6 +41,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
         Task<HardwareSnapshot> hardware)
     {
         InitializeComponent();
+        _options = options;
         ApplyLocalizedChrome();
         _runtime = runtime;
         _models = models;
@@ -51,10 +52,9 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
         _changeHotkey = changeHotkey;
         _supportsGpu = supportsGpu;
         _hardware = hardware;
-        _options = options;
-        Title = string.Empty;
-        AppWindow.Title = string.Empty;
-        AppWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;
+        Title = "VRC-Fisher";
+        AppWindow.Title = "VRC-Fisher";
+        AppWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
         var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "VRC-Fisher.ico");
         if (File.Exists(iconPath)) AppWindow.SetIcon(iconPath);
         ResizeInitialWindow();
@@ -77,8 +77,15 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
 
     async Task IDesktopPageContext.SaveOptionsAsync(AppOptions options)
     {
+        var workModeChanged = options.WorkMode != _options.WorkMode;
         _options = options;
         await _saveOptions(options);
+        if (workModeChanged)
+        {
+            ApplyWorkModeChrome();
+            if ((NavigationList.SelectedItem as ListViewItem)?.Tag?.ToString() == "run")
+                ShowPage("run");
+        }
     }
 
     async Task IDesktopPageContext.ChangeLanguageAsync(string language)
@@ -200,7 +207,7 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
 
     private void ApplyLocalizedChrome()
     {
-        RunNavigationLabel.Text = UiStrings.Get("Run");
+        ApplyWorkModeChrome();
         ModelsNavigationLabel.Text = UiStrings.Get("Models");
         GuideNavigationLabel.Text = UiStrings.Get("Guide");
         SettingsNavigationLabel.Text = UiStrings.Get("Settings");
@@ -208,6 +215,13 @@ public sealed partial class MainWindow : Window, IDesktopPageContext
         StatusIcon.Symbol = Symbol.Important;
         if (RuntimeNotice.IsOpen)
             ShowRuntimeNotice(_runtime.Snapshot.Status, activate: false);
+    }
+
+    private void ApplyWorkModeChrome()
+    {
+        var isDebug = _options.WorkMode == ApplicationMode.Debug;
+        RunNavigationLabel.Text = UiStrings.Get(isDebug ? "DebugMode" : "RunMode");
+        RunNavigationIcon.Glyph = isDebug ? "\uEBE8" : "\uE768";
     }
 
     private void ResizeInitialWindow()

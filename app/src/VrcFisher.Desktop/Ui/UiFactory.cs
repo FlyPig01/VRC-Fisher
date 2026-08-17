@@ -86,12 +86,17 @@ internal static class UiFactory
         {
             Text = label,
             FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
-            Margin = new Thickness(0, 7, 0, 0),
-            TextWrapping = TextWrapping.Wrap
+            TextWrapping = TextWrapping.Wrap,
+            VerticalAlignment = VerticalAlignment.Center
         };
         grid.Children.Add(labelText);
 
-        var controlStack = new StackPanel { Spacing = 6 };
+        var controlStack = new StackPanel
+        {
+            Spacing = 6,
+            MinHeight = 40,
+            VerticalAlignment = VerticalAlignment.Center
+        };
         controlStack.Children.Add(control);
         if (!string.IsNullOrWhiteSpace(description))
             controlStack.Children.Add(Secondary(description));

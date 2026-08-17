@@ -169,10 +169,14 @@ public sealed class RuntimeControllerTests
     {
         public bool IsTargetForeground { get; set; } = true;
         public int ReleaseCount { get; private set; }
-        public void Click() { }
-        public void PressLeft() { }
-        public void ReleaseLeft() { }
-        public void ReleaseAll() => ReleaseCount++;
+        public InputExecutionResult Click() => InputExecutionResult.NoChange;
+        public InputExecutionResult PressLeft() => InputExecutionResult.NoChange;
+        public InputExecutionResult ReleaseLeft() => InputExecutionResult.NoChange;
+        public InputExecutionResult ReleaseAll()
+        {
+            ReleaseCount++;
+            return InputExecutionResult.NoChange;
+        }
     }
 
     private sealed class StubDetectionRuntime : IDetectionRuntime
@@ -190,6 +194,11 @@ public sealed class RuntimeControllerTests
             remove { }
         }
         public event EventHandler<DetectionVisualizationFrame>? VisualizationChanged
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler<FishingOperationTrace>? FishingOperationSubmitted
         {
             add { }
             remove { }

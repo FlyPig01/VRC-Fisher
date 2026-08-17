@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Otomatik önerilir. Oyun takılıyorsa CPU'yu deneyin.</value>
@@ -225,16 +225,13 @@
     <value>Yerel depolama</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Ekran dışı gösterge yedeklemesi</value>
+    <value>Ekran dışı ünlem işareti</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Minimum bekleme</value>
+    <value>Bekleme</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>Isırık göstergesi yakalanan çerçevenin dışında görünebilir. Etkinleştirildiğinde, uygulama hiçbir gösterge algılanmazsa yapılandırılan bekleme süresinden sonra minigame'e girmeyi dener. Varsayılan olarak devre dışıdır.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Atıştan sonra ölçülür. 5–30 saniye seçin; varsayılan 15 saniyedir.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Etkin</value>
@@ -483,11 +480,9 @@
     <value>Bekleniyor</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Çalışma modu</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Çalıştırma modu oyun görünümünü temiz tutar. Hata ayıklama modu tanıma kutuları ve güven değerleri ekler.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Çalıştırma modu</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Tanıma kutuları olmadan otomatik balıkçılığı çalıştırır.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Hata ayıklama modu</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>VRChat üzerinde stabilize edilmiş tanıma kutularını ve güven değerlerini gösterir.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Çalıştır tanıma kutularını gizler; Hata ayıklama kutuları ve güven değerlerini gösterir.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Çalıştır</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Hata ayıklama</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Otomatik balıkçılığı durdurmak için {0} tuşuna basın</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Otomatik balıkçılık başlatılıyor…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Başlatılamadı; fare girişi serbest bırakıldı. VRC-Fisher'ı kontrol edin.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Desteklenen dünyanın web sayfasını görüntüle</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Hızlı başlangıç</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Dünyanın web sayfasını görüntülemek için yukarıdaki görsele tıklayın, ardından dünyaya VRChat üzerinden girin.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Her iki modeli kurun, balık tutma alanına gidin ve VRChat'i ön planda tutun.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Başlatmak için {0} tuşuna basın. Tekrar basmak veya VRChat'ten çıkmak durdurur.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Her iki modeli kontrol edin, oltayı alın ve ünlem işaretiyle mini oyun bileşenleri ekranda görünebilecek şekilde görüş açısını ayarlayın.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>VRChat&apos;i ön planda tutun ve başlatmak için {0} tuşuna basın. Tekrar basmak veya VRChat&apos;ten geçiş yapmak durdurur.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Modeller, çıkarım ve yakalama hazırlanıyor…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Durduruluyor ve fare girdisi bırakılıyor…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat ön plandan ayrıldı; otomatik balık tutma durdu ve fare girdisi bırakıldı</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Otomatik balık tutma durdu</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat artık ön planda değil. Fare girdisi bırakıldı; oyuna dönüp tuşa tekrar basın.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Yalnızca VRChat ön plandayken çalışır ve kalıcı genel kısayol olarak kaydedilmez.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Olta atılıyor</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Balığın vurması bekleniyor</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Balıkla mücadele ediliyor</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Misina sarılıyor</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Durdurmak için {0} tuşuna basın</value></data>
 </root>

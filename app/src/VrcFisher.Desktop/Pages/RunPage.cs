@@ -73,7 +73,6 @@ internal sealed class RunPage : Page
             (UiStrings.Get("ActualDevice"), _actualDeviceValue));
 
         var root = UiFactory.PageStack();
-        root.Children.Add(UiFactory.PageTitle(UiStrings.Get("Run")));
         root.Children.Add(UiFactory.Surface(statusStack));
         root.Children.Add(UiFactory.Section(UiStrings.Get("Readiness"), readinessGrid));
         root.Children.Add(_readinessInfo);

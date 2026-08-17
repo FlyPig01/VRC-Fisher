@@ -20,7 +20,32 @@ public enum InputAction
     None,
     Click,
     Press,
-    Release
+    Release,
+    Pulse
+}
+
+public enum MinigameInputState
+{
+    Released,
+    Pressed,
+    Cooldown
+}
+
+public sealed record MinigameDynamicsParameters(
+    double? ReleaseAcceleration = null,
+    double? PressAcceleration = null)
+{
+    public static MinigameDynamicsParameters Empty => new();
+
+    public MinigameDynamicsParameters Normalize() => new(
+        NormalizeRelease(ReleaseAcceleration),
+        NormalizePress(PressAcceleration));
+
+    private static double? NormalizeRelease(double? value) =>
+        value is < 0 and >= -40 && double.IsFinite(value.Value) ? value : null;
+
+    private static double? NormalizePress(double? value) =>
+        value is > 0 and <= 40 && double.IsFinite(value.Value) ? value : null;
 }
 
 public enum ExecutionDevice
@@ -58,6 +83,12 @@ public enum ApplicationMode
     Debug
 }
 
+public enum FishingOperationKind
+{
+    Cast,
+    Reel
+}
+
 public enum InferenceWorkload
 {
     Locator,
@@ -85,6 +116,7 @@ public enum RuntimeMessageCode
     TargetNotForeground,
     OutputContractUnverified,
     InferenceFailed,
+    InputFailed,
     StateMachineDecision
 }
 
@@ -105,7 +137,13 @@ public sealed record DetectionObservation(
     BoundingBox? MovingTarget = null,
     float? MovingTargetYNorm = null,
     float? CatchZoneTopNorm = null,
-    float? CatchZoneBottomNorm = null)
+    float? CatchZoneBottomNorm = null,
+    float? BiteIndicatorConfidence = null,
+    float? MinigamePanelConfidence = null,
+    float? CatchZoneConfidence = null,
+    float? MovingTargetConfidence = null,
+    long PanelGeneration = 0,
+    TimeSpan CapturedTimestamp = default)
 {
     public bool HasBiteIndicator => BiteIndicator is not null;
     public bool HasMinigamePanel => MinigamePanel is not null;
@@ -115,7 +153,14 @@ public readonly record struct StateDecision(
     FishingPhase Phase,
     InputAction Action,
     string Reason,
-    int Cycle);
+    int Cycle,
+    TimeSpan? PredictedReleaseDelay = null,
+    string? Diagnostic = null,
+    TimeSpan MinimumPulseDuration = default,
+    TimeSpan? PredictedRepressDelay = null,
+    TimeSpan ControlPlanHorizon = default,
+    TimeSpan FeedbackTimeout = default,
+    bool HasFreshControlFeedback = false);
 
 public sealed record StateMachineOptions(
     int BiteIndicatorConfirmFrames = 3,
@@ -130,8 +175,8 @@ public sealed record StateMachineOptions(
     TimeSpan MinigameTimeout = default,
     TimeSpan LootTimeout = default,
     TimeSpan RecoveryDelay = default,
-    TimeSpan CycleDelay = default,
-    float VerticalDeadband = 0.04f)
+    TimeSpan ReelReadyDelay = default,
+    TimeSpan PostReelDelay = default)
 {
     public static StateMachineOptions Default => new(
         BiteIndicatorEvidenceWindow: 5,
@@ -143,7 +188,8 @@ public sealed record StateMachineOptions(
         MinigameTimeout: TimeSpan.FromSeconds(30),
         LootTimeout: TimeSpan.FromSeconds(5),
         RecoveryDelay: TimeSpan.FromSeconds(1),
-        CycleDelay: TimeSpan.FromSeconds(1));
+        ReelReadyDelay: TimeSpan.FromSeconds(1),
+        PostReelDelay: TimeSpan.FromSeconds(2));
 }
 
 public interface IStateMachine
@@ -156,10 +202,30 @@ public interface IStateMachine
 public interface IInputController
 {
     bool IsTargetForeground { get; }
-    void Click();
-    void PressLeft();
-    void ReleaseLeft();
-    void ReleaseAll();
+    InputExecutionResult Click();
+    InputExecutionResult PressLeft();
+    InputExecutionResult ReleaseLeft();
+    InputExecutionResult ReleaseAll();
+}
+
+public readonly record struct InputExecutionResult(
+    bool Succeeded,
+    int SubmittedEvents,
+    int ExpectedEvents,
+    string? Error = null)
+{
+    public DateTimeOffset? PressedAt { get; init; }
+    public DateTimeOffset? ReleasedAt { get; init; }
+
+    public static InputExecutionResult Success(int submittedEvents, int expectedEvents) =>
+        new(true, submittedEvents, expectedEvents);
+
+    public static InputExecutionResult NoChange => new(true, 0, 0);
+
+    public static InputExecutionResult Failure(
+        int submittedEvents,
+        int expectedEvents,
+        string error) => new(false, submittedEvents, expectedEvents, error);
 }
 
 public interface IFrameSource : IAsyncDisposable
@@ -170,15 +236,27 @@ public interface IFrameSource : IAsyncDisposable
     Task StopAsync(CancellationToken cancellationToken);
 }
 
+public interface IDemandDrivenFrameSource : IFrameSource
+{
+    void RequestNextFrame(TimeSpan delay);
+}
+
 public sealed class FrameSourceFailedEventArgs(Exception exception) : EventArgs
 {
     public Exception Exception { get; } = exception ?? throw new ArgumentNullException(nameof(exception));
 }
 
-public sealed class CapturedFrameEventArgs(long frameNumber, DateTimeOffset capturedAt, ReadOnlyMemory<byte> bgraPixels, int width, int height) : EventArgs
+public sealed class CapturedFrameEventArgs(
+    long frameNumber,
+    DateTimeOffset capturedAt,
+    ReadOnlyMemory<byte> bgraPixels,
+    int width,
+    int height,
+    TimeSpan capturedTimestamp = default) : EventArgs
 {
     public long FrameNumber { get; } = frameNumber;
     public DateTimeOffset CapturedAt { get; } = capturedAt;
+    public TimeSpan CapturedTimestamp { get; } = capturedTimestamp;
     public ReadOnlyMemory<byte> BgraPixels { get; } = bgraPixels;
     public int Width { get; } = width;
     public int Height { get; } = height;
@@ -208,6 +286,12 @@ public sealed record DetectionVisualizationFrame(
     int Width,
     int Height,
     IReadOnlyList<DetectionVisual> Detections);
+
+public sealed record FishingOperationTrace(
+    long OperationId,
+    int Cycle,
+    FishingOperationKind Operation,
+    DateTimeOffset SubmittedAt);
 
 public readonly record struct DetectionResult(
     DetectionObservation Observation,
@@ -348,7 +432,7 @@ public readonly record struct InferencePerformanceSnapshot(
         PerformanceInsufficient: false,
         LocatorIntervalMs: 80,
         HookingIntervalMs: 80,
-        MinigameIntervalMs: 33,
+        MinigameIntervalMs: 40,
         PanelRecheckIntervalMs: 250);
 }
 

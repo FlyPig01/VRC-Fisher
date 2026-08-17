@@ -11,6 +11,7 @@ internal sealed class NativeOverlaySurface : IDisposable
     private const uint WsExToolWindow = 0x00000080;
     private const uint WsExLayered = 0x00080000;
     private const uint WsExNoActivate = 0x08000000;
+    private const uint SwpNoZOrder = 0x0004;
     private const uint SwpNoActivate = 0x0010;
     private const uint SwpShowWindow = 0x0040;
     private const int SwHide = 0;
@@ -38,6 +39,13 @@ internal sealed class NativeOverlaySurface : IDisposable
     private string _text = string.Empty;
     private int _fontHeight;
     private string _fontFamily = string.Empty;
+    private int _x;
+    private int _y;
+    private int _width;
+    private int _height;
+    private bool _hasBounds;
+    private bool _visible;
+    private bool _paintDirty = true;
     private bool _disposed;
 
     public NativeOverlaySurface(byte opacity = byte.MaxValue)
@@ -66,6 +74,8 @@ internal sealed class NativeOverlaySurface : IDisposable
 
     public void ShowRectangle(int x, int y, int width, int height, uint color)
     {
+        if (_text.Length != 0 || _background != color)
+            _paintDirty = true;
         _text = string.Empty;
         _background = color;
         Show(x, y, width, height);
@@ -102,6 +112,12 @@ internal sealed class NativeOverlaySurface : IDisposable
         uint background,
         string fontFamily = "Segoe UI")
     {
+        if (!string.Equals(_text, text, StringComparison.Ordinal)
+            || _foreground != foreground
+            || _background != background)
+        {
+            _paintDirty = true;
+        }
         _text = text;
         _foreground = foreground;
         _background = background;
@@ -111,7 +127,9 @@ internal sealed class NativeOverlaySurface : IDisposable
 
     public void Hide()
     {
-        if (!_disposed) ShowWindow(_window, SwHide);
+        if (_disposed || !_visible) return;
+        ShowWindow(_window, SwHide);
+        _visible = false;
     }
 
     public void Dispose()
@@ -130,15 +148,45 @@ internal sealed class NativeOverlaySurface : IDisposable
     private void Show(int x, int y, int width, int height)
     {
         if (_disposed || width <= 0 || height <= 0) return;
-        SetWindowPos(
-            _window,
-            Topmost,
-            x,
-            y,
-            width,
-            height,
-            SwpNoActivate | SwpShowWindow);
+        var boundsChanged = !_hasBounds
+                            || _x != x
+                            || _y != y
+                            || _width != width
+                            || _height != height;
+        var sizeChanged = !_hasBounds || _width != width || _height != height;
+        var becomingVisible = !_visible;
+        if (becomingVisible)
+        {
+            SetWindowPos(
+                _window,
+                Topmost,
+                x,
+                y,
+                width,
+                height,
+                SwpNoActivate | SwpShowWindow);
+            _visible = true;
+        }
+        else if (boundsChanged)
+        {
+            SetWindowPos(
+                _window,
+                IntPtr.Zero,
+                x,
+                y,
+                width,
+                height,
+                SwpNoActivate | SwpNoZOrder);
+        }
+
+        if (boundsChanged)
+        {
+            (_x, _y, _width, _height) = (x, y, width, height);
+            _hasBounds = true;
+        }
+        if (!becomingVisible && !sizeChanged && !_paintDirty) return;
         InvalidateRect(_window, IntPtr.Zero, false);
+        _paintDirty = false;
     }
 
     private void EnsureFont(int height, string fontFamily)
@@ -168,6 +216,7 @@ internal sealed class NativeOverlaySurface : IDisposable
             throw new Win32Exception(Marshal.GetLastWin32Error(), "Failed to create the overlay font.");
         _fontHeight = height;
         _fontFamily = fontFamily;
+        _paintDirty = true;
     }
 
     private void Paint()

@@ -6,6 +6,9 @@ using Windows.Graphics.DirectX;
 using Windows.Graphics.DirectX.Direct3D11;
 using Windows.Graphics.Imaging;
 using Windows.Foundation;
+using Windows.Storage.Streams;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WinRT;
 
@@ -15,15 +18,21 @@ namespace VrcFisher.Desktop.Capture;
 /// Desktop-only Windows Graphics Capture adapter. It owns WinRT objects and
 /// publishes CPU-readable BGRA frames to the Infrastructure source boundary.
 /// </summary>
-internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : IFrameSource, IAsyncDisposable, ICaptureTargetState
+internal sealed class WgcCaptureAdapter(
+    WindowsGraphicsCaptureSource source,
+    ILogger<WgcCaptureAdapter> logger) : IDemandDrivenFrameSource, IAsyncDisposable, ICaptureTargetState
 {
     private readonly SemaphoreSlim _frameGate = new(1, 1);
+    private readonly FrameReadbackGate _readbackGate = new();
+    private readonly CaptureReadbackStatistics _statistics = new();
     private readonly object _sync = new();
     private GraphicsCaptureItem? _item;
     private IDirect3DDevice? _device;
     private Direct3D11CaptureFramePool? _pool;
     private GraphicsCaptureSession? _session;
     private IntPtr _targetWindow;
+    private Windows.Storage.Streams.Buffer? _pixelBuffer;
+    private byte[]? _pixelBytes;
     private bool _running;
 
     public event EventHandler<CapturedFrameEventArgs>? FrameArrived
@@ -51,6 +60,8 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
     {
         get { lock (_sync) return _targetWindow; }
     }
+
+    public void RequestNextFrame(TimeSpan delay) => _readbackGate.Request(delay);
 
     public bool RefreshVrChatTarget()
     {
@@ -118,6 +129,7 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
             _pool.FrameArrived += OnFrameArrived;
             _session = _pool.CreateCaptureSession(_item);
             _session.IsCursorCaptureEnabled = false;
+            _statistics.Reset();
             _running = true;
             source.StartAsync(cancellationToken).GetAwaiter().GetResult();
             _session.StartCapture();
@@ -147,6 +159,15 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
         _frameGate.Release();
         device?.Dispose();
         await source.StopAsync(cancellationToken);
+        _readbackGate.Cancel();
+        var statistics = _statistics.Snapshot();
+        logger.LogInformation(
+            "WGC capture stopped received={Received} skipped={Skipped} readbacks={Readbacks} readback_avg_ms={Average:F2} readback_p95_ms={P95:F2}",
+            statistics.Received,
+            statistics.Skipped,
+            statistics.Readbacks,
+            statistics.AverageMilliseconds,
+            statistics.P95Milliseconds);
     }
 
     public async ValueTask DisposeAsync()
@@ -208,15 +229,47 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
         {
             entered = await _frameGate.WaitAsync(0);
             if (!entered) return;
-            while (_running)
+
+            Direct3D11CaptureFrame? latest = null;
+            var received = 0;
+            try
             {
-                using var frame = sender.TryGetNextFrame();
-                if (frame is null) break;
-                using var bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(frame.Surface, BitmapAlphaMode.Ignore);
-                using var buffer = bitmap.LockBuffer(BitmapBufferAccessMode.Read);
-                var plane = buffer.GetPlaneDescription(0);
-                using var reference = buffer.CreateReference();
-                source.PublishCapturedFrame(CopyBgra(reference, plane, bitmap.PixelWidth, bitmap.PixelHeight), bitmap.PixelWidth, bitmap.PixelHeight);
+                while (_running)
+                {
+                    var frame = sender.TryGetNextFrame();
+                    if (frame is null) break;
+                    received++;
+                    latest?.Dispose();
+                    latest = frame;
+                }
+
+                if (latest is null) return;
+                _statistics.RecordReceived(received);
+                if (!_readbackGate.TryClaim())
+                {
+                    _statistics.RecordSkipped(received);
+                    return;
+                }
+
+                _statistics.RecordSkipped(Math.Max(0, received - 1));
+                var capturedAt = DateTimeOffset.UtcNow;
+                var capturedTimestamp = Stopwatch.GetElapsedTime(0, Stopwatch.GetTimestamp());
+                var readbackStarted = Stopwatch.GetTimestamp();
+                using var bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(
+                    latest.Surface,
+                    BitmapAlphaMode.Ignore);
+                var pixels = CopyBgra(bitmap);
+                _statistics.RecordReadback(Stopwatch.GetElapsedTime(readbackStarted).TotalMilliseconds);
+                source.PublishCapturedFrame(
+                    pixels,
+                    bitmap.PixelWidth,
+                    bitmap.PixelHeight,
+                    capturedAt,
+                    capturedTimestamp);
+            }
+            finally
+            {
+                latest?.Dispose();
             }
         }
         catch (Exception) when (!_running)
@@ -245,44 +298,107 @@ internal sealed class WgcCaptureAdapter(WindowsGraphicsCaptureSource source) : I
             source.PublishCaptureFailure(failure);
     }
 
-    private static unsafe byte[] CopyBgra(IMemoryBufferReference reference, BitmapPlaneDescription plane, int width, int height)
+    private ReadOnlyMemory<byte> CopyBgra(SoftwareBitmap bitmap)
     {
-        ArgumentNullException.ThrowIfNull(reference);
+        ArgumentNullException.ThrowIfNull(bitmap);
+        var width = bitmap.PixelWidth;
+        var height = bitmap.PixelHeight;
         if (width <= 0 || height <= 0)
             throw new InvalidDataException($"捕获帧尺寸无效：{width}x{height}");
+        if (bitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8)
+            throw new InvalidDataException($"捕获帧像素格式必须为 BGRA8，实际为 {bitmap.BitmapPixelFormat}");
 
-        var access = reference.As<IMemoryBufferByteAccess>();
-        access.GetBuffer(out var source, out var capacity);
-        if (source is null)
-            throw new InvalidDataException("捕获帧缓冲区指针为空");
-
-        var rowBytes = checked(width * 4);
-        if (plane.StartIndex < 0)
-            throw new InvalidDataException($"捕获帧起始偏移无效：{plane.StartIndex}");
-        if (plane.Stride < rowBytes)
-            throw new InvalidDataException($"捕获帧步幅 {plane.Stride} 小于行宽 {rowBytes}");
-
-        var finalReadEnd = checked((long)plane.StartIndex + (long)(height - 1) * plane.Stride + rowBytes);
-        if (finalReadEnd > capacity)
-            throw new InvalidDataException($"捕获帧读取越界：需要 {finalReadEnd} 字节，缓冲区仅有 {capacity} 字节");
-
-        var output = new byte[checked(rowBytes * height)];
-        for (var row = 0; row < height; row++)
+        var byteLength = checked(width * height * 4);
+        if (_pixelBuffer is null || _pixelBuffer.Capacity != (uint)byteLength)
         {
-            var offset = checked((long)plane.StartIndex + (long)row * plane.Stride);
-            Marshal.Copy((IntPtr)(source + offset), output, row * rowBytes, rowBytes);
+            _pixelBuffer = new Windows.Storage.Streams.Buffer((uint)byteLength);
+            _pixelBytes = new byte[byteLength];
         }
-        return output;
-    }
 
-    [ComImport]
-    [Guid("5B0D3235-4DBA-4D44-865E-8F1D0D8D3D57")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    private unsafe interface IMemoryBufferByteAccess
-    {
-        void GetBuffer(out byte* buffer, out uint capacity);
+        bitmap.CopyToBuffer(_pixelBuffer);
+        if (_pixelBuffer.Length != (uint)byteLength)
+            throw new InvalidDataException(
+                $"捕获帧字节数无效：需要 {byteLength}，实际为 {_pixelBuffer.Length}");
+
+        using var reader = DataReader.FromBuffer(_pixelBuffer);
+        if (reader.UnconsumedBufferLength != (uint)byteLength)
+            throw new InvalidDataException(
+                $"捕获帧可读字节数无效：需要 {byteLength}，实际为 {reader.UnconsumedBufferLength}");
+        reader.ReadBytes(_pixelBytes!);
+        return _pixelBytes.AsMemory(0, byteLength);
     }
 }
+
+internal sealed class CaptureReadbackStatistics
+{
+    private const int Capacity = 512;
+    private readonly object _sync = new();
+    private readonly double[] _samples = new double[Capacity];
+    private long _received;
+    private long _skipped;
+    private long _readbacks;
+    private int _sampleCount;
+    private int _nextSample;
+
+    public void Reset()
+    {
+        lock (_sync)
+        {
+            _received = 0;
+            _skipped = 0;
+            _readbacks = 0;
+            _sampleCount = 0;
+            _nextSample = 0;
+            Array.Clear(_samples);
+        }
+    }
+
+    public void RecordReceived(int count) => Interlocked.Add(ref _received, count);
+    public void RecordSkipped(int count) => Interlocked.Add(ref _skipped, count);
+
+    public void RecordReadback(double milliseconds)
+    {
+        Interlocked.Increment(ref _readbacks);
+        lock (_sync)
+        {
+            _samples[_nextSample] = Math.Max(0, milliseconds);
+            _nextSample = (_nextSample + 1) % Capacity;
+            _sampleCount = Math.Min(Capacity, _sampleCount + 1);
+        }
+    }
+
+    public CaptureReadbackSnapshot Snapshot()
+    {
+        lock (_sync)
+        {
+            if (_sampleCount == 0)
+                return new(
+                    Interlocked.Read(ref _received),
+                    Interlocked.Read(ref _skipped),
+                    Interlocked.Read(ref _readbacks),
+                    0,
+                    0);
+
+            var samples = _samples.AsSpan(0, _sampleCount).ToArray();
+            Array.Sort(samples);
+            var average = samples.Average();
+            var p95Index = Math.Clamp((int)Math.Ceiling(samples.Length * 0.95) - 1, 0, samples.Length - 1);
+            return new(
+                Interlocked.Read(ref _received),
+                Interlocked.Read(ref _skipped),
+                Interlocked.Read(ref _readbacks),
+                average,
+                samples[p95Index]);
+        }
+    }
+}
+
+internal readonly record struct CaptureReadbackSnapshot(
+    long Received,
+    long Skipped,
+    long Readbacks,
+    double AverageMilliseconds,
+    double P95Milliseconds);
 
 internal static class Direct3DDeviceFactory
 {

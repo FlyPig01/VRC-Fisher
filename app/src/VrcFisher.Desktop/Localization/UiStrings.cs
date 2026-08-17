@@ -54,6 +54,17 @@ internal static class UiStrings
 
     public static string Phase(FishingPhase phase) => Get($"Phase{phase}");
 
+    public static string OverlayStage(FishingPhase phase) => phase switch
+    {
+        FishingPhase.Idle or FishingPhase.Casting => Get("OverlayStageCasting"),
+        FishingPhase.WaitingForBite => Get("OverlayStageWaitingForBite"),
+        FishingPhase.Hooking => Get("PhaseHooking"),
+        FishingPhase.Minigame => Get("OverlayStageFightingFish"),
+        FishingPhase.Reeling or FishingPhase.Loot => Get("OverlayStageReeling"),
+        FishingPhase.Recovery => Get("PhaseRecovery"),
+        _ => Get("RuntimeStopped")
+    };
+
     public static string Provider(string provider) =>
         provider == "Unavailable" ? Get("Unavailable") : provider;
 
@@ -84,6 +95,7 @@ internal static class UiStrings
         RuntimeMessageCode.TargetNotForeground => Get("RuntimeTargetStopped"),
         RuntimeMessageCode.OutputContractUnverified => Get("RuntimeOutputContractUnverified"),
         RuntimeMessageCode.InferenceFailed => Format("RuntimeInferenceFailed", status.Detail ?? Get("UnknownError")),
+        RuntimeMessageCode.InputFailed => Format("RuntimeUnexpectedFailure", status.Detail ?? Get("UnknownError")),
         RuntimeMessageCode.StateMachineDecision => StateDecision(status.Detail),
         _ => Get("UnknownStatus")
     };
@@ -118,6 +130,10 @@ internal static class UiStrings
         RuntimeMessageCode.InferenceFailed => new UiRuntimeNotice(
             Get("AlertInferenceFailedTitle"),
             Format("AlertInferenceFailedMessage", status.Detail ?? Get("UnknownError")),
+            UiNoticeSeverity.Error),
+        RuntimeMessageCode.InputFailed => new UiRuntimeNotice(
+            Get("AlertUnexpectedFailureTitle"),
+            Format("AlertUnexpectedFailureMessage", status.Detail ?? Get("UnknownError")),
             UiNoticeSeverity.Error),
         _ => null
     };

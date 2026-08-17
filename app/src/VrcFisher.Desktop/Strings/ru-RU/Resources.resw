@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Рекомендуется «Автоматически». Попробуйте CPU, если игра тормозит.</value>
@@ -225,16 +225,13 @@
     <value>Локальное хранилище</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Запасной вариант для индикатора вне экрана</value>
+    <value>Восклицательный знак вне экрана</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Минимальное ожидание</value>
+    <value>Ожидание</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>Индикатор поклёвки может появляться за пределами захваченного кадра. Если параметр включён, приложение пытается войти в мини-игру после заданной задержки, если индикатор не был обнаружен. По умолчанию отключено.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Отсчитывается после заброса. Выберите 5–30 секунд; по умолчанию 15 секунд.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Включено</value>
@@ -483,11 +480,9 @@
     <value>Ожидание</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Режим работы</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Режим запуска сохраняет игровой вид чистым. Режим отладки добавляет рамки распознавания и значения уверенности.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Режим запуска</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Запускает автоматическую рыбалку без рамок распознавания.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Режим отладки</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Показывает стабилизированные рамки распознавания и значения уверенности поверх VRChat.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Запуск скрывает рамки; Отладка показывает рамки и значения уверенности.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Запуск</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Отладка</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Нажмите {0}, чтобы остановить автоматическую рыбалку</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Запуск автоматической рыбалки…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Не удалось запустить; управление мышью отпущено. Проверьте VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Открыть веб-страницу поддерживаемого мира</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Быстрый старт</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Нажмите изображение выше, чтобы открыть веб-страницу мира, а затем войдите в него через VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Установите обе модели, войдите в зону рыбалки и оставьте VRChat на переднем плане.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Нажмите {0} для запуска. Повторное нажатие или выход из VRChat остановит работу.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Проверьте обе модели, возьмите удочку и настройте ракурс так, чтобы восклицательный знак и элементы мини-игры могли появляться на экране.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Оставьте VRChat на переднем плане и нажмите {0} для запуска. Повторное нажатие или переключение из VRChat остановит работу.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Подготовка моделей, инференса и захвата…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Остановка и освобождение мыши…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat ушел с переднего плана; авторыбалка остановлена, ввод мыши освобожден</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Авторыбалка остановлена</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat больше не на переднем плане. Ввод мыши освобожден; вернитесь в игру и снова нажмите клавишу.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Работает только когда VRChat на переднем плане и не регистрируется как постоянная глобальная горячая клавиша.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Заброс</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Ожидание поклёвки</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Вываживание рыбы</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Подтягивание улова</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Нажмите {0}, чтобы остановить</value></data>
 </root>

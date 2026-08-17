@@ -12,7 +12,7 @@
 
 正式软件没有 Python、PyTorch、Ultralytics、Miniconda 或 CUDA 依赖。开发机上的 Python 环境也不应与 C# 应用构建目录混用。
 
-许可证按目录和制品分层：VRC-Fisher 原创应用、数据处理和通用工具代码采用 MIT；完整训练子项目、Ultralytics 基础权重及本项目由其产生的官方 `.pt/.onnx` 按上游标注的 AGPL-3.0 发布；第三方组件保持各自许可证。AGPL 允许商业使用，但不能把完整组合重新标为纯 MIT。详细边界见 [许可证与发布边界](licensing.md)。
+许可证按目录和制品分层：VRC-Fisher 原创应用、数据处理和通用工具代码采用 MIT；完整训练子项目、Ultralytics 基础权重及本项目由其产生的官方 `.pt/.onnx` 按上游标注的 AGPL-3.0 发布；第三方组件保持各自许可证。AGPL 允许商业使用，但不能把完整组合重新标为纯 MIT。当前边界见 [发布与许可](../release.md)。
 
 ## 2. 正式软件
 
@@ -30,7 +30,7 @@
 
 正式基线不采用 WPF、Avalonia、Electron、MSIX、PyInstaller 或 OpenCV。项目只面向现代 Windows，不需要为跨平台引入额外运行时。
 
-WinUI 3 的代价是体积与空闲内存高于精简 C++/Win32。项目接受该代价，以换取较低的 Windows UI 开发复杂度和一致的现代外观；资源上限和验证方式见 [性能与存储预算](performance-budget.md)。
+WinUI 3 的代价是体积与空闲内存高于精简 C++/Win32。项目接受该代价，以换取较低的 Windows UI 开发复杂度和一致的现代外观；当时的资源数据见 [性能与存储基线](performance-and-storage-baseline-2026-08-16.md)。
 
 ### C# 与 C++ 的取舍
 
@@ -75,7 +75,7 @@ DirectML 复用 Windows 的 DirectML/DirectX 系统组件，而 CUDA Provider �
 
 训练保存 `.pt` 检查点和实验结果，只有审核后的模型才导出为 ONNX。`.pt` 便于继续训练，但要求 Python/PyTorch 运行环境，不适合作为用户端格式。
 
-CUDA 只影响开发机训练速度，不影响最终用户选择 CPU 或 DirectML，也不改变模型类别和 ONNX 契约。当前训练项目直接安装带 CUDA 13.0 运行库的 PyTorch Windows wheel，不依赖 Miniconda、`nvcc`、`CUDA_PATH` 或全局 CUDA Toolkit。其他开发机必须先用 `nvidia-smi` 确认 NVIDIA 驱动可用，再按已提交的 `uv.lock` 建立项目内环境；完整命令见 [开发环境部署](development-setup.md)。
+CUDA 只影响开发机训练速度，不影响最终用户选择 CPU 或 DirectML，也不改变模型类别和 ONNX 契约。当前训练项目直接安装带 CUDA 13.0 运行库的 PyTorch Windows wheel，不依赖 Miniconda、`nvcc`、`CUDA_PATH` 或全局 CUDA Toolkit。其他开发机必须先用 `nvidia-smi` 确认 NVIDIA 驱动可用，再按已提交的 `uv.lock` 建立项目内环境；当前命令见 [开发与环境](../development.md)。
 
 ## 5. 当前开发机
 

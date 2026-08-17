@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Automatická volba se doporučuje. Pokud hra zadrhává, zkuste CPU.</value>
@@ -225,16 +225,13 @@
     <value>Místní úložiště</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Náhrada za indikátor mimo obrazovku</value>
+    <value>Vykřičník mimo obrazovku</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Minimální čekání</value>
+    <value>Čekání</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>Indikátor záběru se může objevit mimo zachycený snímek. Když je tato volba povolena, aplikace se pokusí vstoupit do minihry po nastavené době čekání, pokud nebyl detekován žádný indikátor. Ve výchozím nastavení je vypnuto.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Měřeno po nahození. Zvolte 5–30 sekund; výchozí hodnota je 15 sekund.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Povoleno</value>
@@ -483,11 +480,9 @@
     <value>Čekání</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Pracovní režim</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Režim spuštění udržuje herní obraz čistý. Režim ladění přidává rozpoznávací rámečky a hodnoty spolehlivosti.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Režim spuštění</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Spustí automatický rybolov bez rozpoznávacích rámečků.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Režim ladění</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Zobrazí stabilizované rozpoznávací rámečky a hodnoty spolehlivosti přes VRChat.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Spustit skryje rozpoznávací rámečky; Ladění zobrazí rámečky a hodnoty spolehlivosti.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Spustit</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Ladění</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Stiskněte {0} pro zastavení automatického rybolovu</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Spouštění automatického rybolovu…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Spuštění selhalo; vstup myši byl uvolněn. Zkontrolujte VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Zobrazit webovou stránku podporovaného světa</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Rychlý start</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Kliknutím na obrázek výše zobrazte webovou stránku světa; do světa vstupte ve VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Nainstalujte oba modely, vstupte do rybářské oblasti a ponechte VRChat v popředí.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Stiskněte {0} pro spuštění. Další stisk nebo opuštění VRChat běh zastaví.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Zkontrolujte oba modely, vezměte rybářský prut a nastavte pohled tak, aby se vykřičník i prvky minihry mohly zobrazit na obrazovce.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Ponechte VRChat v popředí a spusťte program stisknutím {0}. Další stisk nebo přepnutí z VRChatu jej zastaví.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Příprava modelů, inference a snímání…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Zastavování a uvolnění myši…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat opustil popředí; automatické rybaření bylo zastaveno a myš uvolněna</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatické rybaření zastaveno</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat již není v popředí. Myš byla uvolněna; vraťte se do hry a znovu stiskněte klávesu.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Funguje jen když je VRChat v popředí a není trvale registrována jako globální klávesa.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Nahazování</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Čekání na záběr</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Zdolávání ryby</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Vytahování úlovku</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Stiskněte {0} pro zastavení</value></data>
 </root>

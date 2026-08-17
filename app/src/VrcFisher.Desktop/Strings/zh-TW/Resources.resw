@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>建議使用「自動」。如果遊戲卡頓，請嘗試使用 CPU。</value>
@@ -225,16 +225,13 @@
     <value>本機儲存空間</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>畫面外指示器後備</value>
+    <value>畫面外驚嘆號</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>最短等待時間</value>
+    <value>等待</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>咬餌指示器可能出現在擷取畫面之外。啟用後，如果未偵測到指示器，應用程式會在設定的等待時間後嘗試進入小遊戲。預設為停用。</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>從拋竿後開始計算。請選擇 5–30 秒；預設為 15 秒。</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>已啟用</value>
@@ -483,11 +480,9 @@
     <value>等待中</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>工作模式</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>執行模式可保持遊戲畫面乾淨。除錯模式會加入辨識框和信心值。</value></data>
-  <data name="RunMode" xml:space="preserve"><value>執行模式</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>以執行模式執行自動釣魚，不顯示辨識框。</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>除錯模式</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>在 VRChat 上顯示穩定後的辨識框和信心值。</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>執行不顯示辨識框；除錯顯示辨識框和信心值。</value></data>
+  <data name="RunMode" xml:space="preserve"><value>執行</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>除錯</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>按 {0} 停止自動釣魚</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>正在啟動自動釣魚…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>啟動失敗，滑鼠輸入已釋放；請查看 VRC-Fisher。</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>查看此世界的網頁資訊</value></data>
   <data name="QuickStart" xml:space="preserve"><value>快速開始</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>點擊上方圖片查看此世界的網頁資訊，然後在 VRChat 中進入該世界。</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>安裝兩個模型，進入釣魚區域，並讓 VRChat 保持在前景。</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>按 {0} 啟動；再次按下或切出 VRChat 即停止。</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>確認兩個模型已就緒，拿起釣竿並調整視角，讓驚嘆號和小遊戲元件都能出現在畫面內。</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>讓 VRChat 保持在前景，按 {0} 啟動；再次按下或切出 VRChat 即停止。</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>正在準備模型、推論和畫面擷取…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>正在停止並釋放滑鼠輸入…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat 已離開前景；自動釣魚已停止，滑鼠輸入已釋放</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>自動釣魚已停止</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat 已不在前景。滑鼠輸入已釋放；返回遊戲後請重新按快捷鍵啟動。</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>僅在 VRChat 位於前景時生效，不會長期註冊為系統全域快捷鍵。</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>拋竿</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>等魚上鉤</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>與魚搏鬥中</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>收竿</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>按 {0} 停止</value></data>
 </root>

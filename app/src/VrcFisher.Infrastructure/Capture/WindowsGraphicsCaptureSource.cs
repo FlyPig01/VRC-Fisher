@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using VrcFisher.Core;
 
 namespace VrcFisher.Infrastructure.Capture;
@@ -8,7 +9,6 @@ namespace VrcFisher.Infrastructure.Capture;
 /// </summary>
 public sealed class WindowsGraphicsCaptureSource : IFrameSource
 {
-    private readonly LatestFrameBuffer _buffer = new();
     private long _sequence;
     private bool _running;
 
@@ -41,18 +41,25 @@ public sealed class WindowsGraphicsCaptureSource : IFrameSource
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
     /// <summary>Called by the Desktop WGC adapter after CPU readback.</summary>
-    public void PublishCapturedFrame(ReadOnlyMemory<byte> bgraPixels, int width, int height)
+    public void PublishCapturedFrame(
+        ReadOnlyMemory<byte> bgraPixels,
+        int width,
+        int height,
+        DateTimeOffset? capturedAt = null,
+        TimeSpan capturedTimestamp = default)
     {
         if (!_running) return;
         if (width <= 0 || height <= 0 || bgraPixels.Length < width * height * 4)
             throw new ArgumentException("捕获帧的尺寸或像素数据无效");
         var frame = new CapturedFrameEventArgs(
             Interlocked.Increment(ref _sequence),
-            DateTimeOffset.UtcNow,
+            capturedAt ?? DateTimeOffset.UtcNow,
             bgraPixels,
             width,
-            height);
-        _buffer.Publish(frame);
+            height,
+            capturedTimestamp == default
+                ? Stopwatch.GetElapsedTime(0, Stopwatch.GetTimestamp())
+                : capturedTimestamp);
         FrameArrived?.Invoke(this, frame);
     }
 

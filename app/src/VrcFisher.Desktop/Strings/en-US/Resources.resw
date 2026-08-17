@@ -60,9 +60,9 @@
   <data name="LanguageChinese" xml:space="preserve"><value>简体中文</value></data>
   <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
   <data name="Device" xml:space="preserve"><value>Execution device</value></data>
-  <data name="DeviceAuto" xml:space="preserve"><value>Automatic</value></data>
+  <data name="DeviceAuto" xml:space="preserve"><value>Auto</value></data>
   <data name="DeviceCpu" xml:space="preserve"><value>CPU</value></data>
-  <data name="DeviceGpu" xml:space="preserve"><value>GPU (DirectML)</value></data>
+  <data name="DeviceGpu" xml:space="preserve"><value>GPU</value></data>
   <data name="DeviceDescription" xml:space="preserve"><value>Auto is recommended. Try CPU if the game stutters.</value></data>
   <data name="ToggleHotkey" xml:space="preserve"><value>Start / stop hotkey</value></data>
   <data name="ToggleHotkeyDescription" xml:space="preserve"><value>Press this global hotkey to start or stop auto fishing while VRChat is in front or this application is in the background.</value></data>
@@ -74,10 +74,9 @@
   <data name="GeneralSettings" xml:space="preserve"><value>General</value></data>
   <data name="AutomationSettings" xml:space="preserve"><value>Automation</value></data>
   <data name="StorageSettings" xml:space="preserve"><value>Local storage</value></data>
-  <data name="BiteFallback" xml:space="preserve"><value>Off-screen indicator fallback</value></data>
-  <data name="BiteFallbackDelay" xml:space="preserve"><value>Minimum wait</value></data>
+  <data name="BiteFallback" xml:space="preserve"><value>Off-screen exclamation</value></data>
+  <data name="BiteFallbackDelay" xml:space="preserve"><value>Wait</value></data>
   <data name="BiteFallbackDescription" xml:space="preserve"><value>The bite indicator can appear outside the captured frame. When enabled, the application tries to enter the minigame after the configured wait if no indicator was detected. Disabled by default.</value></data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve"><value>Measured after casting. Choose 5–30 seconds; the default is 15 seconds.</value></data>
   <data name="Enabled" xml:space="preserve"><value>Enabled</value></data>
   <data name="Disabled" xml:space="preserve"><value>Disabled</value></data>
   <data name="BiteFallbackSeconds" xml:space="preserve"><value>{0:N0} seconds</value></data>
@@ -161,11 +160,9 @@
   <data name="DecisionStopRequested" xml:space="preserve"><value>Stop requested</value></data>
   <data name="DecisionWaiting" xml:space="preserve"><value>Waiting</value></data>
   <data name="WorkMode" xml:space="preserve"><value>Work mode</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Run mode keeps the game view clean. Debug mode adds recognition boxes and confidence values.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Run mode</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Run auto fishing without recognition boxes.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Debug mode</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Show stabilized recognition boxes and confidence values over VRChat.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Run hides recognition boxes; Debug shows boxes and confidence values.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Run</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Debug</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Press {0} to stop auto fishing</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Starting auto fishing...</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Start failed; mouse input was released. Check VRC-Fisher.</value></data>
@@ -203,12 +200,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>View the supported world's webpage</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Quick start</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Click the image above to view the world's webpage, then enter it in VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Install both models, enter the fishing area, and keep VRChat in the foreground.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Press {0} to start. Press it again, or leave VRChat, to stop.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Check both models, pick up the fishing rod, and adjust the view so the exclamation and minigame components can both appear on screen.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Keep VRChat in the foreground and press {0} to start. Press it again, or switch away from VRChat, to stop.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Preparing models, inference and capture...</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Stopping and releasing mouse input...</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat left the foreground; automatic fishing stopped and mouse input was released</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatic fishing stopped</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat is no longer in the foreground. Mouse input was released; return to the game and press the hotkey to start again.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Works only while VRChat is in the foreground and is not registered as a persistent global hotkey.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Casting</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Waiting for a bite</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Fighting the fish</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Reeling in</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Press {0} to stop</value></data>
 </root>

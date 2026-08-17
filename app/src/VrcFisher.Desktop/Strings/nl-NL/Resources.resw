@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>Automatisch wordt aanbevolen. Probeer CPU als het spel hapert.</value>
@@ -225,16 +225,13 @@
     <value>Lokale opslag</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>Vervanging indicator buiten beeld</value>
+    <value>Uitroepteken buiten beeld</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>Minimale wachttijd</value>
+    <value>Wachttijd</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>De beetindicator kan buiten het vastgelegde frame verschijnen. Als dit is ingeschakeld, probeert de applicatie na de geconfigureerde wachttijd het minigame te openen als er geen indicator is gedetecteerd. Standaard uitgeschakeld.</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>Gemeten na het werpen. Kies 5–30 seconden; de standaard is 15 seconden.</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Ingeschakeld</value>
@@ -483,11 +480,9 @@
     <value>Wachten</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>Werkmodus</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>Uitvoermodus houdt het spelbeeld schoon. Foutopsporingsmodus voegt herkenningskaders en betrouwbaarheidswaarden toe.</value></data>
-  <data name="RunMode" xml:space="preserve"><value>Uitvoermodus</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>Automatisch vissen zonder herkenningskaders.</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>Foutopsporingsmodus</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>Toon gestabiliseerde herkenningskaders en betrouwbaarheidswaarden over VRChat.</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>Uitvoeren verbergt herkenningskaders; Foutopsporing toont kaders en betrouwbaarheidswaarden.</value></data>
+  <data name="RunMode" xml:space="preserve"><value>Uitvoeren</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>Foutopsporing</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>Druk op {0} om automatisch vissen te stoppen</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>Automatisch vissen wordt gestart…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>Start mislukt; muisinvoer is vrijgegeven. Controleer VRC-Fisher.</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>Webpagina van de ondersteunde wereld bekijken</value></data>
   <data name="QuickStart" xml:space="preserve"><value>Snel starten</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>Klik op de afbeelding hierboven om de webpagina van de wereld te bekijken en betreed de wereld daarna via VRChat.</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>Installeer beide modellen, ga naar de visplek en houd VRChat op de voorgrond.</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>Druk op {0} om te starten. Druk opnieuw of verlaat VRChat om te stoppen.</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>Controleer beide modellen, pak de hengel en stel het beeld zo in dat het uitroepteken en de onderdelen van de minigame op het scherm kunnen verschijnen.</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>Houd VRChat op de voorgrond en druk op {0} om te starten. Druk opnieuw of schakel weg van VRChat om te stoppen.</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>Modellen, inferentie en opname voorbereiden…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>Stoppen en muisinvoer vrijgeven…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat verliet de voorgrond; automatisch vissen is gestopt en de muis is vrijgegeven</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>Automatisch vissen gestopt</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat staat niet meer op de voorgrond. De muis is vrijgegeven; ga terug naar het spel en druk opnieuw op de toets.</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>Werkt alleen wanneer VRChat op de voorgrond staat en wordt niet permanent als globale sneltoets geregistreerd.</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>Aan het werpen</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>Wachten op beet</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>Vechtend met de vis</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>Binnenhalen</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>Druk op {0} om te stoppen</value></data>
 </root>

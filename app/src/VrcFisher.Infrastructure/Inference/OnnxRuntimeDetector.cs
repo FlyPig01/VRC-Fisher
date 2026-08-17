@@ -27,7 +27,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     private readonly IReadOnlyList<string> _minigameClasses = ["catch_zone", "moving_target"];
     private ResizeMap? _locatorResizeMap;
     private ResizeMap? _minigameResizeMap;
-    private YoloDetection? _cachedPanel;
+    private readonly MinigamePanelTracker _panelTracker = new();
     private DateTimeOffset _lastLocatorAt = DateTimeOffset.MinValue;
 
     public OnnxRuntimeDetector(
@@ -68,7 +68,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     public ExecutionRuntimeInfo Execution { get; }
     public bool IsReady => true;
     public bool CanProduceDecisions => true;
-    public bool HasCachedPanel => _cachedPanel is not null;
+    public bool HasCachedPanel => _panelTracker.Current is not null;
     public static bool SupportsDirectML
     {
         get
@@ -92,13 +92,14 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             throw new InvalidDataException("捕获帧为空");
 
         if (phase is not (FishingPhase.Hooking or FishingPhase.Minigame))
-            _cachedPanel = null;
+            _panelTracker.Reset();
 
         if (phase == FishingPhase.Minigame
-            && _cachedPanel is not null
+            && _panelTracker.Current is { } cachedPanel
             && frame.CapturedAt - _lastLocatorAt < minigamePanelRecheckInterval)
         {
-            var minigame = DetectMinigame(frame, _cachedPanel, biteIndicator: null, includeVisualization);
+            var minigame = DetectMinigame(frame, cachedPanel, biteIndicator: null, includeVisualization);
+            ObserveLocalComponents(minigame.Observation);
             return new DetectionResult(
                 minigame.Observation,
                 InferenceWorkload.CachedMinigame,
@@ -109,22 +110,44 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         _lastLocatorAt = frame.CapturedAt;
         if (detectedPanel is null)
         {
-            _cachedPanel = null;
+            var retainedPanel = phase == FishingPhase.Minigame
+                ? _panelTracker.RetainAfterSingleLocatorMiss()
+                : null;
+            if (retainedPanel is not null)
+            {
+                var retainedMinigame = DetectMinigame(frame, retainedPanel, biteIndicator, includeVisualization);
+                ObserveLocalComponents(retainedMinigame.Observation);
+                return new DetectionResult(
+                    retainedMinigame.Observation,
+                    InferenceWorkload.LocatorAndMinigame,
+                    includeVisualization ? CreateVisualization(frame, retainedMinigame.Visuals) : null);
+            }
+
+            _panelTracker.Reset();
             return new DetectionResult(
-                new DetectionObservation(frame.FrameNumber, frame.CapturedAt, BiteIndicator: biteIndicator?.Box),
+                new DetectionObservation(
+                    frame.FrameNumber,
+                    frame.CapturedAt,
+                    BiteIndicator: biteIndicator?.Box,
+                    BiteIndicatorConfidence: biteIndicator?.Confidence,
+                    CapturedTimestamp: frame.CapturedTimestamp),
                 InferenceWorkload.Locator,
                 includeVisualization ? CreateVisualization(frame, Compact(biteIndicator)) : null);
         }
 
-        // The panel is stable for one minigame. Keep the first confirmed crop
-        // so locator jitter does not move the control coordinate system.
-        _cachedPanel ??= detectedPanel;
-        var detectedMinigame = DetectMinigame(frame, _cachedPanel, biteIndicator, includeVisualization);
+        var trackedPanel = _panelTracker.UpdateFromLocator(detectedPanel);
+        var detectedMinigame = DetectMinigame(frame, trackedPanel, biteIndicator, includeVisualization);
+        ObserveLocalComponents(detectedMinigame.Observation);
         return new DetectionResult(
             detectedMinigame.Observation,
             InferenceWorkload.LocatorAndMinigame,
             includeVisualization ? CreateVisualization(frame, detectedMinigame.Visuals) : null);
     }
+
+    private void ObserveLocalComponents(DetectionObservation observation) =>
+        _panelTracker.ObserveLocalComponents(
+            observation.CatchZone is not null,
+            observation.MovingTarget is not null);
 
     private (YoloDetection? BiteIndicator, YoloDetection? MinigamePanel) DetectLocator(
         CapturedFrameEventArgs frame)
@@ -176,7 +199,13 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             MovingTarget: movingTarget?.Box,
             MovingTargetYNorm: targetY,
             CatchZoneTopNorm: controlTop,
-            CatchZoneBottomNorm: controlBottom);
+            CatchZoneBottomNorm: controlBottom,
+            BiteIndicatorConfidence: biteIndicator?.Confidence,
+            MinigamePanelConfidence: minigamePanel.Confidence,
+            CatchZoneConfidence: catchZone?.Confidence,
+            MovingTargetConfidence: movingTarget?.Confidence,
+            PanelGeneration: _panelTracker.CurrentGeneration,
+            CapturedTimestamp: frame.CapturedTimestamp);
         return (
             observation,
             includeVisualization

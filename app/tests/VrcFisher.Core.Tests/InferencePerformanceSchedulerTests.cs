@@ -56,6 +56,36 @@ public sealed class InferencePerformanceSchedulerTests
     }
 
     [Fact]
+    public void Cached_minigame_scheduler_selects_a_non_tiered_runtime_interval()
+    {
+        var scheduler = new InferencePerformanceScheduler(AppOptions.Default, "DmlExecutionProvider");
+        var now = DateTimeOffset.UtcNow;
+
+        Feed(scheduler, InferenceWorkload.CachedMinigame, 39, 40, ref now);
+        Evaluate(scheduler, InferenceWorkload.CachedMinigame, 39, ref now);
+
+        Assert.Equal(56, scheduler.Snapshot.MinigameIntervalMs);
+        Assert.False(scheduler.Snapshot.PerformanceInsufficient);
+    }
+
+    [Theory]
+    [InlineData(10, 40)]
+    [InlineData(40, 40)]
+    [InlineData(40.1, 41)]
+    [InlineData(49.2, 50)]
+    [InlineData(55.1, 56)]
+    [InlineData(67, 67)]
+    [InlineData(200, 67)]
+    public void Cached_minigame_budget_uses_continuous_millisecond_values(
+        double requiredMilliseconds,
+        int expectedInterval)
+    {
+        Assert.Equal(
+            expectedInterval,
+            InferencePerformanceScheduler.ClampMinigameInterval(requiredMilliseconds));
+    }
+
+    [Fact]
     public void Adaptive_scheduler_only_speeds_up_after_stable_hysteresis()
     {
         var scheduler = new InferencePerformanceScheduler(AppOptions.Default, "DmlExecutionProvider");
@@ -76,8 +106,26 @@ public sealed class InferencePerformanceSchedulerTests
         Feed(scheduler, InferenceWorkload.CachedMinigame, 20, 125, ref now);
 
         Assert.Equal(67, beforeHysteresis);
-        Assert.True(scheduler.Snapshot.MinigameIntervalMs < beforeHysteresis);
-        Assert.True(scheduler.Snapshot.MinigameIntervalMs >= 33);
+        Assert.Equal(65, scheduler.Snapshot.MinigameIntervalMs);
+    }
+
+    [Fact]
+    public void Profile_preserves_a_non_tiered_minigame_interval()
+    {
+        var scheduler = new InferencePerformanceScheduler(AppOptions.Default, "DmlExecutionProvider");
+
+        scheduler.ApplyProfile(new InferencePerformanceProfile(
+            new PerformanceProfileIdentity("DmlExecutionProvider", "gpu", "models", 1920, 1080),
+            80,
+            80,
+            56,
+            250,
+            null,
+            null,
+            39,
+            DateTimeOffset.UtcNow));
+
+        Assert.Equal(56, scheduler.Snapshot.MinigameIntervalMs);
     }
 
     [Fact]

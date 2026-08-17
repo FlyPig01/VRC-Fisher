@@ -60,10 +60,10 @@
   <data name="LanguageChinese" xml:space="preserve"><value>简体中文</value></data>
   <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
   <data name="Device" xml:space="preserve"><value>运行设备</value></data>
-  <data name="DeviceAuto" xml:space="preserve"><value>自动选择</value></data>
+  <data name="DeviceAuto" xml:space="preserve"><value>自动</value></data>
   <data name="DeviceCpu" xml:space="preserve"><value>CPU</value></data>
-  <data name="DeviceGpu" xml:space="preserve"><value>GPU（DirectML）</value></data>
-  <data name="DeviceDescription" xml:space="preserve"><value>推荐自动选择；游戏卡顿时可尝试 CPU。</value></data>
+  <data name="DeviceGpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="DeviceDescription" xml:space="preserve"><value>推荐自动；游戏卡顿时可尝试 CPU。</value></data>
   <data name="ToggleHotkey" xml:space="preserve"><value>启动 / 停止热键</value></data>
   <data name="ToggleHotkeyDescription" xml:space="preserve"><value>在 VRChat 前台或软件位于后台时，按此全局热键启动或停止自动钓鱼。</value></data>
   <data name="ConfirmHotkeyTitle" xml:space="preserve"><value>更改启动 / 停止热键？</value></data>
@@ -74,10 +74,9 @@
   <data name="GeneralSettings" xml:space="preserve"><value>常规</value></data>
   <data name="AutomationSettings" xml:space="preserve"><value>自动化</value></data>
   <data name="StorageSettings" xml:space="preserve"><value>本地存储</value></data>
-  <data name="BiteFallback" xml:space="preserve"><value>屏外感叹号兜底</value></data>
-  <data name="BiteFallbackDelay" xml:space="preserve"><value>最低等待时间</value></data>
+  <data name="BiteFallback" xml:space="preserve"><value>屏外感叹号</value></data>
+  <data name="BiteFallbackDelay" xml:space="preserve"><value>等待</value></data>
   <data name="BiteFallbackDescription" xml:space="preserve"><value>感叹号可能出现在画面外。启用后，等待达到设定时间仍未识别到感叹号时，软件会尝试进入小游戏。默认禁用。</value></data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve"><value>从抛竿后开始计时，可设置 5–30 秒；默认 15 秒。</value></data>
   <data name="Enabled" xml:space="preserve"><value>启用</value></data>
   <data name="Disabled" xml:space="preserve"><value>禁用</value></data>
   <data name="BiteFallbackSeconds" xml:space="preserve"><value>{0:N0} 秒</value></data>
@@ -98,7 +97,7 @@
   <data name="PhaseWaitingForBite" xml:space="preserve"><value>等待咬钩</value></data>
   <data name="PhaseHooking" xml:space="preserve"><value>提竿</value></data>
   <data name="PhaseMinigame" xml:space="preserve"><value>钓鱼小游戏</value></data>
-  <data name="PhaseReeling" xml:space="preserve"><value>收线</value></data>
+  <data name="PhaseReeling" xml:space="preserve"><value>收杆</value></data>
   <data name="PhaseLoot" xml:space="preserve"><value>拾取</value></data>
   <data name="PhaseRecovery" xml:space="preserve"><value>恢复</value></data>
   <data name="PhaseStopped" xml:space="preserve"><value>已停止</value></data>
@@ -161,11 +160,9 @@
   <data name="DecisionStopRequested" xml:space="preserve"><value>已请求停止</value></data>
   <data name="DecisionWaiting" xml:space="preserve"><value>等待中</value></data>
   <data name="WorkMode" xml:space="preserve"><value>工作模式</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>运行模式保持游戏画面简洁；调试模式额外显示识别框和置信度。</value></data>
-  <data name="RunMode" xml:space="preserve"><value>运行模式</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>正常自动钓鱼，不显示识别框。</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>调试模式</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>在 VRChat 画面上显示经过防抖的识别框和置信度。</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>运行不显示识别框；调试显示识别框和置信度。</value></data>
+  <data name="RunMode" xml:space="preserve"><value>运行</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>调试</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>按 {0} 停止自动钓鱼</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>正在启动自动钓鱼…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>启动失败，鼠标输入已释放；请查看 VRC-Fisher。</value></data>
@@ -203,12 +200,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>查看此世界的网页信息</value></data>
   <data name="QuickStart" xml:space="preserve"><value>快速开始</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>点击上方图片查看此世界的网页信息，然后在 VRChat 中进入该世界。</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>安装两个模型，进入钓鱼区域，并让 VRChat 保持在前台。</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>按 {0} 启动；再次按下或切出 VRChat 即停止。</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>确认两个模型已就绪，拿起钓竿并调整视角，使感叹号和小游戏组件都能出现在画面内。</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>保持 VRChat 在前台，按 {0} 启动；再次按下或切出 VRChat 即停止。</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>正在准备模型、推理和画面捕获…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>正在停止并释放鼠标输入…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat 已离开前台；自动钓鱼已停止，鼠标输入已释放</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>自动钓鱼已停止</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat 已不在前台。鼠标输入已释放；返回游戏后请重新按热键启动。</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>仅在 VRChat 位于前台时生效，不会长期注册为系统全局热键。</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>抛竿</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>等鱼上钩</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>和鱼搏斗中</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>收竿</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>按 {0} 停止</value></data>
 </root>

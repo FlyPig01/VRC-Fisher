@@ -187,7 +187,7 @@
     <value>CPU</value>
   </data>
   <data name="DeviceGpu" xml:space="preserve">
-    <value>GPU (DirectML)</value>
+    <value>GPU</value>
   </data>
   <data name="DeviceDescription" xml:space="preserve">
     <value>自動が推奨されます。ゲームがカクつく場合はCPUをお試しください。</value>
@@ -225,16 +225,13 @@
     <value>ローカルストレージ</value>
   </data>
   <data name="BiteFallback" xml:space="preserve">
-    <value>画面外インジケーターフォールバック</value>
+    <value>画面外の感嘆符</value>
   </data>
   <data name="BiteFallbackDelay" xml:space="preserve">
-    <value>最小待機</value>
+    <value>待機</value>
   </data>
   <data name="BiteFallbackDescription" xml:space="preserve">
     <value>アタリインジケーターはキャプチャされたフレームの外に表示されることがあります。有効にすると、インジケーターが検出されなかった場合、設定された待機時間後にミニゲームへの参加を試みます。デフォルトでは無効です。</value>
-  </data>
-  <data name="BiteFallbackDelayDescription" xml:space="preserve">
-    <value>キャスト後に測定されます。5〜30秒を選択してください。デフォルトは15秒です。</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>有効</value>
@@ -483,11 +480,9 @@
     <value>待機中</value>
   </data>
   <data name="WorkMode" xml:space="preserve"><value>作業モード</value></data>
-  <data name="WorkModeDescription" xml:space="preserve"><value>実行モードではゲーム画面をきれいに保ちます。デバッグモードでは認識ボックスと信頼値を表示します。</value></data>
-  <data name="RunMode" xml:space="preserve"><value>実行モード</value></data>
-  <data name="RunModeDescription" xml:space="preserve"><value>認識ボックスなしで自動釣りを実行します。</value></data>
-  <data name="DebugMode" xml:space="preserve"><value>デバッグモード</value></data>
-  <data name="DebugModeDescription" xml:space="preserve"><value>VRChat上に安定化された認識ボックスと信頼値を表示します。</value></data>
+  <data name="WorkModeDescription" xml:space="preserve"><value>実行では認識枠を隠し、デバッグでは認識枠と信頼度を表示します。</value></data>
+  <data name="RunMode" xml:space="preserve"><value>実行</value></data>
+  <data name="DebugMode" xml:space="preserve"><value>デバッグ</value></data>
   <data name="OverlayStopHint" xml:space="preserve"><value>自動釣りを停止するには {0} を押してください</value></data>
   <data name="OverlayStarting" xml:space="preserve"><value>自動釣りを開始しています…</value></data>
   <data name="OverlayStartFailed" xml:space="preserve"><value>起動に失敗しました。マウス入力は解除されました。VRC-Fisher を確認してください。</value></data>
@@ -525,12 +520,17 @@
   <data name="OpenSupportedWorld" xml:space="preserve"><value>対応ワールドのウェブページを表示</value></data>
   <data name="QuickStart" xml:space="preserve"><value>クイックスタート</value></data>
   <data name="GuideStepEnter" xml:space="preserve"><value>上の画像をクリックしてワールドのウェブページを表示し、その後 VRChat からワールドに入ります。</value></data>
-  <data name="GuideStepPrepare" xml:space="preserve"><value>2 つのモデルを導入し、釣り場へ移動して VRChat を前面に保ちます。</value></data>
-  <data name="GuideStepHotkey" xml:space="preserve"><value>{0} で開始します。もう一度押すか VRChat から切り替えると停止します。</value></data>
+  <data name="GuideStepPrepare" xml:space="preserve"><value>両方のモデルを確認し、釣り竿を持って、感嘆符とミニゲームの要素がどちらも画面内に表示される視点に調整します。</value></data>
+  <data name="GuideStepHotkey" xml:space="preserve"><value>VRChat を前面にしたまま {0} を押して開始します。もう一度押すか VRChat から切り替えると停止します。</value></data>
   <data name="RuntimeStarting" xml:space="preserve"><value>モデル、推論、キャプチャを準備中…</value></data>
   <data name="RuntimeStopping" xml:space="preserve"><value>停止してマウス入力を解放中…</value></data>
   <data name="RuntimeTargetStopped" xml:space="preserve"><value>VRChat が前面でなくなったため、自動釣りを停止してマウス入力を解放しました</value></data>
   <data name="AlertTargetStoppedTitle" xml:space="preserve"><value>自動釣りを停止しました</value></data>
   <data name="AlertTargetStoppedMessage" xml:space="preserve"><value>VRChat が前面にありません。マウス入力を解放しました。ゲームに戻り、もう一度キーを押してください。</value></data>
   <data name="ToggleHotkeyDescriptionLocal" xml:space="preserve"><value>VRChat が前面のときだけ動作し、永続的なグローバルホットキーとして登録されません。</value></data>
+  <data name="OverlayStageCasting" xml:space="preserve"><value>キャスト中</value></data>
+  <data name="OverlayStageWaitingForBite" xml:space="preserve"><value>アタリ待ち</value></data>
+  <data name="OverlayStageFightingFish" xml:space="preserve"><value>魚と格闘中</value></data>
+  <data name="OverlayStageReeling" xml:space="preserve"><value>巻き上げ中</value></data>
+  <data name="OverlayStopKeyHint" xml:space="preserve"><value>{0} で停止</value></data>
 </root>
