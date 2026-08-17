@@ -11,3 +11,4 @@
 | 2026-08-16 | [性能与存储基线](performance-and-storage-baseline-2026-08-16.md) | 当时的安装体积、资源预算和调度数据 |
 | 2026-08-16 至 2026-08-18 | [已处理缺陷](bug-history-2026-08-16.md) | FIX-01 至 FIX-06、BUG-013 至 BUG-033 的处理结论 |
 | 2026-08-17 | [高频短脉冲实验](minigame-high-frequency-pulse-2026-08-17.md) | 外部追赶可行，剩余问题是滑块内部控制 |
+| 2026-08-18 | [Round 5 训练与统一验证](training-round5-2026-08-18.md) | Locator 推荐 Round 5；Minigame 暂时保留 Round 3 |

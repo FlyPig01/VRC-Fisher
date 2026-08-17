@@ -1,0 +1,45 @@
+{
+  "runtime_api": 1,
+  "version": "0.1.1",
+  "files": [
+    {
+      "kind": "checkpoint",
+      "filename": "checkpoints/locator.pt",
+      "sha256": "2db97ba46e3d967026fe0a239cc5b6b46060b79fd87c51ca8e5635faee656b18",
+      "size": 5497114
+    },
+    {
+      "kind": "checkpoint",
+      "filename": "checkpoints/minigame.pt",
+      "sha256": "2b4b03aaacfaa34b085ea1ced219a17c78b97903c0af748c07d61d04078af9ab",
+      "size": 5424602
+    },
+    {
+      "kind": "runtime",
+      "filename": "runtime/locator.onnx",
+      "sha256": "71a026d22508e9bc22557f467ee07009624ece9ea9e6021456da93c117a078c7",
+      "size": 10815002
+    },
+    {
+      "kind": "runtime",
+      "filename": "runtime/minigame.onnx",
+      "sha256": "3e38ae031b7ad2948e30162eb93de288441671145643a229648db33852a57a4b",
+      "size": 10604959
+    },
+    {
+      "kind": "documentation",
+      "filename": "MODEL_CARD.md",
+      "sha256": "c7475311f439976fe496bc7e65bd4d278afc3aa590cd4dd3e0bdda256db6a95c",
+      "size": 5126
+    },
+    {
+      "kind": "license",
+      "filename": "MODEL_LICENSE.txt",
+      "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+      "size": 34523
+    }
+  ],
+  "license": "AGPL-3.0",
+  "schema_version": 1,
+  "automatic_allowed": true
+}

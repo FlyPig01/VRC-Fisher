@@ -82,7 +82,7 @@ uv run vrc-preflight --task all
 | epochs | 100 | 100 |
 | batch | 4 | 8 |
 | patience | 20 | 20 |
-| 初始权重 | locator best-init | minigame best-init |
+| 初始权重 | locator Round 5 | minigame Round 3 |
 
 公共参数为 `device=0`、`workers=4`、`seed=42`。未显式设置的训练参数使用锁定版本 Ultralytics 的默认值；实际参数必须写入最终模型卡。
 
@@ -143,6 +143,6 @@ locator 固定导出为 960，minigame 固定导出为 640。默认产物为 FP3
 
 ## 9. 当前已验收模型
 
-源码模型版本位于 `models/v0.1.0/`。权重来源、数据规模、指标、导出契约、哈希和许可证只以该目录中的 `MODEL_CARD.md` 与 `source-manifest.json` 为准。
+当前选择的源码模型版本位于 `models/v0.1.1/`：Locator 使用 Round 5，Minigame 使用 Round 3。权重来源、数据规模、指标、导出契约、哈希和许可证只以该目录中的 `MODEL_CARD.md` 与 `source-manifest.json` 为准。
 
-新的训练结果在完成数据审核、统一评估、独立视频检查和 C# 回放前，不得覆盖该模型版本，也不得用于正式 Release。
+`configs/round5.toml` 保存本轮实际训练配置；`configs/pending.toml` 已切换为下一轮训练入口，并从当前两个最佳权重继续训练。新的训练结果在完成数据审核、统一评估、独立视频检查和 C# 回放前，不得覆盖正式模型版本。
