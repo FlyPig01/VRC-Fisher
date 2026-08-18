@@ -149,6 +149,7 @@ internal static class UiStrings
         "cast" => Get("DecisionCast"),
         "bite confirmed" => Get("DecisionBiteConfirmed"),
         "bite fallback" => Get("DecisionBiteFallback"),
+        "bite fallback recovery" => Get("DecisionFailureDetected"),
         "bite timeout" => Get("DecisionBiteTimeout"),
         "minigame confirmed" => Get("DecisionMinigameConfirmed"),
         "minigame did not start" => Get("DecisionMinigameDidNotStart"),

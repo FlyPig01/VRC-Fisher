@@ -9,6 +9,8 @@ public sealed class FishingStateMachine : IStateMachine
     private DateTimeOffset _enteredAt;
     private int _cycle;
     private long _panelGeneration;
+    private bool _fallbackHookPending;
+    private bool _fallbackRecovery;
 
     public FishingStateMachine(
         StateMachineOptions options,
@@ -29,6 +31,8 @@ public sealed class FishingStateMachine : IStateMachine
         _evidence.Clear();
         _phase = FishingPhase.Idle;
         _enteredAt = now;
+        _fallbackHookPending = false;
+        _fallbackRecovery = false;
         ResetControlState();
     }
 
@@ -73,11 +77,13 @@ public sealed class FishingStateMachine : IStateMachine
             case FishingPhase.WaitingForBite:
                 if (_evidence.BiteIndicatorHits >= _options.BiteIndicatorConfirmFrames)
                 {
+                    _fallbackHookPending = false;
                     Transition(FishingPhase.Hooking, now);
                     return Decision(InputAction.Click, "bite confirmed");
                 }
                 if (_options.BiteFallback > TimeSpan.Zero && elapsed >= _options.BiteFallback)
                 {
+                    _fallbackHookPending = true;
                     Transition(FishingPhase.Hooking, now);
                     return Decision(InputAction.Click, "bite fallback");
                 }
@@ -86,10 +92,17 @@ public sealed class FishingStateMachine : IStateMachine
             case FishingPhase.Hooking:
                 if (elapsed >= _options.HookToUiMinimum && _evidence.Ui >= _options.UiConfirmFrames)
                 {
+                    _fallbackHookPending = false;
                     Transition(FishingPhase.Minigame, now);
                     return Decision(InputAction.None, "minigame confirmed");
                 }
-                if (elapsed >= _options.BiteToMinigameTimeout) return Recover(now, "minigame did not start");
+                if (elapsed >= _options.BiteToMinigameTimeout)
+                {
+                    if (_fallbackHookPending)
+                        return RecoverFallbackWithoutClick(now);
+
+                    return Recover(now, "minigame did not start");
+                }
                 break;
             case FishingPhase.Minigame:
                 if (HasPanelRelocated(observation))
@@ -132,6 +145,13 @@ public sealed class FishingStateMachine : IStateMachine
                 }
                 break;
             case FishingPhase.Recovery when elapsed >= _options.RecoveryDelay:
+                if (_fallbackRecovery)
+                {
+                    _fallbackRecovery = false;
+                    Transition(FishingPhase.WaitingForBite, now);
+                    return Decision(InputAction.None, "bite fallback recovery complete");
+                }
+
                 Transition(FishingPhase.Idle, now);
                 return Decision(InputAction.None, "recovery complete");
         }
@@ -189,8 +209,18 @@ public sealed class FishingStateMachine : IStateMachine
 
     private StateDecision Recover(DateTimeOffset now, string reason)
     {
+        _fallbackHookPending = false;
+        _fallbackRecovery = false;
         Transition(FishingPhase.Recovery, now);
         return Decision(InputAction.None, reason);
+    }
+
+    private StateDecision RecoverFallbackWithoutClick(DateTimeOffset now)
+    {
+        _fallbackHookPending = false;
+        _fallbackRecovery = true;
+        Transition(FishingPhase.Recovery, now);
+        return Decision(InputAction.None, "bite fallback recovery");
     }
 
     private bool HasPanelRelocated(DetectionObservation observation) =>

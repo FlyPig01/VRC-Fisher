@@ -138,6 +138,66 @@ public sealed class FishingStateMachineTests
     }
 
     [Fact]
+    public void Failed_bite_fallback_returns_to_waiting_without_a_second_click()
+    {
+        var options = StateMachineOptions.Default with
+        {
+            BiteFallback = TimeSpan.FromSeconds(2),
+            BiteToMinigameTimeout = TimeSpan.FromSeconds(1),
+            RecoveryDelay = TimeSpan.FromSeconds(1)
+        };
+        var machine = new FishingStateMachine(options);
+        var now = DateTimeOffset.UtcNow;
+
+        var cast = machine.Step(new DetectionObservation(1, now), now);
+        machine.Step(new DetectionObservation(2, now), now.AddSeconds(1));
+        var fallback = machine.Step(new DetectionObservation(3, now), now.AddSeconds(3.1));
+
+        var recovery = machine.Step(
+            new DetectionObservation(4, now),
+            now.AddSeconds(4.2));
+        var recoveryWaiting = machine.Step(
+            new DetectionObservation(5, now),
+            now.AddSeconds(4.8));
+        var resumed = machine.Step(
+            new DetectionObservation(6, now),
+            now.AddSeconds(5.3));
+        var next = machine.Step(
+            new DetectionObservation(7, now),
+            now.AddSeconds(5.4));
+
+        Assert.Equal(InputAction.Click, cast.Action);
+        Assert.Equal(FishingPhase.Hooking, fallback.Phase);
+        Assert.Equal(InputAction.Click, fallback.Action);
+        Assert.Equal(FishingPhase.Recovery, recovery.Phase);
+        Assert.Equal(InputAction.None, recovery.Action);
+        Assert.Equal("bite fallback recovery", recovery.Reason);
+        Assert.Equal(FishingPhase.Recovery, recoveryWaiting.Phase);
+        Assert.Equal(InputAction.None, recoveryWaiting.Action);
+        Assert.Equal(FishingPhase.WaitingForBite, resumed.Phase);
+        Assert.Equal(InputAction.None, resumed.Action);
+        Assert.Equal(FishingPhase.WaitingForBite, next.Phase);
+        Assert.Equal(InputAction.None, next.Action);
+
+        var secondFallback = machine.Step(
+            new DetectionObservation(8, now),
+            now.AddSeconds(7.4));
+        var secondRecovery = machine.Step(
+            new DetectionObservation(9, now),
+            now.AddSeconds(8.5));
+        var secondResumed = machine.Step(
+            new DetectionObservation(10, now),
+            now.AddSeconds(9.6));
+
+        Assert.Equal(FishingPhase.Hooking, secondFallback.Phase);
+        Assert.Equal(InputAction.Click, secondFallback.Action);
+        Assert.Equal(FishingPhase.Recovery, secondRecovery.Phase);
+        Assert.Equal(InputAction.None, secondRecovery.Action);
+        Assert.Equal(FishingPhase.WaitingForBite, secondResumed.Phase);
+        Assert.Equal(InputAction.None, secondResumed.Action);
+    }
+
+    [Fact]
     public void Minigame_end_waits_one_second_and_reels_once()
     {
         var now = DateTimeOffset.UtcNow;
