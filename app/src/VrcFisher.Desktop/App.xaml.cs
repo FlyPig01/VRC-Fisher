@@ -75,14 +75,6 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        if (args.Arguments.Contains("--download-models", StringComparison.OrdinalIgnoreCase)
-            || Array.Exists(
-                Environment.GetCommandLineArgs(),
-                argument => string.Equals(argument, "--download-models", StringComparison.OrdinalIgnoreCase)))
-        {
-            await RunModelDownloadCommandAsync();
-            return;
-        }
         try
         {
             await _models.RefreshAsync(CancellationToken.None);
@@ -123,25 +115,6 @@ public partial class App : Microsoft.UI.Xaml.Application
             _window.ShowRuntimeNotice(
                 new VrcFisher.Core.RuntimeStatus(VrcFisher.Core.RuntimeMessageCode.HotkeyRegistrationFailed, _options.ToggleHotkey),
                 activate: false);
-        }
-    }
-
-    private async Task RunModelDownloadCommandAsync()
-    {
-        try
-        {
-            await _models.DownloadLatestAsync(progress: null, CancellationToken.None);
-            Environment.ExitCode = 0;
-        }
-        catch (Exception error)
-        {
-            _loggerFactory.CreateLogger<App>().LogError(error, "model download command failed");
-            Environment.ExitCode = 1;
-        }
-        finally
-        {
-            await StopAsync();
-            Environment.Exit(Environment.ExitCode);
         }
     }
 
