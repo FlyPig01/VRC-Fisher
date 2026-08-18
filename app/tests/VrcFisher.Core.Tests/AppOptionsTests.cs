@@ -13,6 +13,7 @@ public sealed class AppOptionsTests
             Language: "vi-VN",
             WorkMode: (ApplicationMode)99,
             ConfidenceThreshold: double.NaN,
+            BiteIndicatorConfidenceThreshold: double.NaN,
             IoUThreshold: 2,
             BiteFallbackSeconds: 100);
 
@@ -21,6 +22,9 @@ public sealed class AppOptionsTests
         Assert.Equal(UiLanguage.English, normalized.Language);
         Assert.Equal(ApplicationMode.Run, normalized.WorkMode);
         Assert.Equal(AppOptions.Default.ConfidenceThreshold, normalized.ConfidenceThreshold);
+        Assert.Equal(
+            AppOptions.Default.BiteIndicatorConfidenceThreshold,
+            normalized.BiteIndicatorConfidenceThreshold);
         Assert.Equal(0.99, normalized.IoUThreshold);
         Assert.Equal(30, normalized.BiteFallbackSeconds);
     }
@@ -31,6 +35,7 @@ public sealed class AppOptionsTests
         var options = new AppOptions(
             Language: "en-US",
             ConfidenceThreshold: 0.5,
+            BiteIndicatorConfidenceThreshold: 0.6,
             IoUThreshold: 0.6,
             Device: ExecutionDevice.Cpu);
 
@@ -68,6 +73,7 @@ public sealed class AppOptionsTests
             var options = new OptionsStore(root).Load();
 
             Assert.Equal(15, options.BiteFallbackSeconds);
+            Assert.Equal(0.60, options.BiteIndicatorConfidenceThreshold);
             Assert.Equal(AppOptions.CurrentSettingsVersion, options.SettingsVersion);
         }
         finally

@@ -8,13 +8,14 @@ public sealed record AppOptions(
     ExecutionDevice Device = ExecutionDevice.Auto,
     ApplicationMode WorkMode = ApplicationMode.Run,
     double ConfidenceThreshold = 0.35,
+    double BiteIndicatorConfidenceThreshold = 0.60,
     double IoUThreshold = 0.45,
     bool BiteFallbackEnabled = false,
     double BiteFallbackSeconds = 15,
     string ToggleHotkey = "F8",
-    int SettingsVersion = 5)
+    int SettingsVersion = 6)
 {
-    public const int CurrentSettingsVersion = 5;
+    public const int CurrentSettingsVersion = 6;
 
     public static AppOptions Default => new();
 
@@ -23,6 +24,9 @@ public sealed record AppOptions(
         var confidence = double.IsFinite(ConfidenceThreshold)
             ? Math.Clamp(ConfidenceThreshold, 0.01, 0.99)
             : Default.ConfidenceThreshold;
+        var biteIndicatorConfidence = double.IsFinite(BiteIndicatorConfidenceThreshold)
+            ? Math.Clamp(BiteIndicatorConfidenceThreshold, 0.01, 0.99)
+            : Default.BiteIndicatorConfidenceThreshold;
         var iou = double.IsFinite(IoUThreshold)
             ? Math.Clamp(IoUThreshold, 0.01, 0.99)
             : Default.IoUThreshold;
@@ -36,6 +40,7 @@ public sealed record AppOptions(
                 : Default.Language,
             WorkMode = Enum.IsDefined(WorkMode) ? WorkMode : Default.WorkMode,
             ConfidenceThreshold = confidence,
+            BiteIndicatorConfidenceThreshold = biteIndicatorConfidence,
             IoUThreshold = iou,
             BiteFallbackSeconds = fallback,
             ToggleHotkey = HotkeyGestureRules.TryNormalize(ToggleHotkey, out var hotkey)

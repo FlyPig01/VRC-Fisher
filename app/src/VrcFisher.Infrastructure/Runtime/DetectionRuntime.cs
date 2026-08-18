@@ -83,7 +83,8 @@ public sealed class DetectionRuntime(
             layout.Models,
             options.Device,
             (float)options.ConfidenceThreshold,
-            (float)options.IoUThreshold);
+            (float)options.IoUThreshold,
+            (float)options.BiteIndicatorConfidenceThreshold);
         if (!modelCatalog.AutomaticAllowed || !detector.CanProduceDecisions)
         {
             detector.Dispose();

@@ -23,6 +23,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
     private readonly DenseTensor<float> _minigameTensor;
     private readonly NamedOnnxValue[] _locatorInputs;
     private readonly NamedOnnxValue[] _minigameInputs;
+    private readonly float _biteIndicatorConfidenceThreshold;
     private readonly IReadOnlyList<string> _locatorClasses = ["bite_indicator", "minigame_panel"];
     private readonly IReadOnlyList<string> _minigameClasses = ["catch_zone", "moving_target"];
     private ResizeMap? _locatorResizeMap;
@@ -34,7 +35,8 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         string modelsDirectory,
         ExecutionDevice device,
         float confidenceThreshold = 0.35f,
-        float iouThreshold = 0.45f)
+        float iouThreshold = 0.45f,
+        float biteIndicatorConfidenceThreshold = 0.60f)
     {
         var locatorPath = Path.Combine(modelsDirectory, LocatorModel);
         var minigamePath = Path.Combine(modelsDirectory, MinigameModel);
@@ -62,6 +64,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         _minigameInputs = [NamedOnnxValue.CreateFromTensor(_minigameInput, _minigameTensor)];
         _confidenceThreshold = confidenceThreshold;
         _iouThreshold = iouThreshold;
+        _biteIndicatorConfidenceThreshold = biteIndicatorConfidenceThreshold;
         Execution = sessions.Execution;
     }
 
@@ -163,7 +166,7 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
             out var locatorTransform);
         var detections = Decode(locator, _locatorClasses, _confidenceThreshold, _iouThreshold, locatorTransform);
         return (
-            BestDetection(detections, "bite_indicator"),
+            BestDetection(detections, "bite_indicator", _biteIndicatorConfidenceThreshold),
             BestDetection(detections, "minigame_panel"));
     }
 
@@ -439,8 +442,15 @@ public sealed class OnnxRuntimeDetector : IDetector, IDisposable
         return YoloPostprocessor.Decode(output.AsTensor<float>(), classes, confidenceThreshold, iouThreshold, transform);
     }
 
-    private static YoloDetection? BestDetection(IReadOnlyList<YoloDetection> detections, string className) =>
-        detections.FirstOrDefault(item => string.Equals(item.ClassName, className, StringComparison.Ordinal));
+    internal static YoloDetection? BestDetection(
+        IReadOnlyList<YoloDetection> detections,
+        string className,
+        float minimumConfidence = 0f) =>
+        detections
+            .Where(item =>
+                item.Confidence >= minimumConfidence
+                && string.Equals(item.ClassName, className, StringComparison.Ordinal))
+            .MaxBy(item => item.Confidence);
 
     private static float? RelativeCenter(BoundingBox? zone, BoundingBox? target)
     {
