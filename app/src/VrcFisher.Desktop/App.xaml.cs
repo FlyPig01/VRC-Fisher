@@ -75,9 +75,12 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        if (args.Arguments.Contains("--download-models", StringComparison.OrdinalIgnoreCase))
+        if (args.Arguments.Contains("--download-models", StringComparison.OrdinalIgnoreCase)
+            || Array.Exists(
+                Environment.GetCommandLineArgs(),
+                argument => string.Equals(argument, "--download-models", StringComparison.OrdinalIgnoreCase)))
         {
-            _ = RunModelDownloadCommandAsync();
+            await RunModelDownloadCommandAsync();
             return;
         }
         try
