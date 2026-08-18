@@ -129,11 +129,11 @@ minigame 构建会保留全部正样本，并按配置从审核负样本中选�
 至少需要两段独立且已审核的录屏：
 
 ```powershell
-uv run vrc-split-recordings --input output/locator --output ../training/datasets/locator
-uv run vrc-split-recordings --input output/minigame --output ../training/datasets/minigame
+uv run vrc-split-dataset --input output/locator --output ../training/datasets/locator
+uv run vrc-split-dataset --input output/minigame --output ../training/datasets/minigame
 ```
 
-工具按录屏生成 `train`、`val` 和 `split.json`。同一录屏不得跨集合。完整测试视频放在 `training/test/videos/`，不进入 `data.yaml`。
+工具按图片执行分层随机划分，默认 `90% train / 10% val`，生成 `train`、`val` 和 `split.json`。`split.json` 记录每张图片的文件名分配；同一录屏可以同时出现在两个集合，这是为了让长录屏和新反馈充分参与训练。完整测试视频仍放在 `training/test/videos/`，不进入 `data.yaml`，用于人工检查实际应用效果。
 
 ## 5. 无预标注流程
 
@@ -173,5 +173,5 @@ uv run vrc-split-recordings --input output/minigame --output ../training/dataset
 - 图片与标签不匹配；
 - YOLO 坐标或类别非法；
 - 小游戏三类组合错误；
-- 只有一段录屏却尝试生成正式 `train/val`；
-- 审核未完成或同一录屏跨集合。
+- 少于两张已生成图片却尝试生成正式 `train/val`；
+- 审核未完成。

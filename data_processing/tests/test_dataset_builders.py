@@ -11,7 +11,7 @@ from vrc_data_processing.build_minigame_dataset import build_minigame_dataset
 from vrc_data_processing.build_minigame_dataset import main as build_minigame_main
 from vrc_data_processing.build_review_images import build_review_images
 from vrc_data_processing.split_by_recording import main as split_main
-from vrc_data_processing.split_by_recording import split_by_recording
+from vrc_data_processing.split_by_recording import split_by_image
 
 
 def sample(tmp_path: Path, recording: str = "recording-a") -> tuple[Path, Path]:
@@ -93,27 +93,30 @@ def test_label_without_cached_image_is_ignored(tmp_path) -> None:
     assert not (output / "data.yaml").exists()
 
 
-def test_split_refuses_one_recording_for_train_and_validation(tmp_path) -> None:
+def test_split_refuses_one_image_for_train_and_validation(tmp_path) -> None:
     frames, annotations = sample(tmp_path)
     generated = tmp_path / "locator"
     build_locator_dataset(frames, annotations, generated)
 
-    with pytest.raises(ValueError, match="collect more recordings"):
-        split_by_recording(generated, tmp_path / "dataset")
+    with pytest.raises(ValueError, match="at least two generated images"):
+        split_by_image(generated, tmp_path / "dataset")
 
     with pytest.raises(SystemExit):
         split_main(["--input", str(generated), "--output", str(tmp_path / "dataset")])
 
 
-def test_split_keeps_each_recording_in_one_partition(tmp_path) -> None:
+def test_split_randomizes_images_and_preserves_label_strata(tmp_path) -> None:
     frames, annotations = sample(tmp_path, "recording-a")
     sample(tmp_path, "recording-b")
+    for recording in ("recording-a", "recording-b"):
+        Image.new("RGB", (100, 100), "white").save(frames / recording / "frame-2.jpg")
+        (annotations / recording / "frame-2.txt").write_text("", encoding="ascii")
     generated = tmp_path / "locator"
     build_locator_dataset(frames, annotations, generated)
 
-    assignments = split_by_recording(generated, tmp_path / "dataset", 0.5, 0.5)
-    assert len(assignments["train"]) == 1
-    assert len(assignments["val"]) == 1
+    assignments = split_by_image(generated, tmp_path / "dataset", 0.5, 0.5)
+    assert len(assignments["train"]) == 2
+    assert len(assignments["val"]) == 2
     assert set(assignments["train"]).isdisjoint(assignments["val"])
     assert json.loads((tmp_path / "dataset/split.json").read_text(encoding="utf-8")) == assignments
     assert set(assignments) == {"train", "val"}
@@ -122,6 +125,10 @@ def test_split_keeps_each_recording_in_one_partition(tmp_path) -> None:
         assert (tmp_path / f"dataset/labels/{split}").is_dir()
     assert not (tmp_path / "dataset/images/test").exists()
     assert not (tmp_path / "dataset/labels/test").exists()
+    for split in ("train", "val"):
+        labels = list((tmp_path / f"dataset/labels/{split}").glob("*.txt"))
+        assert any(label.read_text(encoding="ascii").strip() for label in labels)
+        assert any(not label.read_text(encoding="ascii").strip() for label in labels)
 
 
 def test_rebuild_removes_stale_generated_files(tmp_path) -> None:

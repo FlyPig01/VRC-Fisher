@@ -12,3 +12,4 @@
 | 2026-08-16 至 2026-08-18 | [已处理缺陷](bug-history-2026-08-16.md) | FIX-01 至 FIX-06、BUG-013 至 BUG-033 的处理结论 |
 | 2026-08-17 | [高频短脉冲实验](minigame-high-frequency-pulse-2026-08-17.md) | 外部追赶可行，剩余问题是滑块内部控制 |
 | 2026-08-18 | [Round 5 训练与统一验证](training-round5-2026-08-18.md) | Locator 推荐 Round 5；Minigame 暂时保留 Round 3 |
+| 2026-08-18 | [Round 6 训练与统一验证](training-round6-2026-08-18.md) | Locator 与 Minigame 均推荐 Round 6 `best.pt` 进入人工视频审核 |

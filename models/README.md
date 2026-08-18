@@ -19,7 +19,7 @@ models/vX.Y.Z/
 
 `.pt` 是继续训练、检查和修改模型的首选形式；ONNX 是 C# 软件实际加载的运行时形式。两者都按模型卡声明的许可证公开。`source-manifest.json` 记录全部权重、运行时模型和文档的大小与 SHA-256。
 
-这里不能放 `last.pt`、任意 epoch、未验收实验、训练日志或数据集。它们继续留在被 Git 忽略的 `training/runs/`、`training/weights/` 和 `training/exports/`。当前正式源码模型为 `v0.1.1`：Locator Round 5 与 Minigame Round 3。
+这里不能放 `last.pt`、任意 epoch、未验收实验、训练日志或数据集。它们继续留在被 Git 忽略的 `training/runs/`、`training/weights/` 和 `training/exports/`。当前正式源码模型为 `v0.1.2`：Locator Round 6 与 Minigame Round 6。
 
 模型版本通过 `packaging/build-model-release.ps1` 生成。维护者必须提交完整的 `models/vX.Y.Z/` 后，才能上传对应的 `releases/models-vX.Y.Z/`。Release 中只复制软件需要的两个 ONNX、模型卡、许可证和运行时清单，不重复提供 `.pt`；需要继续训练或审计模型的开发者直接从仓库取得 `.pt`。
 

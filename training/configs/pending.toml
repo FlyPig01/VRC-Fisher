@@ -5,8 +5,8 @@ seed = 42
 
 [locator]
 data = "datasets/locator/data.yaml"
-base_model = "runs/locator-round5/weights/best.pt"
-run_name = "locator-round6"
+base_model = "runs/locator-round6/weights/best.pt"
+run_name = "locator-round7"
 image_size = 960
 epochs = 100
 batch = 4
@@ -14,8 +14,8 @@ patience = 20
 
 [minigame]
 data = "datasets/minigame/data.yaml"
-base_model = "runs/minigame-round3/weights/best.pt"
-run_name = "minigame-round6"
+base_model = "runs/minigame-round6/weights/best.pt"
+run_name = "minigame-round7"
 image_size = 640
 epochs = 100
 batch = 8

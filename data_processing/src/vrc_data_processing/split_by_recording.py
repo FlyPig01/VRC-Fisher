@@ -1,4 +1,10 @@
-"""Split a generated dataset by recording, never by adjacent frame."""
+"""Split a generated dataset by image with deterministic stratification.
+
+The application-oriented dataset split intentionally allows frames from the
+same recording to appear in both partitions. This keeps long recordings from
+consuming the whole validation set and lets new feedback frames contribute to
+training. A separate test video remains the place for qualitative review.
+"""
 
 from __future__ import annotations
 
@@ -9,49 +15,77 @@ from pathlib import Path
 import shutil
 
 from .generated_output import staged_output
+from .labels import read_labels
 
 
-def split_by_recording(
+def split_by_image(
     source: Path,
     output: Path,
-    train_ratio: float = 0.8,
-    val_ratio: float = 0.2,
+    train_ratio: float = 0.9,
+    val_ratio: float = 0.1,
     seed: int = 42,
 ) -> dict[str, list[str]]:
     if abs(train_ratio + val_ratio - 1.0) > 1e-9:
         raise ValueError("train and val ratios must sum to 1")
     if min(train_ratio, val_ratio) <= 0:
-        raise ValueError("split ratios cannot be negative")
-    recordings = sorted(path.name for path in (source / "images").iterdir() if path.is_dir())
-    required = 2
-    if len(recordings) < required:
-        raise ValueError(
-            f"{len(recordings)} recording(s) cannot populate {required} non-empty splits; "
-            "collect more recordings or set unused ratios to zero"
-        )
-    random.Random(seed).shuffle(recordings)
-    counts = _split_counts(len(recordings), (train_ratio, val_ratio))
-    assignments: dict[str, list[str]] = {}
-    position = 0
-    for split, count in zip(("train", "val"), counts):
-        assignments[split] = recordings[position : position + count]
-        position += count
+        raise ValueError("train and val ratios must be positive")
+
+    records: list[tuple[str, Path, str]] = []
+    image_root = source / "images"
+    label_root = source / "labels"
+    if not image_root.is_dir():
+        raise ValueError(f"generated dataset has no images directory: {source}")
+    for recording in sorted(path for path in image_root.iterdir() if path.is_dir()):
+        for image in sorted(path for path in recording.iterdir() if path.is_file()):
+            label = label_root / recording.name / f"{image.stem}.txt"
+            if not label.is_file():
+                raise ValueError(f"generated image has no label: {image}")
+            labels = read_labels(label)
+            signature = ",".join(
+                str(item.class_id)
+                for item in sorted(labels, key=lambda item: item.class_id)
+            )
+            records.append(
+                (f"{recording.name}--{image.name}", image, signature or "negative")
+            )
+
+    if len(records) < 2:
+        raise ValueError("at least two generated images are required")
+
+    rng = random.Random(seed)
+    strata: dict[str, list[tuple[str, Path, str]]] = {}
+    for record in records:
+        strata.setdefault(record[2], []).append(record)
+
+    train_records: list[tuple[str, Path, str]] = []
+    val_records: list[tuple[str, Path, str]] = []
+    for group in strata.values():
+        rng.shuffle(group)
+        if len(group) == 1:
+            val_count = 0
+        else:
+            val_count = max(1, min(len(group) - 1, round(len(group) * val_ratio)))
+        val_records.extend(group[:val_count])
+        train_records.extend(group[val_count:])
+
+    rng.shuffle(train_records)
+    rng.shuffle(val_records)
+    assignments = {
+        "train": [record[0] for record in train_records],
+        "val": [record[0] for record in val_records],
+    }
     with staged_output(output) as staging:
         for split in ("train", "val"):
             (staging / "images" / split).mkdir(parents=True, exist_ok=True)
             (staging / "labels" / split).mkdir(parents=True, exist_ok=True)
-        for split, split_recordings in assignments.items():
-            for recording in split_recordings:
-                for image in sorted((source / "images" / recording).iterdir()):
-                    if not image.is_file():
-                        continue
-                    label = source / "labels" / recording / f"{image.stem}.txt"
-                    if not label.is_file():
-                        raise ValueError(f"generated image has no label: {image}")
-                    destination_image = staging / "images" / split / f"{recording}--{image.name}"
-                    destination_label = staging / "labels" / split / f"{recording}--{image.stem}.txt"
-                    shutil.copy2(image, destination_image)
-                    shutil.copy2(label, destination_label)
+        for split, split_records in (("train", train_records), ("val", val_records)):
+            for sample_id, image, _ in split_records:
+                label = label_root / image.parent.name / f"{image.stem}.txt"
+                shutil.copy2(image, staging / "images" / split / sample_id)
+                shutil.copy2(
+                    label,
+                    staging / "labels" / split / f"{Path(sample_id).stem}.txt",
+                )
         shutil.copy2(source / "data.yaml", staging / "data.yaml")
         (staging / "split.json").write_text(
             json.dumps(assignments, ensure_ascii=False, indent=2) + "\n",
@@ -60,26 +94,28 @@ def split_by_recording(
     return assignments
 
 
-def _split_counts(total: int, ratios: tuple[float, float]) -> tuple[int, int]:
-    counts = [1, 1]
-    remaining = total - sum(counts)
-    while remaining:
-        index = max(range(2), key=lambda item: ratios[item] * total - counts[item])
-        counts[index] += 1
-        remaining -= 1
-    return counts[0], counts[1]
+def split_by_recording(
+    source: Path,
+    output: Path,
+    train_ratio: float = 0.9,
+    val_ratio: float = 0.1,
+    seed: int = 42,
+) -> dict[str, list[str]]:
+    """Compatibility alias; the implementation now splits by image."""
+
+    return split_by_image(source, output, train_ratio, val_ratio, seed)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--train", type=float, default=0.8)
-    parser.add_argument("--val", type=float, default=0.2)
+    parser.add_argument("--train", type=float, default=0.9)
+    parser.add_argument("--val", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args(argv)
     try:
-        assignments = split_by_recording(
+        assignments = split_by_image(
             args.input,
             args.output,
             args.train,

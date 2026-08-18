@@ -3,6 +3,11 @@
 > Replace every `TBD` before publishing a model version. The release script
 > rejects a card that still contains `TBD`.
 
+> **Validation leakage warning:** state whether adjacent frames from the same
+> recording can cross the train/validation split. If they can, explicitly say
+> that this is temporal data leakage, that reported validation metrics are
+> biased high, and that they do not represent performance on unseen recordings.
+
 ## Identity
 
 | Field | Value |
@@ -29,7 +34,7 @@ in the model release. Record only non-identifying aggregate information here.
 |---|---|
 | Recording source and collection method | TBD |
 | Number of independent recordings | TBD |
-| Train/validation assignment | TBD; complete-video review is unlabelled and stored outside the YOLO dataset |
+| Train/validation assignment | TBD; disclose image-level splitting and temporal leakage when applicable |
 | Locator image/box counts | TBD |
 | Minigame image/box counts | TBD |
 | Review status | TBD |
@@ -43,7 +48,7 @@ in the model release. Record only non-identifying aggregate information here.
 | Device and software environment | TBD |
 | Locator metrics | TBD |
 | Minigame metrics | TBD |
-| Independent-recording runtime validation | TBD |
+| Data-leakage effect and independent-recording runtime validation | TBD |
 
 ## Files
 

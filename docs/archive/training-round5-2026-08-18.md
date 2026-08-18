@@ -138,7 +138,7 @@ Round 5 提高了 Minigame 的 mAP50，但总体 Precision、Recall 和 mAP50-95
 | Locator | `locator-round5/weights/best.pt` | 感叹号 Recall 和严格定位明显提升，面板能力保持稳定 |
 | Minigame | 暂时保留 `minigame-round3/weights/best.pt` | Round 5 没有超过 Round 3，且 `catch_zone` Recall 略降 |
 
-Precision 反映误识别，Recall 反映漏识别，mAP50 反映目标是否大致找到，mAP50-95 更重视识别框是否贴合。对本项目而言：感叹号首先重视 Recall；小游戏控制同时重视 `catch_zone`、`moving_target` 的 Recall 和 mAP50-95，因为漏框或框位置漂移都会直接影响控制。
+Precision 反映误识别，Recall 反映漏识别，mAP50 反映目标是否大致找到，mAP50-95 更重视识别框是否贴合。本轮当时按感叹号 Recall 选择 Locator；后续在 Round 6 验收时明确修正为感叹号优先 Precision，其他类别优先 Recall。当前标准以 `docs/vision-and-training.md` 为准。
 
 本轮训练指标只完成候选模型筛选，不能单独关闭模型质量问题。正式替换模型前，仍需由人工使用未参与训练与验证的完整视频检查：感叹号事件是否整段漏检、视角变化后是否能重新定位、小游戏框是否稳定贴合，以及是否产生影响流程的误识别。
 

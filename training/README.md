@@ -32,7 +32,7 @@ training/.ultralytics/
 
 ## 3. 输入
 
-数据集必须由数据处理工具按录屏划分：
+数据集必须由数据处理工具按图片分层随机划分：
 
 ```text
 datasets/locator/
@@ -47,6 +47,8 @@ datasets/minigame/
   images/{train,val}/
   labels/{train,val}/
 ```
+
+`split.json` 保存的是每张图片的文件名分配，不是录屏名称；同一录屏可以同时出现在两个集合。
 
 完整大屏测试视频单独放在：
 
@@ -67,7 +69,7 @@ uv run vrc-preflight --task all
 - 图片和 YOLO 标签一一对应；
 - 坐标和类别合法；
 - locator 与 minigame 都包含所需类别；
-- `train`、`val` 按录屏隔离；
+- `train`、`val` 使用固定种子的图片级分层随机划分；
 - 配置中的输入尺寸、数据路径和基础权重可用。
 
 `READY` 只表示数据结构允许训练，不代表数据质量或模型效果已经合格。未完成人工审核时不得开始训练。
@@ -82,7 +84,7 @@ uv run vrc-preflight --task all
 | epochs | 100 | 100 |
 | batch | 4 | 8 |
 | patience | 20 | 20 |
-| 初始权重 | locator Round 5 | minigame Round 3 |
+| 初始权重 | locator Round 6 | minigame Round 6 |
 
 公共参数为 `device=0`、`workers=4`、`seed=42`。未显式设置的训练参数使用锁定版本 Ultralytics 的默认值；实际参数必须写入最终模型卡。
 
@@ -143,6 +145,6 @@ locator 固定导出为 960，minigame 固定导出为 640。默认产物为 FP3
 
 ## 9. 当前已验收模型
 
-当前选择的源码模型版本位于 `models/v0.1.1/`：Locator 使用 Round 5，Minigame 使用 Round 3。权重来源、数据规模、指标、导出契约、哈希和许可证只以该目录中的 `MODEL_CARD.md` 与 `source-manifest.json` 为准。
+当前选择的源码模型版本位于 `models/v0.1.2/`：Locator 与 Minigame 均使用 Round 6 `best.pt`。权重来源、数据规模、指标、数据泄漏限制、导出契约、哈希和许可证只以该目录中的 `MODEL_CARD.md` 与 `source-manifest.json` 为准。
 
-`configs/round5.toml` 保存本轮实际训练配置；`configs/pending.toml` 已切换为下一轮训练入口，并从当前两个最佳权重继续训练。新的训练结果在完成数据审核、统一评估、独立视频检查和 C# 回放前，不得覆盖正式模型版本。
+`configs/round6.toml` 保存本轮实际训练配置；`configs/pending.toml` 已切换为 Round 7 入口，并从当前两个最佳权重继续训练。新的训练结果在完成数据审核、统一评估、独立视频检查和 C# 回放前，不得覆盖正式模型版本。

@@ -42,7 +42,7 @@ def preflight_task(name: str, task: TaskConfig, root: Path) -> DatasetReport:
     dataset_root = (data.parent / fields.get("path", ".")).resolve()
     split_path = dataset_root / "split.json"
     if not split_path.is_file():
-        raise ValueError(f"{name}: split.json not found; use vrc-split-recordings")
+        raise ValueError(f"{name}: split.json not found; use vrc-split-dataset")
     try:
         assignments = json.loads(split_path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError) as error:
@@ -74,14 +74,12 @@ def preflight_task(name: str, task: TaskConfig, root: Path) -> DatasetReport:
                 f"missing_labels={len(image_keys - label_keys)} "
                 f"orphan_labels={len(label_keys - image_keys)}"
             )
-        allowed_recordings = set(assignments[split])
-        observed_recordings = {
-            _recording_from_generated_name(path.name, allowed_recordings) for path in images
-        }
-        if observed_recordings != allowed_recordings:
+        allowed_samples = set(assignments[split])
+        observed_samples = {path.name for path in images}
+        if observed_samples != allowed_samples:
             raise ValueError(
-                f"{name}: {split} recordings do not match split.json: "
-                f"expected={sorted(allowed_recordings)} observed={sorted(observed_recordings)}"
+                f"{name}: {split} samples do not match split.json: "
+                f"expected={len(allowed_samples)} observed={len(observed_samples)}"
             )
 
         split_boxes = [0, 0]
@@ -118,7 +116,10 @@ def preflight_task(name: str, task: TaskConfig, root: Path) -> DatasetReport:
         total_boxes[0] += split_boxes[0]
         total_boxes[1] += split_boxes[1]
 
-    recordings = set(assignments["train"]) | set(assignments["val"])
+    recordings = {
+        _recording_from_sample_name(sample)
+        for sample in assignments["train"] + assignments["val"]
+    }
     return DatasetReport(
         name,
         len(recordings),
@@ -164,19 +165,19 @@ def _validate_assignments(name: str, assignments: object) -> None:
         if not isinstance(values, list) or not all(isinstance(value, str) for value in values):
             raise ValueError(f"{name}: split.json {split} must be a string list")
     if not assignments["train"] or not assignments["val"]:
-        raise ValueError(f"{name}: train and val must each contain a recording")
+        raise ValueError(f"{name}: train and val must each contain samples")
     if set(assignments) != {"train", "val"}:
         raise ValueError(f"{name}: split.json must contain only train and val")
-    all_recordings = assignments["train"] + assignments["val"]
-    if len(all_recordings) != len(set(all_recordings)):
-        raise ValueError(f"{name}: a recording appears in multiple splits")
+    all_samples = assignments["train"] + assignments["val"]
+    if len(all_samples) != len(set(all_samples)):
+        raise ValueError(f"{name}: a sample appears in multiple splits")
 
 
-def _recording_from_generated_name(filename: str, recordings: set[str]) -> str:
-    matches = [recording for recording in recordings if filename.startswith(f"{recording}--")]
-    if len(matches) != 1:
-        raise ValueError(f"cannot map generated image to one recording: {filename}")
-    return matches[0]
+def _recording_from_sample_name(filename: str) -> str:
+    recording, separator, _ = filename.partition("--")
+    if not separator or not recording:
+        raise ValueError(f"invalid generated sample name: {filename}")
+    return recording
 
 
 def _read_yolo_label(path: Path) -> tuple[int, int]:

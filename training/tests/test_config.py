@@ -29,10 +29,10 @@ def test_pending_training_config_uses_retained_best_weights() -> None:
     root = Path(__file__).resolve().parents[1]
     config = load_train_config(root / "configs/pending.toml")
 
-    assert config.locator.base_model == "runs/locator-best-init/weights/best.pt"
-    assert config.locator.run_name == "locator-round3"
-    assert config.minigame.base_model == "runs/minigame-best-init/weights/best.pt"
-    assert config.minigame.run_name == "minigame-round3"
+    assert config.locator.base_model == "runs/locator-round6/weights/best.pt"
+    assert config.locator.run_name == "locator-round7"
+    assert config.minigame.base_model == "runs/minigame-round6/weights/best.pt"
+    assert config.minigame.run_name == "minigame-round7"
     assert (root / config.locator.base_model).is_file()
     assert (root / config.minigame.base_model).is_file()
 
@@ -88,7 +88,10 @@ def write_dataset(tmp_path: Path, task: str = "locator") -> TaskConfig:
         f"  1: {names[1]}\n",
         encoding="ascii",
     )
-    assignments = {"train": ["recording-a"], "val": ["recording-b"]}
+    assignments = {
+        "train": ["recording-a--frame.jpg"],
+        "val": ["recording-b--frame.jpg"],
+    }
     (root / "split.json").write_text(
         json.dumps(assignments, ensure_ascii=False), encoding="utf-8"
     )
@@ -126,15 +129,20 @@ def test_preflight_accepts_two_recording_dataset_with_both_classes(tmp_path: Pat
     assert report.boxes == (2, 2)
 
 
-def test_preflight_rejects_recording_in_multiple_splits(tmp_path: Path) -> None:
+def test_preflight_rejects_sample_in_multiple_splits(tmp_path: Path) -> None:
     task = write_dataset(tmp_path)
     split = tmp_path / "datasets/locator/split.json"
     split.write_text(
-        json.dumps({"train": ["recording-a"], "val": ["recording-a"]}),
+        json.dumps(
+            {
+                "train": ["recording-a--frame.jpg"],
+                "val": ["recording-a--frame.jpg"],
+            }
+        ),
         encoding="utf-8",
     )
 
-    with pytest.raises(ValueError, match="multiple splits"):
+    with pytest.raises(ValueError, match="sample appears in multiple splits"):
         preflight_task("locator", task, tmp_path)
 
 
@@ -153,6 +161,15 @@ def test_minigame_preflight_accepts_empty_negative_labels(tmp_path: Path) -> Non
     label = tmp_path / "datasets/minigame/labels/train/recording-a--negative.txt"
     Image.new("RGB", (16, 16), "black").save(image)
     label.write_text("", encoding="ascii")
+    (tmp_path / "datasets/minigame/split.json").write_text(
+        json.dumps(
+            {
+                "train": ["recording-a--frame.jpg", "recording-a--negative.jpg"],
+                "val": ["recording-b--frame.jpg"],
+            }
+        ),
+        encoding="utf-8",
+    )
 
     report = preflight_task("minigame", task, tmp_path)
 
