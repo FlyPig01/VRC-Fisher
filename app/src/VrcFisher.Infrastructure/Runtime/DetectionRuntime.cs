@@ -741,8 +741,9 @@ public sealed class DetectionRuntime(
         else if (result.TimingOverrun)
         {
             logger.LogWarning(
-                "pulse timing overrun planned_ms={Planned} actual_ms={Actual:F1}",
+                "pulse timing overrun planned_ms={Planned} release_late_ms={ReleaseLate:F1} actual_ms={Actual:F1}",
                 FormatMilliseconds(result.PlannedHold),
+                result.ReleaseLateness?.TotalMilliseconds ?? 0,
                 result.ActualHold.TotalMilliseconds);
         }
 
@@ -1145,7 +1146,7 @@ public sealed class DetectionRuntime(
         var actualHold = pulse?.ActualHold.TotalMilliseconds
             ?? Math.Max(0, (releasedAt - pressedAt).TotalMilliseconds);
         logger.LogDebug(
-            "input session={Session} cycle={Cycle} decision_id={DecisionId} action={Action} operation_id={OperationId} down_at={DownAt:O} up_at={UpAt:O} minimum_hold_ms={MinimumHold:F0} predicted_release_ms={PredictedRelease} predicted_repress_ms={PredictedRepress} plan_horizon_ms={PlanHorizon:F1} final_plan_ms={FinalPlan} actual_hold_ms={ActualHold:F1} release_cause={ReleaseCause} release_requested={ReleaseRequested} timing_overrun={TimingOverrun} emergency_release={EmergencyRelease} submitted={Submitted} expected={Expected} succeeded={Succeeded} error={Error} foreground_before={ForegroundBefore} foreground_after={ForegroundAfter}",
+            "input session={Session} cycle={Cycle} decision_id={DecisionId} action={Action} operation_id={OperationId} down_at={DownAt:O} up_at={UpAt:O} minimum_hold_ms={MinimumHold:F0} predicted_release_ms={PredictedRelease} predicted_repress_ms={PredictedRepress} plan_horizon_ms={PlanHorizon:F1} final_plan_ms={FinalPlan} actual_hold_ms={ActualHold:F1} release_late_ms={ReleaseLate} release_cause={ReleaseCause} release_requested={ReleaseRequested} timing_overrun={TimingOverrun} emergency_release={EmergencyRelease} submitted={Submitted} expected={Expected} succeeded={Succeeded} error={Error} foreground_before={ForegroundBefore} foreground_after={ForegroundAfter}",
             _sessionId,
             decision.Cycle,
             decisionId,
@@ -1159,6 +1160,7 @@ public sealed class DetectionRuntime(
             decision.ControlPlanHorizon.TotalMilliseconds,
             FormatMilliseconds(pulse?.PlannedHold),
             actualHold,
+            FormatMilliseconds(pulse?.ReleaseLateness),
             pulse?.ReleaseCause ?? "-",
             pulse?.ReleaseRequested ?? false,
             pulse?.TimingOverrun ?? false,

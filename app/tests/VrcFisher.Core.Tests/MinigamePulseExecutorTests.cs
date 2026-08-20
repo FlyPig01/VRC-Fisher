@@ -87,6 +87,29 @@ public sealed class MinigamePulseExecutorTests
     }
 
     [Fact]
+    public async Task Replanned_release_is_compared_with_its_absolute_deadline()
+    {
+        var input = new RecordingInputController();
+        var executor = new MinigamePulseExecutor(input);
+        var control = new PulseReleaseControl(
+            TimeSpan.FromMilliseconds(500),
+            TimeSpan.FromSeconds(2));
+
+        var pulse = executor.ExecuteAsync(
+            TimeSpan.FromMilliseconds(10),
+            control,
+            CancellationToken.None);
+        await input.Pressed.Task;
+        await Task.Delay(90);
+        control.ScheduleAfter(TimeSpan.FromMilliseconds(20));
+        var result = await pulse;
+
+        Assert.True(result.ActualHold > TimeSpan.FromMilliseconds(80));
+        Assert.False(result.TimingOverrun);
+        Assert.True(result.ReleaseLateness < MinigamePulseExecutor.TimingOverrunTolerance);
+    }
+
+    [Fact]
     public async Task Release_request_waits_for_minimum_hold_then_releases()
     {
         var input = new RecordingInputController();

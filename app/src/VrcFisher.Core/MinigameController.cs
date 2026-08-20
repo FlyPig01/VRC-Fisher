@@ -30,6 +30,8 @@ internal sealed class MinigameController
     private const double MinimumAccelerationMagnitude = 0.1;
     private const double MaximumAccelerationMagnitude = 40.0;
     private const double MaximumHeightVariationRatio = 0.20;
+    private const double MinimumTargetPredictionWeight = 0.50;
+    private const double MaximumTargetPredictionWeight = 0.75;
     private static readonly TimeSpan MinimumDynamicsInterval = TimeSpan.FromMilliseconds(15);
     private static readonly TimeSpan MaximumDynamicsInterval = TimeSpan.FromMilliseconds(200);
     private static readonly TimeSpan ReleasePlanResolution = TimeSpan.FromMilliseconds(5);
@@ -136,10 +138,14 @@ internal sealed class MinigameController
 
         var referenceHeight = ReferenceHeight(catchZone.Height);
         MeasureAcceleration(frame, referenceHeight);
-        var zoneVelocity = Velocity(referenceHeight, target: false);
-        var targetVelocity = Velocity(referenceHeight, target: true);
+        var zoneVelocity = ZoneVelocity(referenceHeight);
+        var targetVelocity = TargetVelocity(referenceHeight);
         var bounds = ControlBounds.From(frame);
         var feedbackTime = FeedbackTime(currentMinigameInterval);
+        var targetPredictionWeight = TargetPredictionWeight(
+            RecentTargetInterval(),
+            feedbackTime);
+        var targetPredictionVelocity = targetVelocity * targetPredictionWeight;
         var currentZone = AdvanceWithInputTimeline(
             frame.ZoneCenterUp,
             zoneVelocity,
@@ -153,10 +159,11 @@ internal sealed class MinigameController
             null,
             frameAge,
             referenceHeight);
-        // Relative motion keeps the existing zone trajectory planner while making the target part of every prediction.
+        // Frame-age compensation uses the latest observed target velocity. Future planning
+        // damps that velocity because the random target can reverse before the next result.
         var current = new MotionState(
             currentZone.Position - currentTarget.Position,
-            currentZone.Velocity - currentTarget.Velocity);
+            currentZone.Velocity - targetPredictionVelocity);
         var projection = Decide(
             current,
             bounds,
@@ -169,7 +176,8 @@ internal sealed class MinigameController
             ? MinimumPulseDuration
             : TimeSpan.Zero;
         var targetAtFeedback = Advance(
-            currentTarget,
+            currentTarget.Position,
+            targetPredictionVelocity,
             null,
             feedbackTime,
             referenceHeight);
@@ -186,6 +194,8 @@ internal sealed class MinigameController
             CreateDiagnostic(
                 zoneVelocity,
                 targetVelocity,
+                targetPredictionVelocity,
+                targetPredictionWeight,
                 frameAge,
                 feedbackTime,
                 bounds,
@@ -245,18 +255,48 @@ internal sealed class MinigameController
         return heights.Length == 0 ? Math.Max(1.0, fallback) : Median(heights);
     }
 
-    private double Velocity(double referenceHeight, bool target)
+    private double ZoneVelocity(double referenceHeight)
     {
         if (_motionFrames.Count < 2 || referenceHeight <= 0) return 0.0;
         var frames = _motionFrames.ToArray();
         var first = frames[0];
         var last = frames[^1];
         var seconds = (last.CapturedTimestamp - first.CapturedTimestamp).TotalSeconds;
-        var firstPosition = target ? first.TargetCenterUp : first.ZoneCenterUp;
-        var lastPosition = target ? last.TargetCenterUp : last.ZoneCenterUp;
         return seconds <= 0
             ? 0.0
-            : (lastPosition - firstPosition) / referenceHeight / seconds;
+            : (last.ZoneCenterUp - first.ZoneCenterUp) / referenceHeight / seconds;
+    }
+
+    private double TargetVelocity(double referenceHeight)
+    {
+        if (_motionFrames.Count < 2 || referenceHeight <= 0) return 0.0;
+        var frames = _motionFrames.ToArray();
+        var previous = frames[^2];
+        var current = frames[^1];
+        var seconds = (current.CapturedTimestamp - previous.CapturedTimestamp).TotalSeconds;
+        return seconds <= 0
+            ? 0.0
+            : (current.TargetCenterUp - previous.TargetCenterUp) / referenceHeight / seconds;
+    }
+
+    private TimeSpan RecentTargetInterval()
+    {
+        if (_motionFrames.Count < 2) return TimeSpan.Zero;
+        var frames = _motionFrames.ToArray();
+        return frames[^1].CapturedTimestamp - frames[^2].CapturedTimestamp;
+    }
+
+    internal static double TargetPredictionWeight(
+        TimeSpan recentTargetInterval,
+        TimeSpan feedbackTime)
+    {
+        if (recentTargetInterval <= TimeSpan.Zero || feedbackTime <= TimeSpan.Zero)
+            return MinimumTargetPredictionWeight;
+
+        return Math.Clamp(
+            recentTargetInterval.TotalSeconds / feedbackTime.TotalSeconds,
+            MinimumTargetPredictionWeight,
+            MaximumTargetPredictionWeight);
     }
 
     private void MeasureAcceleration(MotionFrame frame, double referenceHeight)
@@ -1208,6 +1248,8 @@ internal sealed class MinigameController
     private string CreateDiagnostic(
         double zoneVelocity,
         double targetVelocity,
+        double targetPredictionVelocity,
+        double targetPredictionWeight,
         TimeSpan frameAge,
         TimeSpan feedbackTime,
         ControlBounds bounds,
@@ -1223,6 +1265,8 @@ internal sealed class MinigameController
             CultureInfo.InvariantCulture,
             "control=center_prediction relative_prediction=true velocity_up_px_s={0:F2} velocity_up_h_s={1:F3} "
             + "target_velocity_up_px_s={2:F2} target_velocity_up_h_s={3:F3} "
+            + "target_prediction_velocity_up_px_s={40:F2} target_prediction_velocity_up_h_s={41:F3} "
+            + "target_prediction_weight={42:F3} "
             + "relative_velocity_up_px_s={4:F2} relative_velocity_up_h_s={5:F3} "
             + "frame_age_ms={6:F1} decision_interval_p95_ms={7:F1} "
             + "range_low_relative_up={8:F2} range_high_relative_up={9:F2} "
@@ -1276,7 +1320,10 @@ internal sealed class MinigameController
             FeedbackTimeout(feedbackTime).TotalMilliseconds,
             projection.WaitBrakeMinimum + currentTarget.Position,
             inputTimeline.InitialState,
-            inputTimeline.Transitions.Count);
+            inputTimeline.Transitions.Count,
+            targetPredictionVelocity * referenceHeight,
+            targetPredictionVelocity,
+            targetPredictionWeight);
 
     private static string FormatOptional(double? value) =>
         value?.ToString("F3", CultureInfo.InvariantCulture) ?? "-";

@@ -13,7 +13,8 @@ internal readonly record struct PulseExecutionResult(
     DateTimeOffset ReleasedAt = default,
     TimeSpan ReleasedTimestamp = default,
     TimeSpan? PlannedHold = null,
-    string ReleaseCause = "-");
+    string ReleaseCause = "-",
+    TimeSpan? ReleaseLateness = null);
 
 internal sealed class PulseReleaseControl
 {
@@ -355,12 +356,14 @@ internal sealed class MinigamePulseExecutor
             control.Begin(minimumDuration);
             var canceled = false;
             var releaseCause = PulseReleaseCause.Planned;
+            TimeSpan? plannedReleaseLateness = null;
             InputExecutionResult? failure = null;
             try
             {
                 var outcome = await ExecutePlanAsync(control, accounting, cancellationToken);
                 releaseCause = outcome.Cause;
                 failure = outcome.Failure;
+                plannedReleaseLateness = outcome.PlannedReleaseLateness;
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -383,10 +386,9 @@ internal sealed class MinigamePulseExecutor
             var releasedAt = DateTimeOffset.UtcNow;
             var releasedTimestamp = MonotonicNow;
             var snapshot = control.Snapshot();
-            var timingOverrun = !snapshot.Repressed
-                && releaseCause == PulseReleaseCause.Planned
-                && snapshot.PlannedHold is { } planned
-                && accounting.TotalHold > planned + TimingOverrunTolerance;
+            var timingOverrun = releaseCause == PulseReleaseCause.Planned
+                && plannedReleaseLateness is { } releaseLateness
+                && releaseLateness > TimingOverrunTolerance;
             var emergencyReleased = releaseCause is PulseReleaseCause.FeedbackTimeout
                 or PulseReleaseCause.ForegroundLost;
             var input = failure is { } failed
@@ -415,7 +417,8 @@ internal sealed class MinigamePulseExecutor
                 releasedAt,
                 releasedTimestamp,
                 snapshot.PlannedHold,
-                releaseCause.ToString());
+                releaseCause.ToString(),
+                plannedReleaseLateness);
         }
         finally
         {
@@ -447,15 +450,19 @@ internal sealed class MinigamePulseExecutor
                     && snapshot.ReleaseRemaining is { } releaseRemaining
                     && releaseRemaining <= TimeSpan.Zero)
                 {
+                    var releaseDeadline = MonotonicNow + releaseRemaining;
                     var release = _inputController.ReleaseLeft();
                     accounting.Add(release);
                     if (!release.Succeeded)
                         return new(PulseReleaseCause.Requested, release);
+                    var releaseLateness = Max(
+                        MonotonicNow - releaseDeadline,
+                        TimeSpan.Zero);
                     accounting.MarkReleased();
                     control.MarkReleased();
                     var released = control.Snapshot();
                     if (!released.PressRequested && released.RepressRemaining is null)
-                        return new(PulseReleaseCause.Planned);
+                        return new(PulseReleaseCause.Planned, null, releaseLateness);
                     continue;
                 }
 
@@ -531,7 +538,8 @@ internal sealed class MinigamePulseExecutor
 
     private readonly record struct PlanOutcome(
         PulseReleaseCause Cause,
-        InputExecutionResult? Failure = null);
+        InputExecutionResult? Failure = null,
+        TimeSpan? PlannedReleaseLateness = null);
 
     private sealed class InputAccounting
     {

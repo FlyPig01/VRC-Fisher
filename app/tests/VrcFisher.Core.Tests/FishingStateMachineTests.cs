@@ -967,7 +967,8 @@ public sealed class FishingStateMachineTests
 
         Assert.Equal(InputAction.Pulse, decision.Action);
         Assert.Contains("target_velocity_up_px_s=120.00", decision.Diagnostic);
-        Assert.Contains("relative_velocity_up_px_s=-200.00", decision.Diagnostic);
+        Assert.Contains("target_prediction_velocity_up_px_s=90.00", decision.Diagnostic);
+        Assert.Contains("relative_velocity_up_px_s=-170.00", decision.Diagnostic);
     }
 
     [Fact]
@@ -991,7 +992,8 @@ public sealed class FishingStateMachineTests
 
         Assert.Equal(InputAction.Release, decision.Action);
         Assert.Contains("target_velocity_up_px_s=-120.00", decision.Diagnostic);
-        Assert.Contains("relative_velocity_up_px_s=200.00", decision.Diagnostic);
+        Assert.Contains("target_prediction_velocity_up_px_s=-90.00", decision.Diagnostic);
+        Assert.Contains("relative_velocity_up_px_s=170.00", decision.Diagnostic);
     }
 
     [Fact]
@@ -1052,7 +1054,46 @@ public sealed class FishingStateMachineTests
 
         Assert.Contains("target_velocity_up_px_s=100.00", decision.Diagnostic);
         Assert.Contains("frame_age_ms=50.0 decision_interval_p95_ms=100.0", decision.Diagnostic);
-        Assert.Contains("target_current_up=-40.00 target_feedback_up=-30.00", decision.Diagnostic);
+        Assert.Contains("target_prediction_velocity_up_px_s=50.00", decision.Diagnostic);
+        Assert.Contains("target_prediction_weight=0.500", decision.Diagnostic);
+        Assert.Contains("target_current_up=-40.00 target_feedback_up=-35.00", decision.Diagnostic);
+    }
+
+    [Fact]
+    public void Random_target_reversal_uses_the_latest_two_frames()
+    {
+        var now = DateTimeOffset.UtcNow;
+        var machine = EnterMinigame(now);
+        var start = TimeSpan.FromSeconds(10);
+
+        _ = ControlFrame(machine, 5, now.AddSeconds(1.4), start,
+            ZoneAt(40), BoxAtCenter(50), controlTimestamp: start);
+        _ = ControlFrame(machine, 6, now.AddSeconds(1.45),
+            start + TimeSpan.FromMilliseconds(50), ZoneAt(40), BoxAtCenter(45),
+            controlTimestamp: start + TimeSpan.FromMilliseconds(50));
+        var reversed = ControlFrame(machine, 7, now.AddSeconds(1.5),
+            start + TimeSpan.FromMilliseconds(100), ZoneAt(40), BoxAtCenter(47),
+            controlTimestamp: start + TimeSpan.FromMilliseconds(100));
+
+        Assert.Contains("target_velocity_up_px_s=-40.00", reversed.Diagnostic);
+        Assert.DoesNotContain("target_velocity_up_px_s=30.00", reversed.Diagnostic);
+    }
+
+    [Theory]
+    [InlineData(60, 60, 0.75)]
+    [InlineData(60, 90, 2.0 / 3.0)]
+    [InlineData(60, 120, 0.50)]
+    [InlineData(60, 150, 0.50)]
+    public void Target_prediction_weight_tracks_the_real_feedback_period(
+        int targetIntervalMs,
+        int feedbackMs,
+        double expected)
+    {
+        var actual = MinigameController.TargetPredictionWeight(
+            TimeSpan.FromMilliseconds(targetIntervalMs),
+            TimeSpan.FromMilliseconds(feedbackMs));
+
+        Assert.Equal(expected, actual, precision: 6);
     }
 
     private static FishingStateMachine EnterMinigame(
