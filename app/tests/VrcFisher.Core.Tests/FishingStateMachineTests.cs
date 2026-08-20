@@ -994,6 +994,67 @@ public sealed class FishingStateMachineTests
         Assert.Contains("relative_velocity_up_px_s=200.00", decision.Diagnostic);
     }
 
+    [Fact]
+    public void Frame_age_compensation_uses_actual_input_transition_timeline()
+    {
+        var now = DateTimeOffset.UtcNow;
+        var machine = EnterMinigame(
+            now,
+            new MinigameDynamicsParameters(
+                ReleaseAcceleration: -4,
+                PressAcceleration: 12));
+        var captured = TimeSpan.FromSeconds(10);
+        var timeline = new MinigameInputTimeline(
+            MinigameInputState.Released,
+            [new(captured + TimeSpan.FromMilliseconds(50), MinigameInputState.Pressed)]);
+
+        var decision = ControlFrame(
+            machine,
+            5,
+            now.AddSeconds(1.4),
+            captured,
+            ZoneAt(40),
+            BoxAtCenter(50),
+            inputState: MinigameInputState.Pressed,
+            controlTimestamp: captured + TimeSpan.FromMilliseconds(100),
+            inputTimeline: timeline);
+
+        Assert.Contains("current_relative_up=0.00", decision.Diagnostic);
+        Assert.Contains("relative_velocity_up_h_s=0.400", decision.Diagnostic);
+        Assert.Contains("zone_current_up=-50.00", decision.Diagnostic);
+        Assert.Contains("input_state_at_capture=Released input_transition_count=1", decision.Diagnostic);
+    }
+
+    [Fact]
+    public void Target_is_projected_through_frame_age_and_next_feedback_interval()
+    {
+        var now = DateTimeOffset.UtcNow;
+        var machine = EnterMinigame(now);
+        var start = TimeSpan.FromSeconds(10);
+
+        _ = ControlFrame(
+            machine,
+            5,
+            now.AddSeconds(1.4),
+            start,
+            ZoneAt(40),
+            BoxAtCenter(50),
+            controlTimestamp: start);
+        var decision = ControlFrame(
+            machine,
+            6,
+            now.AddSeconds(1.45),
+            start + TimeSpan.FromMilliseconds(50),
+            ZoneAt(40),
+            BoxAtCenter(45),
+            controlTimestamp: start + TimeSpan.FromMilliseconds(100),
+            currentMinigameInterval: TimeSpan.FromMilliseconds(50));
+
+        Assert.Contains("target_velocity_up_px_s=100.00", decision.Diagnostic);
+        Assert.Contains("frame_age_ms=50.0 decision_interval_p95_ms=100.0", decision.Diagnostic);
+        Assert.Contains("target_current_up=-40.00 target_feedback_up=-30.00", decision.Diagnostic);
+    }
+
     private static FishingStateMachine EnterMinigame(
         DateTimeOffset now,
         MinigameDynamicsParameters? initialDynamics = null)
@@ -1030,7 +1091,8 @@ public sealed class FishingStateMachineTests
         MinigameInputState inputState = MinigameInputState.Released,
         TimeSpan remainingMinimumHold = default,
         TimeSpan? controlTimestamp = null,
-        TimeSpan? currentMinigameInterval = null) => machine.Step(
+        TimeSpan? currentMinigameInterval = null,
+        MinigameInputTimeline? inputTimeline = null) => machine.Step(
             new DetectionObservation(
                 frameNumber,
                 capturedAt,
@@ -1043,7 +1105,8 @@ public sealed class FishingStateMachineTests
             inputState,
             controlTimestamp ?? capturedTimestamp,
             remainingMinimumHold,
-            currentMinigameInterval ?? TimeSpan.FromMilliseconds(40));
+            currentMinigameInterval ?? TimeSpan.FromMilliseconds(40),
+            inputTimeline);
 
     private static BoundingBox BoxAtCenter(float centerY) =>
         new(10, centerY - 2, 30, centerY + 2);

@@ -31,6 +31,21 @@ public enum MinigameInputState
     Cooldown
 }
 
+public readonly record struct MinigameInputTransition(
+    TimeSpan Timestamp,
+    MinigameInputState State);
+
+public sealed record MinigameInputTimeline(
+    MinigameInputState InitialState,
+    IReadOnlyList<MinigameInputTransition> Transitions)
+{
+    public MinigameInputState FinalState =>
+        Transitions.Count == 0 ? InitialState : Transitions[^1].State;
+
+    public static MinigameInputTimeline Constant(MinigameInputState state) =>
+        new(state, Array.Empty<MinigameInputTransition>());
+}
+
 public sealed record MinigameDynamicsParameters(
     double? ReleaseAcceleration = null,
     double? PressAcceleration = null)

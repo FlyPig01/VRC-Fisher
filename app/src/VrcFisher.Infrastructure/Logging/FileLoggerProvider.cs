@@ -227,7 +227,7 @@ public sealed class FileLoggerProvider : ILoggerProvider
         var safeMessage = SingleLine(message);
         var safeCategory = SingleLine(category);
         var exceptionText = exception is null ? null : SingleLine(exception.ToString());
-        var line = $"{DateTimeOffset.Now:O} {LevelName(level)} {safeCategory} {safeMessage}";
+        var line = $"{DateTimeOffset.Now:O} {LevelName(level)} thread_id={Environment.CurrentManagedThreadId} {safeCategory} {safeMessage}";
         if (exceptionText is not null)
             line += $" exception=\"{exceptionText}\"";
         return TruncateUtf8(

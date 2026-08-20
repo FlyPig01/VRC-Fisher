@@ -22,6 +22,7 @@ public sealed class FileLoggerProviderTests
 
             var text = File.ReadAllText(Path.Combine(root, "run", "current.log"));
             Assert.Contains("run-event", text);
+            Assert.Contains("thread_id=", text);
             Assert.DoesNotContain("debug-event", text);
             Assert.False(File.Exists(Path.Combine(root, "debug", "current.log")));
         }

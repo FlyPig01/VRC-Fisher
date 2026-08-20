@@ -57,7 +57,8 @@ public sealed class FishingStateMachine : IStateMachine
         MinigameInputState minigameInputState,
         TimeSpan controlTimestamp,
         TimeSpan remainingMinimumHold,
-        TimeSpan currentMinigameInterval)
+        TimeSpan currentMinigameInterval,
+        MinigameInputTimeline? inputTimeline = null)
     {
         _evidence.Update(observation, _options.BiteIndicatorEvidenceWindow);
 
@@ -124,7 +125,8 @@ public sealed class FishingStateMachine : IStateMachine
                     minigameInputState,
                     controlTimestamp,
                     remainingMinimumHold,
-                    currentMinigameInterval);
+                    currentMinigameInterval,
+                    inputTimeline);
             case FishingPhase.Reeling:
                 if (elapsed >= _options.ReelReadyDelay)
                 {
@@ -185,14 +187,16 @@ public sealed class FishingStateMachine : IStateMachine
         MinigameInputState inputState,
         TimeSpan controlTimestamp,
         TimeSpan remainingMinimumHold,
-        TimeSpan currentMinigameInterval)
+        TimeSpan currentMinigameInterval,
+        MinigameInputTimeline? inputTimeline)
     {
         var control = _minigameController.Step(
             observation,
             inputState,
             controlTimestamp,
             remainingMinimumHold,
-            currentMinigameInterval);
+            currentMinigameInterval,
+            inputTimeline);
         return new StateDecision(
             _phase,
             control.Action,

@@ -213,6 +213,34 @@ public sealed class MinigamePulseExecutorTests
     }
 
     [Fact]
+    public void Input_timeline_reports_state_at_capture_and_later_transitions()
+    {
+        var control = new PulseReleaseControl(null, TimeSpan.FromSeconds(1));
+
+        control.Begin(TimeSpan.FromMilliseconds(10));
+        control.MarkReleased();
+        control.MarkPressed();
+
+        var fullTimeline = control.InputTimeline(TimeSpan.Zero, TimeSpan.MaxValue);
+        Assert.Equal(MinigameInputState.Released, fullTimeline.InitialState);
+        Assert.Equal(
+            [
+                MinigameInputState.Pressed,
+                MinigameInputState.Released,
+                MinigameInputState.Pressed
+            ],
+            fullTimeline.Transitions.Select(transition => transition.State));
+
+        var afterFirstPress = control.InputTimeline(
+            fullTimeline.Transitions[0].Timestamp,
+            TimeSpan.MaxValue);
+        Assert.Equal(MinigameInputState.Pressed, afterFirstPress.InitialState);
+        Assert.Equal(
+            [MinigameInputState.Released, MinigameInputState.Pressed],
+            afterFirstPress.Transitions.Select(transition => transition.State));
+    }
+
+    [Fact]
     public async Task Actual_timing_overrun_is_reported_without_input_failure()
     {
         var input = new RecordingInputController();

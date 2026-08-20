@@ -8,6 +8,7 @@ using Windows.Graphics.Imaging;
 using Windows.Foundation;
 using Windows.Storage.Streams;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Dispatching;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WinRT;
@@ -22,18 +23,22 @@ internal sealed class WgcCaptureAdapter(
     WindowsGraphicsCaptureSource source,
     ILogger<WgcCaptureAdapter> logger) : IDemandDrivenFrameSource, IAsyncDisposable, ICaptureTargetState
 {
+    private readonly DispatcherQueueController _captureThread =
+        DispatcherQueueController.CreateOnDedicatedThread();
     private readonly SemaphoreSlim _frameGate = new(1, 1);
     private readonly FrameReadbackGate _readbackGate = new();
     private readonly CaptureReadbackStatistics _statistics = new();
     private readonly object _sync = new();
     private GraphicsCaptureItem? _item;
+    private TypedEventHandler<GraphicsCaptureItem, object>? _itemClosedHandler;
     private IDirect3DDevice? _device;
     private Direct3D11CaptureFramePool? _pool;
     private GraphicsCaptureSession? _session;
     private IntPtr _targetWindow;
     private Windows.Storage.Streams.Buffer? _pixelBuffer;
     private byte[]? _pixelBytes;
-    private bool _running;
+    private volatile bool _running;
+    private int _disposed;
 
     public event EventHandler<CapturedFrameEventArgs>? FrameArrived
     {
@@ -63,7 +68,10 @@ internal sealed class WgcCaptureAdapter(
 
     public void RequestNextFrame(TimeSpan delay) => _readbackGate.Request(delay);
 
-    public bool RefreshVrChatTarget()
+    public bool RefreshVrChatTarget() =>
+        InvokeOnCaptureThread(RefreshVrChatTargetCore);
+
+    private bool RefreshVrChatTargetCore()
     {
         lock (_sync)
         {
@@ -73,7 +81,7 @@ internal sealed class WgcCaptureAdapter(
         var window = IsSupported ? VrChatWindowLocator.FindMainWindow() : IntPtr.Zero;
         if (window == IntPtr.Zero)
         {
-            ClearTarget();
+            ClearTargetCore();
             return false;
         }
 
@@ -89,7 +97,8 @@ internal sealed class WgcCaptureAdapter(
         }
         catch (Exception error) when (error is COMException or InvalidCastException)
         {
-            ClearTarget();
+            LogWinRtFailure("refresh_target", error);
+            ClearTargetCore();
             return false;
         }
 
@@ -101,43 +110,79 @@ internal sealed class WgcCaptureAdapter(
                 return _item is not null;
             }
             previous = _item;
-            if (previous is not null) previous.Closed -= OnTargetClosed;
+            if (previous is not null && _itemClosedHandler is not null)
+                previous.Closed -= _itemClosedHandler;
             _item = item;
             _targetWindow = window;
-            _item.Closed += OnTargetClosed;
+            _itemClosedHandler = (_, _) =>
+                PostToCaptureThread(() => HandleTargetClosed(item));
+            _item.Closed += _itemClosedHandler;
             source.Configure(TargetApplication.ProcessName);
         }
         NotifyTargetChanged();
         return true;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken cancellationToken) =>
+        InvokeOnCaptureThreadAsync(() => StartCore(cancellationToken));
+
+    private void StartCore(CancellationToken cancellationToken)
     {
-        if (!RefreshVrChatTarget())
-            throw new InvalidOperationException("VRChat is not running or its main window is unavailable.");
-        lock (_sync)
+        cancellationToken.ThrowIfCancellationRequested();
+        var stage = "refresh_target";
+        try
         {
-            if (_running) return Task.CompletedTask;
-            if (_item is null) throw new InvalidOperationException("VRChat is not running or its main window is unavailable.");
-            if (!IsSupported) throw new PlatformNotSupportedException("当前系统不支持 Windows Graphics Capture");
-            _device = Direct3DDeviceFactory.Create();
-            _pool = Direct3D11CaptureFramePool.CreateFreeThreaded(
-                _device,
-                DirectXPixelFormat.B8G8R8A8UIntNormalized,
-                2,
-                _item.Size);
-            _pool.FrameArrived += OnFrameArrived;
-            _session = _pool.CreateCaptureSession(_item);
-            _session.IsCursorCaptureEnabled = false;
-            _statistics.Reset();
-            _running = true;
-            source.StartAsync(cancellationToken).GetAwaiter().GetResult();
-            _session.StartCapture();
+            if (!RefreshVrChatTargetCore())
+                throw new InvalidOperationException("VRChat is not running or its main window is unavailable.");
+            lock (_sync)
+            {
+                if (_running) return;
+                if (_item is null)
+                    throw new InvalidOperationException("VRChat is not running or its main window is unavailable.");
+                if (!IsSupported)
+                    throw new PlatformNotSupportedException("当前系统不支持 Windows Graphics Capture");
+
+                stage = "create_device";
+                _device = Direct3DDeviceFactory.Create();
+                stage = "create_frame_pool";
+                _pool = Direct3D11CaptureFramePool.CreateFreeThreaded(
+                    _device,
+                    DirectXPixelFormat.B8G8R8A8UIntNormalized,
+                    2,
+                    _item.Size);
+                _pool.FrameArrived += OnFrameArrived;
+                stage = "create_capture_session";
+                _session = _pool.CreateCaptureSession(_item);
+                stage = "configure_capture_session";
+                _session.IsCursorCaptureEnabled = false;
+                _statistics.Reset();
+                _running = true;
+                stage = "start_frame_source";
+                source.StartAsync(cancellationToken).GetAwaiter().GetResult();
+                stage = "start_capture";
+                _session.StartCapture();
+            }
+            logger.LogInformation(
+                "WGC capture started thread_id={ThreadId} window=0x{Window:X}",
+                Environment.CurrentManagedThreadId,
+                _targetWindow.ToInt64());
         }
-        return Task.CompletedTask;
+        catch (Exception error)
+        {
+            LogWinRtFailure(stage, error);
+            try { StopCore(CancellationToken.None, logStatistics: false); }
+            catch (Exception cleanupError)
+            {
+                LogWinRtFailure("startup_cleanup", cleanupError);
+            }
+            throw new InvalidOperationException($"WGC 启动失败，阶段：{stage}", error);
+        }
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken) =>
+        InvokeOnCaptureThreadAsync(() => StopCore(cancellationToken, logStatistics: true));
+
+    private void StopCore(CancellationToken cancellationToken, bool logStatistics)
     {
         Direct3D11CaptureFramePool? pool;
         GraphicsCaptureSession? session;
@@ -152,61 +197,142 @@ internal sealed class WgcCaptureAdapter(
             _session = null;
             _device = null;
         }
-        if (pool is not null) pool.FrameArrived -= OnFrameArrived;
-        session?.Dispose();
-        pool?.Dispose();
-        await _frameGate.WaitAsync(cancellationToken);
-        _frameGate.Release();
-        device?.Dispose();
-        await source.StopAsync(cancellationToken);
+        Exception? failure = null;
+        TryCleanup("unsubscribe_frame_callback", () =>
+        {
+            if (pool is not null) pool.FrameArrived -= OnFrameArrived;
+        });
+        TryCleanup("dispose_capture_session", () => session?.Dispose());
+        TryCleanup("dispose_frame_pool", () => pool?.Dispose());
+        TryCleanup("wait_for_frame_readback", () =>
+        {
+            _frameGate.Wait(cancellationToken);
+            _frameGate.Release();
+        });
+        TryCleanup("dispose_capture_device", () => device?.Dispose());
+        TryCleanup("stop_frame_source", () =>
+            source.StopAsync(cancellationToken).GetAwaiter().GetResult());
         _readbackGate.Cancel();
-        var statistics = _statistics.Snapshot();
-        logger.LogInformation(
-            "WGC capture stopped received={Received} skipped={Skipped} readbacks={Readbacks} readback_avg_ms={Average:F2} readback_p95_ms={P95:F2}",
-            statistics.Received,
-            statistics.Skipped,
-            statistics.Readbacks,
-            statistics.AverageMilliseconds,
-            statistics.P95Milliseconds);
+        if (logStatistics)
+        {
+            var statistics = _statistics.Snapshot();
+            logger.LogInformation(
+                "WGC capture stopped thread_id={ThreadId} received={Received} skipped={Skipped} readbacks={Readbacks} readback_avg_ms={Average:F2} readback_p95_ms={P95:F2}",
+                Environment.CurrentManagedThreadId,
+                statistics.Received,
+                statistics.Skipped,
+                statistics.Readbacks,
+                statistics.AverageMilliseconds,
+                statistics.P95Milliseconds);
+        }
+        if (failure is not null)
+            throw new InvalidOperationException("WGC 停止时未能释放全部捕获资源", failure);
+
+        void TryCleanup(string stage, Action action)
+        {
+            try { action(); }
+            catch (Exception error)
+            {
+                failure ??= error;
+                LogWinRtFailure(stage, error);
+            }
+        }
     }
 
     public async ValueTask DisposeAsync()
     {
+        if (Interlocked.Exchange(ref _disposed, 1) != 0) return;
         await StopAsync(CancellationToken.None);
-        ClearTarget();
+        await InvokeOnCaptureThreadAsync(ClearTargetCore);
+        await _captureThread.ShutdownQueueAsync();
         _frameGate.Dispose();
         await source.DisposeAsync();
     }
 
-    private void ClearTarget()
+    private void ClearTargetCore()
     {
         GraphicsCaptureItem? previous;
         lock (_sync)
         {
             if (_item is null && _targetWindow == IntPtr.Zero) return;
             previous = _item;
-            if (previous is not null) previous.Closed -= OnTargetClosed;
+            if (previous is not null && _itemClosedHandler is not null)
+                previous.Closed -= _itemClosedHandler;
             _item = null;
+            _itemClosedHandler = null;
             _targetWindow = IntPtr.Zero;
         }
         NotifyTargetChanged();
     }
 
-    private void OnTargetClosed(GraphicsCaptureItem sender, object args)
+    private void HandleTargetClosed(GraphicsCaptureItem closedItem)
     {
         var wasRunning = false;
         lock (_sync)
         {
-            if (!ReferenceEquals(_item, sender)) return;
+            if (!ReferenceEquals(_item, closedItem)) return;
             wasRunning = _running;
-            sender.Closed -= OnTargetClosed;
+            if (_itemClosedHandler is not null)
+                _item.Closed -= _itemClosedHandler;
             _item = null;
+            _itemClosedHandler = null;
             _targetWindow = IntPtr.Zero;
         }
         NotifyTargetChanged();
         if (wasRunning)
             source.PublishCaptureFailure(new InvalidOperationException("VRChat 捕获窗口已关闭"));
     }
+
+    private T InvokeOnCaptureThread<T>(Func<T> action) =>
+        InvokeOnCaptureThreadAsync(action).GetAwaiter().GetResult();
+
+    private Task InvokeOnCaptureThreadAsync(Action action) =>
+        InvokeOnCaptureThreadAsync(() =>
+        {
+            action();
+            return true;
+        });
+
+    private Task<T> InvokeOnCaptureThreadAsync<T>(Func<T> action)
+    {
+        if (_captureThread.DispatcherQueue.HasThreadAccess)
+        {
+            try { return Task.FromResult(action()); }
+            catch (Exception error) { return Task.FromException<T>(error); }
+        }
+
+        var completion = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (!_captureThread.DispatcherQueue.TryEnqueue(() =>
+            {
+                try { completion.TrySetResult(action()); }
+                catch (Exception error) { completion.TrySetException(error); }
+            }))
+        {
+            completion.TrySetException(new ObjectDisposedException(nameof(WgcCaptureAdapter)));
+        }
+        return completion.Task;
+    }
+
+    private void PostToCaptureThread(Action action)
+    {
+        if (Volatile.Read(ref _disposed) != 0) return;
+        if (!_captureThread.DispatcherQueue.TryEnqueue(() =>
+            {
+                try { action(); }
+                catch (Exception error) { LogWinRtFailure("capture_thread_callback", error); }
+            }))
+        {
+            logger.LogWarning("WGC capture-thread callback was rejected because the dispatcher is stopping");
+        }
+    }
+
+    private void LogWinRtFailure(string stage, Exception error) =>
+        logger.LogError(
+            error,
+            "WGC operation failed stage={Stage} thread_id={ThreadId} hresult=0x{HResult:X8}",
+            stage,
+            Environment.CurrentManagedThreadId,
+            unchecked((uint)error.HResult));
 
     private void NotifyTargetChanged()
     {
@@ -215,7 +341,7 @@ internal sealed class WgcCaptureAdapter(
             try { handler(this, EventArgs.Empty); }
             catch
             {
-                // Target notifications run on WinRT callback threads. UI
+                // Target notifications run on the dedicated capture thread. UI
                 // subscribers cannot be allowed to terminate the process.
             }
         }
@@ -225,6 +351,7 @@ internal sealed class WgcCaptureAdapter(
     {
         var entered = false;
         Exception? failure = null;
+        var stage = "acquire_frame_gate";
         try
         {
             entered = await _frameGate.WaitAsync(0);
@@ -236,6 +363,7 @@ internal sealed class WgcCaptureAdapter(
             {
                 while (_running)
                 {
+                    stage = "dequeue_frame";
                     var frame = sender.TryGetNextFrame();
                     if (frame is null) break;
                     received++;
@@ -255,9 +383,11 @@ internal sealed class WgcCaptureAdapter(
                 var capturedAt = DateTimeOffset.UtcNow;
                 var capturedTimestamp = Stopwatch.GetElapsedTime(0, Stopwatch.GetTimestamp());
                 var readbackStarted = Stopwatch.GetTimestamp();
+                stage = "copy_surface";
                 using var bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(
                     latest.Surface,
                     BitmapAlphaMode.Ignore);
+                stage = "copy_bgra_buffer";
                 var pixels = CopyBgra(bitmap);
                 _statistics.RecordReadback(Stopwatch.GetElapsedTime(readbackStarted).TotalMilliseconds);
                 source.PublishCapturedFrame(
@@ -278,12 +408,15 @@ internal sealed class WgcCaptureAdapter(
         }
         catch (Exception error)
         {
+            LogWinRtFailure(stage, error);
             lock (_sync)
             {
                 if (_running)
                 {
                     _running = false;
-                    failure = new InvalidOperationException("VRChat 画面捕获失败", error);
+                    failure = new InvalidOperationException(
+                        $"VRChat 画面捕获失败，阶段：{stage}",
+                        error);
                 }
             }
         }

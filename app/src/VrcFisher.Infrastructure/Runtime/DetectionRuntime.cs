@@ -470,9 +470,12 @@ public sealed class DetectionRuntime(
 
                 var decisionAt = DateTimeOffset.UtcNow;
                 controlTimestamp = MonotonicNow;
-                var minigameInputState = pendingPulse is null
-                    ? MinigameInputState.Released
-                    : pendingPulse.InputState;
+                var inputTimeline = pendingPulse is null
+                    ? MinigameInputTimeline.Constant(MinigameInputState.Released)
+                    : pendingPulse.InputTimeline(
+                        detection.Observation.CapturedTimestamp,
+                        controlTimestamp);
+                var minigameInputState = inputTimeline.FinalState;
                 var remainingMinimumHold = pendingPulse is null
                     ? TimeSpan.Zero
                     : pendingPulse.RemainingMinimumHold;
@@ -482,7 +485,8 @@ public sealed class DetectionRuntime(
                     minigameInputState,
                     controlTimestamp,
                     remainingMinimumHold,
-                    interval);
+                    interval,
+                    inputTimeline);
                 var decisionId = Interlocked.Increment(ref _decisionId);
                 _lastCycle = decision.Cycle;
                 LogInference(
@@ -1230,6 +1234,9 @@ public sealed class DetectionRuntime(
         public MinigameInputState InputState => releaseControl.Snapshot().IsPressed
             ? MinigameInputState.Pressed
             : MinigameInputState.Released;
+
+        public MinigameInputTimeline InputTimeline(TimeSpan from, TimeSpan to) =>
+            releaseControl.InputTimeline(from, to);
 
         public TimeSpan RemainingMinimumHold =>
             releaseControl.Snapshot().MinimumHoldRemaining;

@@ -30,6 +30,7 @@ internal sealed class PulseReleaseControl
     private TimeSpan? _plannedHold;
     private TimeSpan _pressedTimestamp;
     private TimeSpan _lastFeedbackTimestamp;
+    private readonly List<MinigameInputTransition> _inputTransitions = new();
     private bool _started;
     private bool _isPressed;
     private bool _pressRequested;
@@ -73,6 +74,7 @@ internal sealed class PulseReleaseControl
             _minimumDuration = minimumDuration;
             _pressedTimestamp = now;
             _lastFeedbackTimestamp = now;
+            RecordInputTransition(now, MinigameInputState.Pressed);
             ApplyDeadlines(now, _initialReleaseDelay, _initialRepressDelay, _initialPlanHorizon);
             SignalChanged();
         }
@@ -173,12 +175,34 @@ internal sealed class PulseReleaseControl
         }
     }
 
+    public MinigameInputTimeline InputTimeline(TimeSpan from, TimeSpan to)
+    {
+        if (to < from) throw new ArgumentOutOfRangeException(nameof(to));
+        lock (_sync)
+        {
+            var initial = MinigameInputState.Released;
+            var transitions = new List<MinigameInputTransition>();
+            foreach (var transition in _inputTransitions)
+            {
+                if (transition.Timestamp <= from)
+                {
+                    initial = transition.State;
+                    continue;
+                }
+                if (transition.Timestamp > to) break;
+                transitions.Add(transition);
+            }
+            return new(initial, transitions.ToArray());
+        }
+    }
+
     public void MarkReleased()
     {
         lock (_sync)
         {
             _isPressed = false;
             _releaseDeadline = null;
+            RecordInputTransition(MonotonicNow, MinigameInputState.Released);
             SignalChanged();
         }
     }
@@ -193,6 +217,7 @@ internal sealed class PulseReleaseControl
             _repressDeadline = null;
             _pressedTimestamp = now;
             _repressed = true;
+            RecordInputTransition(now, MinigameInputState.Pressed);
             if (_releaseDeadline is null && _planHorizonDeadline is { } horizon)
             {
                 _releaseDeadline = horizon;
@@ -230,6 +255,12 @@ internal sealed class PulseReleaseControl
         var previous = _changed;
         _changed = CreateSignal();
         previous.TrySetResult();
+    }
+
+    private void RecordInputTransition(TimeSpan timestamp, MinigameInputState state)
+    {
+        if (_inputTransitions.Count > 0 && _inputTransitions[^1].State == state) return;
+        _inputTransitions.Add(new(timestamp, state));
     }
 
     private static void ValidateDelay(TimeSpan? value, string parameterName)

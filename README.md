@@ -2,7 +2,7 @@
 
 VRC-Fisher 是 Windows 上的 VRChat 钓鱼自动化项目。正式软件使用 C#、WinUI 3、Windows Graphics Capture、ONNX Runtime DirectML 和 SendInput，只处理前台 `VRChat.exe` 窗口。
 
-当前应用版本已完成自动收杆、下一轮流程和低识别帧率控制的现场验证；现存未关闭问题仅为两个模型的识别质量仍需改进。
+当前应用版本已完成自动收杆、下一轮流程、低识别帧率控制和 WGC 兼容性修复的现场验证。两个模型的识别质量仍需改进，快速目标控制还需继续覆盖高难度场景。
 
 ## 快速使用
 
