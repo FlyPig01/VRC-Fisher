@@ -946,6 +946,54 @@ public sealed class FishingStateMachineTests
         }
     }
 
+    [Fact]
+    public void Target_rising_while_zone_falls_pulses_before_relative_lower_boundary_crossing()
+    {
+        var now = DateTimeOffset.UtcNow;
+        var machine = EnterMinigame(
+            now,
+            new MinigameDynamicsParameters(
+                ReleaseAcceleration: -4,
+                PressAcceleration: 12));
+        var start = TimeSpan.FromSeconds(10);
+
+        _ = ControlFrame(
+            machine, 5, now.AddSeconds(1.4), start,
+            ZoneAt(40), BoxAtCenter(60));
+        var decision = ControlFrame(
+            machine, 6, now.AddSeconds(1.45), start + TimeSpan.FromMilliseconds(50),
+            ZoneAt(44), BoxAtCenter(54),
+            currentMinigameInterval: TimeSpan.FromMilliseconds(50));
+
+        Assert.Equal(InputAction.Pulse, decision.Action);
+        Assert.Contains("target_velocity_up_px_s=120.00", decision.Diagnostic);
+        Assert.Contains("relative_velocity_up_px_s=-200.00", decision.Diagnostic);
+    }
+
+    [Fact]
+    public void Target_falling_while_zone_rises_releases_before_relative_upper_boundary_crossing()
+    {
+        var now = DateTimeOffset.UtcNow;
+        var machine = EnterMinigame(
+            now,
+            new MinigameDynamicsParameters(
+                ReleaseAcceleration: -4,
+                PressAcceleration: 12));
+        var start = TimeSpan.FromSeconds(10);
+
+        _ = ControlFrame(
+            machine, 5, now.AddSeconds(1.4), start,
+            ZoneAt(40), BoxAtCenter(42));
+        var decision = ControlFrame(
+            machine, 6, now.AddSeconds(1.45), start + TimeSpan.FromMilliseconds(50),
+            ZoneAt(36), BoxAtCenter(48),
+            currentMinigameInterval: TimeSpan.FromMilliseconds(50));
+
+        Assert.Equal(InputAction.Release, decision.Action);
+        Assert.Contains("target_velocity_up_px_s=-120.00", decision.Diagnostic);
+        Assert.Contains("relative_velocity_up_px_s=200.00", decision.Diagnostic);
+    }
+
     private static FishingStateMachine EnterMinigame(
         DateTimeOffset now,
         MinigameDynamicsParameters? initialDynamics = null)
